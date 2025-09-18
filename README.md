@@ -154,7 +154,7 @@ card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
   Subdevices: 1/1
   Subdevice #0: subdevice #0
 ```
-We get a value of 1.0 (`-Dplughw:1,0`):
+We get a value of 1,0 (`-Dplughw:1,0`):
 ```
 card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
 ```

@@ -4,12 +4,12 @@ This is an extended version of PiFmRds, which operates on the latest **Raspberry
 Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds) 
 
 # Supported functions RDS
-PI -
-PS - 
-RT - 
-TP - 
-TA - 
-ECC - 
+PI -  
+PS -   
+RT -   
+TP -   
+TA -   
+ECC -   
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

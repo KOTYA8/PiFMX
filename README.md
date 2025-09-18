@@ -88,3 +88,7 @@ TA OFF
 ### PS and RT modes (rds_ctl)
 I also have a special script that allows you to use different PS and RT modes:
 [PiFmPSRT](https://github.com/KOTYA8/PiFmPSRT)
+
+# Changelog
+
+18.09.2025 - Support ECC

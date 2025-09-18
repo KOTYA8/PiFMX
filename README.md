@@ -27,56 +27,56 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  
 **PI** (`PI`) **RDS_CTL** - ❌ not realized 
 
-**PTY** (`-pi`) **GLOBAL** -   
-**PTY** (`PI`) **RDS_CTL** -   
+**PTY** (`-pty`) **GLOBAL** - ❌ not realized  
+**PTY** (`PTY`) **RDS_CTL** - ❌ not realized  
 
-**PS** (`-pi`) **GLOBAL** -   
-**PS** (`PI`) **RDS_CTL** -   
+**PS** (`-ps`) **GLOBAL** - ✅ realized 
+**PS** (`PS`) **RDS_CTL** - ✅ realized 
 
-**RT** (`-pi`) **GLOBAL** -   
-**RT** (`PI`) **RDS_CTL** -   
+**RT** (`-rt`) **GLOBAL** - ✅ realized  
+**RT** (`RT`) **RDS_CTL** - ✅ realized  
 
-**RT(A/B)** (`-pi`) **GLOBAL** -   
-**RT(A/B)** (`PI`) **RDS_CTL** -   
+**RT(A/B)** (`-rts`) **GLOBAL** - ❌ not realized  
+**RT(A/B)** (`RTS`) **RDS_CTL** - ❌ not realized
 
-**RT+** (`-pi`) **GLOBAL** -   
-**RT+** (`PI`) **RDS_CTL** -   
+**RT+** (`-rtp`) **GLOBAL** - ❌ not realized 
+**RT+** (`RTP`) **RDS_CTL** - ❌ not realized 
 
-**TP** (`-pi`) **GLOBAL** -   
-**TP** (`PI`) **RDS_CTL** -   
+**TP** (`-tp`) **GLOBAL** - ✅ realized (always turned on)
+**TP** (`TP`) **RDS_CTL** - ❌ not realized  
 
-**TA** (`-pi`) **GLOBAL** -   
-**TA** (`PI`) **RDS_CTL** -   
+**TA** (`-ta`) **GLOBAL** - ⚠️ realized, but you can’t turn on the command 
+**TA** (`ta`) **RDS_CTL** - ✅ realized  
 
-**AF(A)** (`-pi`) **GLOBAL** -   
-**AF(A)** (`PI`) **RDS_CTL** -   
+**AF(A)** (`-afa`) **GLOBAL** - ❌ not realized   
+**AF(A)** (`AFA`) **RDS_CTL** - ❌ not realized  
 
-**AF(B)** (`-pi`) **GLOBAL** -   
-**AF(B)** (`PI`) **RDS_CTL** -   
+**AF(B)** (`-afb`) **GLOBAL** - ❌ not realized   
+**AF(B)** (`AFB`) **RDS_CTL** - ❌ not realized   
 
-**M/S** (`-pi`) **GLOBAL** -   
-**M/S** (`PI`) **RDS_CTL** -   
+**M/S** (`-MS`) **GLOBAL** - ❌ not realized   
+**M/S** (`MS`) **RDS_CTL** - ❌ not realized   
 
-**ECC** (`-pi`) **GLOBAL** -   
-**ECC** (`PI`) **RDS_CTL** -   
+**ECC** (`-ecc`) **GLOBAL** - ✅ realized  
+**ECC** (`ECC`) **RDS_CTL** - ❌ not realized  
 
-**LIC** (`-pi`) **GLOBAL** -   
-**LIC** (`PI`) **RDS_CTL** -   
+**LIC** (`-lic`) **GLOBAL** - ⚠️ not realized, due to ECC, random numbers (there will be a fix)
+**LIC** (`LIC`) **RDS_CTL** - ❌ not realized  
 
-**PIN** (`-pi`) **GLOBAL** -   
-**PIN** (`PI`) **RDS_CTL** -    
+**PIN** (`-pin`) **GLOBAL** - ❌ not realized  
+**PIN** (`PIN`) **RDS_CTL** - ❌ not realized   
 
-**PTYN** (`-pi`) **GLOBAL** -    
-**PTYN** (`PI`) **RDS_CTL** -    
+**PTYN** (`-ptyn`) **GLOBAL** - ❌ not realized   
+**PTYN** (`PTYN`) **RDS_CTL** - ❌ not realized   
 
-**Long PS** (`-pi`) **GLOBAL** -    
-**Long PS** (`PI`) **RDS_CTL** -    
+**Long PS** (`-lps`) **GLOBAL** - ❌ not realized   
+**Long PS** (`LPS`) **RDS_CTL** - ❌ not realized   
 
-**DI(A,C,D)** (`-pi`) **GLOBAL** -    
-**DI(A,C,D)** (`PI`) **RDS_CTL** -   
+**DI(A,C,D)** (`-di`) **GLOBAL** - ❌ not realized   
+**DI(A,C,D)** (`DI`) **RDS_CTL** - ❌ not realized  
 
-**EON** (`-pi`) **GLOBAL** -   
-**EON** (`PI`) **RDS_CTL** -   
+**EON** (`-eon`) **GLOBAL** - ❌ not realized  
+**EON** (`EON`) **RDS_CTL** - ❌ not realized  
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

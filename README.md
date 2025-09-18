@@ -4,24 +4,24 @@ This is an extended version of PiFmRds, which operates on the latest **Raspberry
 Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds) 
 
 # Supported functions RDS (global and rds_ctl)
-* **PI** - Programme Identification (4 characters: XXXX)  
-* **PTY** - Programme Type (0 - 31)
-* **PS** - Programme Service Name (8 characters: XXXXXXXX)  
-* **RT** - Radio Text (64 characters)
-* **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B, A/B.  
-* **RT+** - Radio Text+. (Tags: 0 - 63). Example (tags.first symbol.last symbol): XX.XX.XX|XX.XX.XX
-* **TP** - Traffic Programme identification (ON/OFF)   
-* **TA** - Traffic Announcement identification (ON/OFF) 
-* **AF(A)** - Alternative Frequencies List (A method). Example: 87.6 87.8 91.1  
-* **AF(B)** - Alternative Frequencies List (B method). Example (main|same|regional): 87.6|90.1 95.5|90.5 90.6  
+* **PI** - Programme Identification (4 characters: `XXXX`)  
+* **PTY** - Programme Type (`0 - 31`)
+* **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
+* **RT** - Radio Text (`64 characters`)
+* **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B, A/B. Example: `A, B, AB`  
+* **RT+** - Radio Text+. (Tags: 0 - 63). Example (tags.first symbol.last symbol): `XX.XX.XX|XX.XX.XX`
+* **TP** - Traffic Programme identification (`ON/OFF`)   
+* **TA** - Traffic Announcement identification (`ON/OFF`) 
+* **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1`  
+* **AF(B)** - Alternative Frequencies List (B method). Example (main|same|regional): `87.6|90.1 95.5|90.5 90.6`  
 * **M/S** - Music Speech switch (M/S)  
-* **ECC** - Extended Country Code (2 characters: XX)  
-* **LIC** - Language Identification Code (2 characters: XX)  
-* **PIN** - Programme Item Number. (Date: 01-31, Hours: 00-23, Minutes: 00-59). Example (date|hours|minutes): XX|XX|XX  
-* **PTYN** - Programme Type Name. (8 characters: XXXXXXXX)  
+* **ECC** - Extended Country Code (2 characters: `XX`)  
+* **LIC** - Language Identification Code (2 characters: `XX`)  
+* **PIN** - Programme Item Number. (Date: 01-31, Hours: 00-23, Minutes: 00-59). Example (date|hours|minutes): `XX|XX|XX`  
+* **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **Long PS** - Long Programme Service Name (32 characters)  
-* **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: A, AC, AD, C, CA, CD, D, ACD  
-* **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|    
+* **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: `A, AC, AD, C, CA, CD, D, ACD`  
+* **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|`    
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

@@ -79,6 +79,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **EON** (`-eon`) **GLOBAL** - ❌ not realized  
 **EON** (`EON`) **RDS_CTL** - ❌ not realized 
 
+# Development Statuses (Global functions)
 **FREQUENCY** (`-freq`) - increase to **65 MHz** - ❌ not realized  
 **RDS POWER** (`-rdsp`) - RDS signal level - ❌ not realized  
 **FM POWER** (`-fmp`) - Power issued by Raspberry Pi for FM - ❌ not realized  

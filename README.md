@@ -28,7 +28,7 @@ sudo ./pi_fm_rds
 ```
 
 # General Arguments
-By default the PS changes back and forth between RPi-Live and a sequence number, starting at 00000000. The PS changes around one time per second.  
+By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
 sudo ./pi_fm_rds [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc XX]
 ```

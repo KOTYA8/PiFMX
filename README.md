@@ -30,7 +30,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **PTY** (`-pty`) **GLOBAL** - ❌ not realized  
 **PTY** (`PTY`) **RDS_CTL** - ❌ not realized  
 
-**PS** (`-ps`) **GLOBAL** - ✅ realized 
+**PS** (`-ps`) **GLOBAL** - ✅ realized  
 **PS** (`PS`) **RDS_CTL** - ✅ realized 
 
 **RT** (`-rt`) **GLOBAL** - ✅ realized  

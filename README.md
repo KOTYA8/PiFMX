@@ -43,7 +43,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **RT+** (`-rtp`) **GLOBAL** - ❌ not realized  
 **RT+** (`RTP`) **RDS_CTL** - ❌ not realized  
 
-**TP** (`-tp`) **GLOBAL** - ⚠️ realized, but always turned on 
+**TP** (`-tp`) **GLOBAL** - ⚠️ realized, but always turned on  
 **TP** (`TP`) **RDS_CTL** - ❌ not realized  
 
 **TA** (`-ta`) **GLOBAL** - ⚠️ realized, but you can’t turn on the command  

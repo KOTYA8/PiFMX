@@ -3,13 +3,25 @@ PiFmX - will support (hope) full RDS functions.
 This is an extended version of PiFmRds, which operates on the latest **Raspberry Pi OS** system and on the **Raspberry Pi 4B** board.  
 Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds) 
 
-# Supported functions RDS
-PI -  
-PS -   
-RT -   
-TP -   
-TA -   
-ECC -   
+# Supported functions RDS (global and rds_ctl)
+* **PI** -  
+* **PTY** -  
+* **PS** -    
+* **RT** -  
+* **RT(A/B)** -  
+* **RT+** -   
+* **TP** -     
+* **TA** -  
+* **AF(A)** -  
+* **AF(B)** -  
+* **M/S** -  
+* **ECC** -  
+* **LIC** -  
+* **PIN** -  
+* **PTYN** -  
+* **Long PS** -  
+* **DI(A,C,D)** -  
+* **EON** -   
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

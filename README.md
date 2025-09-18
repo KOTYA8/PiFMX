@@ -22,7 +22,7 @@ make clean
 make
 ```
 
-PIFMX launch:  
+PiFmX launch:  
 ```bash
 sudo ./pi_fm_rds
 ```

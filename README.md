@@ -25,8 +25,59 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 
 # Development Statuses (RDS functions) (global and rds_ctl)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  
-**PI** (`PI`) **RDS_CTL** - ❌ not realized  
- 
+**PI** (`PI`) **RDS_CTL** - ❌ not realized 
+
+**PTY**
+**PTY**
+
+**PS**
+**PS**
+
+**RT**
+**RT**
+
+**RT(A/B)**
+**RT(A/B)**
+
+**RT+**
+**RT+**
+
+**TP**
+**TP**
+
+**TA**
+**TA**
+
+**AF(A)**
+**AF(A)**
+
+**AF(B)**
+**AF(B)**
+
+**M/S**
+**M/S**
+
+**ECC**
+**ECC**
+
+**LIC**
+**LIC**
+
+**PIN**
+**PIN**
+
+**PTYN**
+**PTYN**
+
+**Long PS**
+**Long PS**
+
+**DI(A,C,D)**
+**DI(A,C,D)**
+
+**EON**
+**EON**
+
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  
 ```bash

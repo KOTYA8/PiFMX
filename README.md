@@ -39,8 +39,8 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **RT(A/B)** (`-rts`) **GLOBAL** - ❌ not realized  
 **RT(A/B)** (`RTS`) **RDS_CTL** - ❌ not realized
 
-**RT+** (`-rtp`) **GLOBAL** - ❌ not realized 
-**RT+** (`RTP`) **RDS_CTL** - ❌ not realized 
+**RT+** (`-rtp`) **GLOBAL** - ❌ not realized  
+**RT+** (`RTP`) **RDS_CTL** - ❌ not realized  
 
 **TP** (`-tp`) **GLOBAL** - ✅ realized (always turned on)  
 **TP** (`TP`) **RDS_CTL** - ❌ not realized  

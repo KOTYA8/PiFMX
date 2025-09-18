@@ -14,7 +14,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **TA** - Traffic Announcement identification (`ON/OFF`) 
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1`  
 * **AF(B)** - Alternative Frequencies List (B method). Example (main|same|regional): `87.6|90.1 95.5|90.5 90.6`  
-* **M/S** - Music Speech switch (M/S)  
+* **M/S** - Music Speech switch (M/S). Example: `M, S `
 * **ECC** - Extended Country Code (2 characters: `XX`)  
 * **LIC** - Language Identification Code (2 characters: `XX`)  
 * **PIN** - Programme Item Number. (Date: 01-31, Hours: 00-23, Minutes: 00-59). Example (date|hours|minutes): `XX|XX|XX`  

@@ -9,6 +9,11 @@ For continuous operation of the FM transmitter on the Raspberry Pi 4B, the follo
 echo "performance"| sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 ```
 
+Module installation(before installing PiFmX):
+```
+sudo apt install libsndfile1-dev
+```
+
 Installation PiFmX:  
 ```bash
 git clone https://github.com/KOTYA8/PiFmX.git

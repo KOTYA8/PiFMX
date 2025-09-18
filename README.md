@@ -4,16 +4,16 @@ This is an extended version of PiFmRds, which operates on the latest **Raspberry
 Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds) 
 
 # Supported functions RDS (global and rds_ctl)
-* **PI** -  
-* **PTY** -  
-* **PS** -    
-* **RT** -  
-* **RT(A/B)** -  
-* **RT+** -   
-* **TP** -     
-* **TA** -  
-* **AF(A)** -  
-* **AF(B)** -  
+* **PI** - Programme Identification (4 characters: XXXX)  
+* **PTY** - Programme Type (0 - 31)
+* **PS** - Programme Service Name (8 characters: XXXXXXXX)  
+* **RT** - Radio Text (64 characters)
+* **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B, A/B.  
+* **RT+** - Radio Text+ (Tags: 0 - 63) Example: (tags.first symbol.last symbol): XX.XX.XX|XX.XX.XX
+* **TP** - Traffic Programme identification (ON/OFF)   
+* **TA** - Traffic Announcement identification (ON/OFF) 
+* **AF(A)** - Alternative Frequencies List  
+* **AF(B)** - Alternative Frequencies List  
 * **M/S** -  
 * **ECC** -  
 * **LIC** -  

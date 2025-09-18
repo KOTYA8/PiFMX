@@ -143,6 +143,22 @@ sox -t mp3 http://www.linuxvoice.com/episodes/lv_s02e01.mp3 -t wav -  | sudo ./p
 
 Or to pipe the AUX input of a sound card into Pi-FM-RDS:
 
+Before starting, we enter the command:
+```
+arecord -l
+```
+And look for our connected sound card:
+```
+**** List of CAPTURE Hardware Devices ****
+card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+```
+We get a value of 1.0 (`-Dplughw:1,0`):
+```
+card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+```
+Enter the obtained values ​​in pi_fm_rds:
 ```
 sudo arecord -fS16_LE -r 44100 -Dplughw:1,0 -c 2 -  | sudo ./pi_fm_rds -audio -
 ```

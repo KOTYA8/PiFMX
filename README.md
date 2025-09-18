@@ -5,7 +5,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  
-```
+```bash
 echo "performance"| sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 ```
 
@@ -15,7 +15,7 @@ sudo apt install libsndfile1-dev
 ```
 
 Installation PiFmX:  
-```
+```bash
 git clone https://github.com/KOTYA8/PiFmX.git
 cd PiFmX/src
 make clean

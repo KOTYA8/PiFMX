@@ -65,6 +65,24 @@ Or to pipe the AUX input of a sound card into Pi-FM-RDS:
 sudo arecord -fS16_LE -r 44100 -Dplughw:1,0 -c 2 -  | sudo ./pi_fm_rds -audio -
 ```
 
+### Non-ASCII characters
+
+You can use the full range of characters supported by the RDS protocol. Pi-FM-RDS decodes
+the input strings based on the system's locale variables. As of early 2024, Raspberry Pi
+OS uses by default UTF-8 and the `LANG` variable is set to `en_GB.UTF-8`. With this setup,
+it should work out of the box.
+
+If it does not work, look at the first message that Pi-FM-RDS prints out. It should be
+something sensible, like:
+
+```
+Locale set to en_GB.UTF-8.
+```
+
+If it is not consistent with your setup, or if the locale appears to be set to `(null)`,
+then your locale variables are not set correctly and Pi-FM-RDS is incapable of working
+with non-ASCII characters.
+
 ### Control RDS (rds_ctl)
 
 You can control RDS at run-time using a named pipe (FIFO). For this run Pi-FM-RDS with the -ctl argument.

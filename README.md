@@ -67,3 +67,18 @@ You can control RDS at run-time using a named pipe (FIFO). For this run Pi-FM-RD
 mkfifo rds_ctl
 sudo ./pi_fm_rds -ctl rds_ctl
 ```
+
+At this point, Pi-FM-RDS waits until another program opens the named pipe in write mode (for example cat >rds_ctl in the example below) before it starts transmitting.
+
+You can use the named pipe to send “commands” to change PS, RT and TA. For instance, in another terminal:
+```
+cat >rds_ctl
+PS MyText
+RT A text to be sent as radiotext
+TA ON
+PS OtherTxt
+TA OFF
+```
+
+I also have a special script that allows you to use different PS and RT modes:
+[PiFmPSRT](https://github.com/KOTYA8/PiFmPSRT)

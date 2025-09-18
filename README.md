@@ -80,6 +80,9 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **EON** (`EON`) **RDS_CTL** - ❌ not realized 
 
 **FREQUENCY** (`-freq`) - increase to **65 MHz** - ❌ not realized  
+**RDS POWER** (`-rdsp`) - RDS signal level - ❌ not realized  
+**FM POWER** (`-fmp`) - Power issued by Raspberry Pi for FM - ❌ not realized  
+**CHANGE GPIO** (`-gpio`) - Change of Pin output for the antenna - ❌ not realized  
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

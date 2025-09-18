@@ -77,7 +77,9 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **DI(A,C,D)** (`DI`) **RDS_CTL** - ❌ not realized  
 
 **EON** (`-eon`) **GLOBAL** - ❌ not realized  
-**EON** (`EON`) **RDS_CTL** - ❌ not realized  
+**EON** (`EON`) **RDS_CTL** - ❌ not realized 
+
+**FREQUENCY** (`-freq`) - increase to **65 MHz** - ❌ not realized  
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

@@ -91,4 +91,4 @@ I also have a special script that allows you to use different PS and RT modes:
 
 # Changelog
 
-18.09.2025 - Support ECC
+* 18.09.2025 - Support **ECC**

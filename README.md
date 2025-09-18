@@ -23,8 +23,10 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: `A, AC, AD, C, CA, CD, D, ACD`  
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|`
 
-# Development Statuses (RDS functions)  
-
+# Development Statuses (RDS functions) (global and rds_ctl)
+* **PI**  
+* **PI**  
+* 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  
 ```bash

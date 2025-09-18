@@ -3,7 +3,7 @@ PiFmX - will support (hope) full RDS functions.
 This is an extended version of PiFmRds, which operates on the latest **Raspberry Pi OS** system and on the **Raspberry Pi 4B** board.  
 Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds) 
 
-# Supported functions RDS (global and rds_ctl)
+# Functions RDS
 * **PI** - Programme Identification (4 characters: `XXXX`)  
 * **PTY** - Programme Type (`0 - 31`)
 * **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
@@ -21,7 +21,9 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **Long PS** - Long Programme Service Name (`32 characters`)  
 * **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: `A, AC, AD, C, CA, CD, D, ACD`  
-* **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|`    
+* **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|`
+
+# Development Statuses (RDS functions)  
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

@@ -16,3 +16,8 @@ cd PiFmX/src
 make clean
 make
 ```
+
+PIFMX launch:  
+```bash
+sudo ./pi_fm_rds
+```

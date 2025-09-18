@@ -9,7 +9,7 @@ For continuous operation of the FM transmitter on the Raspberry Pi 4B, the follo
 echo "performance"| sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 ```
 
-Module installation(before installing PiFmX):
+Module installation (before installing PiFmX):
 ```
 sudo apt install libsndfile1-dev
 ```
@@ -85,5 +85,6 @@ PS OtherTxt
 TA OFF
 ```
 
+### PS and RT modes (rds_ctl)
 I also have a special script that allows you to use different PS and RT modes:
 [PiFmPSRT](https://github.com/KOTYA8/PiFmPSRT)

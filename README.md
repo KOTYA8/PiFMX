@@ -42,10 +42,10 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **RT+** (`-rtp`) **GLOBAL** - ❌ not realized 
 **RT+** (`RTP`) **RDS_CTL** - ❌ not realized 
 
-**TP** (`-tp`) **GLOBAL** - ✅ realized (always turned on)
+**TP** (`-tp`) **GLOBAL** - ✅ realized (always turned on)  
 **TP** (`TP`) **RDS_CTL** - ❌ not realized  
 
-**TA** (`-ta`) **GLOBAL** - ⚠️ realized, but you can’t turn on the command 
+**TA** (`-ta`) **GLOBAL** - ⚠️ realized, but you can’t turn on the command  
 **TA** (`ta`) **RDS_CTL** - ✅ realized  
 
 **AF(A)** (`-afa`) **GLOBAL** - ❌ not realized   
@@ -60,7 +60,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **ECC** (`-ecc`) **GLOBAL** - ✅ realized  
 **ECC** (`ECC`) **RDS_CTL** - ❌ not realized  
 
-**LIC** (`-lic`) **GLOBAL** - ⚠️ not realized, due to ECC, random numbers (there will be a fix)
+**LIC** (`-lic`) **GLOBAL** - ⚠️ not realized, due to ECC, random numbers (there will be a fix)  
 **LIC** (`LIC`) **RDS_CTL** - ❌ not realized  
 
 **PIN** (`-pin`) **GLOBAL** - ❌ not realized  

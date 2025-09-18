@@ -462,7 +462,7 @@ int main(int argc, char **argv) {
     char *control_pipe = NULL;
     uint32_t carrier_freq = 107900000;
     char *ps = NULL;
-    char *rt = "PiFmRds: live FM-RDS transmission from the RaspberryPi";
+    char *rt = "PiFmX: FM transmitter and full RDS functions";
     uint16_t pi = 0x1234;
     float ppm = 0;
     char *ecc_str = NULL;

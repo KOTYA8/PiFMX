@@ -80,6 +80,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **EON** (`EON`) **RDS_CTL** - ❌ not realized 
 
 # Development Statuses (Global functions)
+**MONO** (`-mn`) - Conclusion in mono sound - ❌ not realized  
 **FREQUENCY** (`-freq`) - increase to **65 MHz** - ❌ not realized  
 **RDS POWER** (`-rdsp`) - RDS signal level - ❌ not realized  
 **FM POWER** (`-fmp`) - Power issued by Raspberry Pi for FM - ❌ not realized  

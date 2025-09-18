@@ -1,7 +1,7 @@
 # PiFmX
-Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)  
 PiFmX - will support (hope) full RDS functions.  
 This is an extended version of PiFmRds, which operates on the latest **Raspberry Pi OS** system and on the **Raspberry Pi 4B** board.  
+Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)  
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  
@@ -60,3 +60,10 @@ Or to pipe the AUX input of a sound card into Pi-FM-RDS:
 sudo arecord -fS16_LE -r 44100 -Dplughw:1,0 -c 2 -  | sudo ./pi_fm_rds -audio -
 ```
 
+### Control RDS (rds_ctl)
+
+You can control RDS at run-time using a named pipe (FIFO). For this run Pi-FM-RDS with the -ctl argument.
+```
+mkfifo rds_ctl
+sudo ./pi_fm_rds -ctl rds_ctl
+```

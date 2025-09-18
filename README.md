@@ -24,8 +24,8 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|`
 
 # Development Statuses (RDS functions) (global and rds_ctl)
-**PI** (`-pi`) **GLOBAL** - [x] realized  
-**PI** (`PI`) **RDS_CTL** - [ ] not realized  
+**PI** (`-pi`) **GLOBAL** - [✔] realized  
+**PI** (`PI`) **RDS_CTL** - [X] not realized  
  
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

@@ -21,3 +21,9 @@ PIFMX launch:
 ```bash
 sudo ./pi_fm_rds
 ```
+
+# General Arguments
+
+```bash
+pi_fm_rds [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc XX]
+```

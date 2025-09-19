@@ -61,10 +61,10 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **ECC** (`-ecc`) **GLOBAL** - ✅ realized  
 **ECC** (`ECC`) **RDS_CTL** - ❌ not realized  
 
-**LIC** (`-lic`) **GLOBAL** - ⚠️ not realized, due to ECC, random numbers (there will be a fix)  
+**LIC** (`-lic`) **GLOBAL** - ❌ not realized  
 **LIC** (`LIC`) **RDS_CTL** - ❌ not realized  
 
-**PIN** (`-pin`) **GLOBAL** - ❌ not realized  
+**PIN** (`-pin`) **GLOBAL** - ⚠️ not realized, due to ECC, random numbers (there will be a fix)   
 **PIN** (`PIN`) **RDS_CTL** - ❌ not realized   
 
 **PTYN** (`-ptyn`) **GLOBAL** - ❌ not realized   

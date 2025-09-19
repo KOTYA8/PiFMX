@@ -186,7 +186,7 @@ with non-ASCII characters.
 
 You can control RDS at run-time using a named pipe (FIFO). For this run PiFMX with the -ctl argument.
 
-Before starting in the PIFMX folder, we create RDS_ctl using the command:  
+Before starting in the PIFMX folder, we create rds_ctl using the command:  
 ```
 mkfifo rds_ctl
 ```
@@ -212,7 +212,7 @@ TA OFF
 
 ### PS and RT modes (rds_ctl)
 I also have a special script that allows you to use different PS and RT modes:
-[PiFmPSRT](https://github.com/KOTYA8/PiFmPSRT)
+[PiFMPSRT](https://github.com/KOTYA8/PiFMPSRT)
 
 # Changelog
 

@@ -99,7 +99,7 @@ sudo apt install libsndfile1-dev
 
 Installation PiFMX:  
 ```bash
-git clone https://github.com/KOTYA8/PiFmX.git
+git clone https://github.com/KOTYA8/PiFMX.git
 cd PiFMX/src
 make clean
 make
@@ -139,10 +139,10 @@ One way to measure the ppm error is to play the `pulses.wav` file: it will play 
 If you use the argument `-audio -`, PiFMX reads audio data on standard input. This allows you to pipe the output of a program into PiFMX. For instance, this can be used to read MP3 files using Sox:
 
 ```
-sox -t mp3 http://www.linuxvoice.com/episodes/lv_s02e01.mp3 -t wav -  | sudo ./pi_fm_rds -audio -
+sox -t mp3 http://www.linuxvoice.com/episodes/lv_s02e01.mp3 -t wav -  | sudo ./pi_fm_x -audio -
 ```
 
-Or to pipe the AUX input of a sound card into Pi-FM-RDS:
+Or to pipe the AUX input of a sound card into PiFMX:
 
 Before starting, we enter the command:
 ```
@@ -166,7 +166,7 @@ sudo arecord -fS16_LE -r 44100 -Dplughw:1,0 -c 2 -  | sudo ./pi_fm_x -audio -
 
 ### Non-ASCII characters
 
-You can use the full range of characters supported by the RDS protocol. Pi-FM-RDS decodes
+You can use the full range of characters supported by the RDS protocol. PiFMX decodes
 the input strings based on the system's locale variables. As of early 2024, Raspberry Pi
 OS uses by default UTF-8 and the `LANG` variable is set to `en_GB.UTF-8`. With this setup,
 it should work out of the box.

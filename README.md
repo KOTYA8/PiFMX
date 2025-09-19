@@ -1,5 +1,5 @@
-# PiFmX
-PiFmX - will support (hope) full RDS functions.  
+# PiFMX
+PiFMX - will support (hope) full RDS functions.  
 This is an extended version of PiFmRds,  
 which operates on the latest **Raspberry Pi OS** system and on the **Raspberry Pi 4B** board.  
 Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds) 
@@ -92,33 +92,33 @@ For continuous operation of the FM transmitter on the Raspberry Pi 4B, the follo
 echo "performance"| sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 ```
 
-Module installation (before installing PiFmX):
+Module installation (before installing PiFMX):
 ```
 sudo apt install libsndfile1-dev
 ```
 
-Installation PiFmX:  
+Installation PiFMX:  
 ```bash
 git clone https://github.com/KOTYA8/PiFmX.git
-cd PiFmX/src
+cd PiFMX/src
 make clean
 make
 ```
 
-PiFmX launch:  
+PiFMX launch:  
 ```
-sudo ./pi_fm_rds
+sudo ./pi_fm_x
 ```
 
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_rds [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc XX]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc XX]
 ```
 All arguments are optional:  
 
 * `-freq` specifies the carrier frequency (76 - 108 MHz). Example: `-freq 107.9`.  
-* `-audio` specifies an audio file to play as audio. The sample rate does not matter: Pi-FM-RDS will resample and filter it. If a stereo file is provided, Pi-FM-RDS will produce an FM-Stereo signal. Example: `-audio sound.wav`. The supported formats depend on libsndfile. This includes WAV and Ogg/Vorbis (among others) but not MP3. Specify - as the file name to read audio data on standard input (useful for piping audio into Pi-FM-RDS, see below).  
+* `-audio` specifies an audio file to play as audio. The sample rate does not matter: PiFMX will resample and filter it. If a stereo file is provided, Pi-FM-RDS will produce an FM-Stereo signal. Example: `-audio sound.wav`. The supported formats depend on libsndfile. This includes WAV and Ogg/Vorbis (among others) but not MP3. Specify - as the file name to read audio data on standard input (useful for piping audio into Pi-FM-RDS, see below).  
 * `-pi` specifies the PI-code of the RDS broadcast. 4 hexadecimal digits. Example: `-pi FFFF`.  
 * `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.  
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.  
@@ -134,9 +134,9 @@ In practice, I found that Pi-FM-RDS works okay even without using the `-ppm` par
 
 One way to measure the ppm error is to play the `pulses.wav` file: it will play a pulse for precisely 1 second, then play a 1-second silence, and so on. Record the audio output from a radio with a good audio card. Say you sample at 44.1 kHz. Measure 10 intervals. Using [Audacity](https://www.audacityteam.org/) for example determine the number of samples of these 10 intervals: in the absence of clock error, it should be 441,000 samples. With my Pi, I found 441,132 samples. Therefore, my ppm error is (441132-441000)/441000 * 1e6 = 299 ppm, **assuming that my sampling device (audio card) has no clock error...**
 
-### Piping audio into Pi-FM-RDS
+### Piping audio into PiFMX
 
-If you use the argument `-audio -`, Pi-FM-RDS reads audio data on standard input. This allows you to pipe the output of a program into Pi-FM-RDS. For instance, this can be used to read MP3 files using Sox:
+If you use the argument `-audio -`, PiFMX reads audio data on standard input. This allows you to pipe the output of a program into PiFMX. For instance, this can be used to read MP3 files using Sox:
 
 ```
 sox -t mp3 http://www.linuxvoice.com/episodes/lv_s02e01.mp3 -t wav -  | sudo ./pi_fm_rds -audio -
@@ -159,9 +159,9 @@ We get a value of 1,0 (`-Dplughw:1,0`):
 ```
 card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
 ```
-Enter the obtained values ​​in pi_fm_rds:
+Enter the obtained values ​​in pi_fm_x:
 ```
-sudo arecord -fS16_LE -r 44100 -Dplughw:1,0 -c 2 -  | sudo ./pi_fm_rds -audio -
+sudo arecord -fS16_LE -r 44100 -Dplughw:1,0 -c 2 -  | sudo ./pi_fm_x -audio -
 ```
 
 ### Non-ASCII characters
@@ -171,7 +171,7 @@ the input strings based on the system's locale variables. As of early 2024, Rasp
 OS uses by default UTF-8 and the `LANG` variable is set to `en_GB.UTF-8`. With this setup,
 it should work out of the box.
 
-If it does not work, look at the first message that Pi-FM-RDS prints out. It should be
+If it does not work, look at the first message that PiFMX prints out. It should be
 something sensible, like:
 
 ```
@@ -179,18 +179,18 @@ Locale set to en_GB.UTF-8.
 ```
 
 If it is not consistent with your setup, or if the locale appears to be set to `(null)`,
-then your locale variables are not set correctly and Pi-FM-RDS is incapable of working
+then your locale variables are not set correctly and PiFMX is incapable of working
 with non-ASCII characters.
 
 ### Control RDS (rds_ctl)
 
-You can control RDS at run-time using a named pipe (FIFO). For this run Pi-FM-RDS with the -ctl argument.
+You can control RDS at run-time using a named pipe (FIFO). For this run PiFMX with the -ctl argument.
 ```bash
 mkfifo rds_ctl
-sudo ./pi_fm_rds -ctl rds_ctl
+sudo ./pi_fm_x -ctl rds_ctl
 ```
 
-At this point, Pi-FM-RDS waits until another program opens the named pipe in write mode (for example cat >rds_ctl in the example below) before it starts transmitting.
+At this point, PiFMX waits until another program opens the named pipe in write mode (for example cat >rds_ctl in the example below) before it starts transmitting.
 
 You can use the named pipe to send “commands” to change PS, RT and TA. For instance, in another terminal:
 ```

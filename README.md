@@ -6,7 +6,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 
 # Functions RDS
 * **PI** - Programme Identification (4 characters: `XXXX`)  
-* **PTY** - Programme Type (`0 - 31`)
+* **PTY** - Programme Type (`00 - 31`)
 * **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
 * **RT** - Radio Text (`64 characters`)
 * **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B, A/B. Example: `A, B, AB`  

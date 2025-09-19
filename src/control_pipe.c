@@ -1,8 +1,10 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <stdint.h>
 
 #include "rds.h"
 #include "control_pipe.h"
@@ -39,29 +41,91 @@ int poll_control_pipe() {
 
     char *res = fgets(buf, CTL_BUFFER_SIZE, f_ctl);
     if(res == NULL) return -1;
-    if(strlen(res) > 3 && res[2] == ' ') {
-        char *arg = res+3;
-        if(arg[strlen(arg)-1] == '\n') arg[strlen(arg)-1] = 0;
-        if(res[0] == 'P' && res[1] == 'S') {
-            arg[8] = 0;
-            set_rds_ps(arg);
-            printf("PS set to: \"%s\"\n", arg);
-            return CONTROL_PIPE_PS_SET;
-        }
-        if(res[0] == 'R' && res[1] == 'T') {
-            arg[64] = 0;
-            set_rds_rt(arg);
-            printf("RT set to: \"%s\"\n", arg);
-            return CONTROL_PIPE_RT_SET;
-        }
-        if(res[0] == 'T' && res[1] == 'A') {
-            int ta = ( strcmp(arg, "ON") == 0 );
-            set_rds_ta(ta);
-            printf("Set TA to ");
-            if(ta) printf("ON\n"); else printf("OFF\n");
-            return CONTROL_PIPE_TA_SET;
-        }
+
+    // Убираем символ новой строки в конце
+    if(res[strlen(res)-1] == '\n') res[strlen(res)-1] = 0;
+
+    // Используем strncmp для безопасного сравнения команд
+    // Формат команд: "CMD <value>"
+
+    if (strncmp(res, "PS ", 3) == 0) {
+        char *arg = res + 3;
+        arg[8] = 0; // PS текст не длиннее 8 символов
+        set_rds_ps(arg);
+        printf("PS set to: \"%s\"\n", arg);
+        fflush(stdout);
+        return CONTROL_PIPE_PS_SET;
     }
+
+    if (strncmp(res, "RT ", 3) == 0) {
+        char *arg = res + 3;
+        arg[64] = 0; // RT текст не длиннее 64 символов
+        set_rds_rt(arg);
+        printf("RT set to: \"%s\"\n", arg);
+        fflush(stdout);
+        return CONTROL_PIPE_RT_SET;
+    }
+
+    // <<< НОВОЕ: Установщик для PI (Program Identification)
+    if (strncmp(res, "PI ", 3) == 0) {
+        char *arg = res + 3;
+        // Конвертируем строку (шестнадцатеричную) в число
+        uint16_t pi_val = (uint16_t)strtol(arg, NULL, 16);
+        set_rds_pi(pi_val);
+        printf("PI set to: 0x%04X\n", pi_val);
+        fflush(stdout);
+        return CONTROL_PIPE_PI_SET;
+    }
+
+    // <<< НОВОЕ: Установщик для ECC (Extended Country Code)
+    // Команда будет "ECC <value>"
+    if (strncmp(res, "ECC ", 4) == 0) {
+        char *arg = res + 4;
+        // Конвертируем строку (шестнадцатеричную) в число
+        uint8_t ecc_val = (uint8_t)strtol(arg, NULL, 16);
+        set_rds_ecc(ecc_val);
+        printf("ECC set to: 0x%02X\n", ecc_val);
+        fflush(stdout);
+        return CONTROL_PIPE_ECC_SET;
+    }
+
+    // <<< НОВОЕ: Установщик для PTY (Program Type)
+    // Команда будет "PTY <value>"
+    if (strncmp(res, "PTY ", 4) == 0) {
+        char *arg = res + 4;
+        // Конвертируем строку (десятичную) в число
+        uint8_t pty_val = (uint8_t)atoi(arg);
+        if (pty_val > 31) {
+            printf("ERROR: PTY value must be between 0 and 31.\n");
+        } else {
+            set_rds_pty(pty_val);
+            printf("PTY set to: %u\n", pty_val);
+        }
+        fflush(stdout);
+        return CONTROL_PIPE_PTY_SET;
+    }
+
+    if (strncmp(res, "TA ", 3) == 0) {
+        char *arg = res + 3;
+        int ta = (strcmp(arg, "ON") == 0);
+        set_rds_ta(ta);
+        printf("TA set to %s\n", ta ? "ON" : "OFF");
+        fflush(stdout);
+        return CONTROL_PIPE_TA_SET;
+    }
+
+    if (strncmp(res, "TP ", 3) == 0) {
+        char *arg = res + 3;
+        int tp = (strcmp(arg, "ON") == 0);
+        set_rds_tp(tp);
+        printf("TP set to %s\n", tp ? "ON" : "OFF");
+        fflush(stdout);
+        return CONTROL_PIPE_TP_SET;
+    }
+
+    // Если ни одна команда не подошла
+    printf("ERROR: Unknown command '%s'\n", res);
+    fflush(stdout);
 
     return -1;
 }
@@ -70,6 +134,9 @@ int poll_control_pipe() {
  * Closes the control pipe.
  */
 int close_control_pipe() {
-    if(f_ctl) return fclose(f_ctl);
-    else return 0;
+	if(f_ctl != NULL) {
+		fclose(f_ctl);
+		f_ctl = NULL;
+	}
+	return 0;
 }

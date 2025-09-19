@@ -14,11 +14,13 @@
 struct {
     uint16_t pi;
     int ta;
+    int tp;
     char ps[PS_LENGTH];
     char rt[RT_LENGTH];
+    uint8_t pty;
     uint8_t ecc;
     int ecc_enabled;
-} rds_params = { 0 };
+} rds_params = { .pty = 0, .tp = 0, .ta = 0 };
 /* Here, the first member of the struct must be a scalar to avoid a
    warning on -Wmissing-braces with GCC < 4.8.3 
    (bug: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119)
@@ -101,36 +103,31 @@ int get_rds_ct_group(uint16_t *blocks) {
    pattern. 'ps_state' and 'rt_state' keep track of where we are in the PS (0A) sequence
    or RT (2A) sequence, respectively.
 */
+
 void get_rds_group(int *buffer) {
     static int state = 0;
     static int ps_state = 0;
     static int rt_state = 0;
     uint16_t blocks[GROUP_LENGTH] = {rds_params.pi, 0, 0, 0};
+
+    uint16_t block1_base = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
     
-    // Generate block content
-    if(! get_rds_ct_group(blocks)) { // CT (clock time) has priority on other group types
+    if(! get_rds_ct_group(blocks)) {
         if(rds_params.ecc_enabled && state == 3) {
-            // === НАЧАЛО ИЗМЕНЕНИЙ ===
-            // Генерируем группу 1A для передачи ECC
-            // PTY = 1 (News) в качестве примера. Можно установить любое значение.
-            uint16_t pty = 1; 
-            blocks[1] = 0x1000 | (rds_params.ta ? 0x10 : 0) | pty; // Group 1A, Version B=0, TA, PTY
-            
-            // Block C для группы 1A содержит ECC в младших 8 битах
+            // Группа 1A
+            blocks[1] = 0x1000 | block1_base | (rds_params.ta ? 0x10 : 0);
             blocks[2] = rds_params.ecc;
-            
-            // Block D для группы 1A дублирует PI-код
             blocks[3] = rds_params.pi;
-            // === КОНЕЦ ИЗМЕНЕНИЙ ===
         } else if(state < 4) {
-            blocks[1] = 0x0400 | ps_state;
-            if(rds_params.ta) blocks[1] |= 0x0010;
-            blocks[2] = 0xCDCD;     // no AF
+            // Группа 0A
+            blocks[1] = block1_base | (rds_params.ta ? 0x10 : 0) | ps_state;
+            blocks[2] = 0xCDCD;
             blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
             ps_state++;
             if(ps_state >= 4) ps_state = 0;
-        } else { // state == 4 (было state == 5)
-            blocks[1] = 0x2400 | rt_state;
+        } else { // state == 4
+            // Группа 2A
+            blocks[1] = 0x2000 | block1_base | (rds_params.ta ? 0x10 : 0) | rt_state;
             blocks[2] = rds_params.rt[rt_state*4+0]<<8 | rds_params.rt[rt_state*4+1];
             blocks[3] = rds_params.rt[rt_state*4+2]<<8 | rds_params.rt[rt_state*4+3];
             rt_state++;
@@ -140,7 +137,7 @@ void get_rds_group(int *buffer) {
         state++;
         if(state >= 5) state = 0;
     }
-    
+
     // Calculate the checkword for each block and emit the bits
     // ... (остальная часть функции без изменений)
     for(int i=0; i<GROUP_LENGTH; i++) {
@@ -246,7 +243,31 @@ void set_rds_ta(int ta) {
     rds_params.ta = ta;
 }
 
+void set_rds_tp(int tp) {
+    rds_params.tp = tp;
+}
+
+void set_rds_pty(uint8_t pty_code) {
+    rds_params.pty = pty_code;
+}
+
 void set_rds_ecc(uint8_t ecc_code) {
     rds_params.ecc = ecc_code;
     rds_params.ecc_enabled = 1;
+}
+
+uint16_t get_rds_pi() {
+    return rds_params.pi;
+}
+uint8_t get_rds_pty() {
+    return rds_params.pty;
+}
+int get_rds_tp() {
+    return rds_params.tp;
+}
+int get_rds_ta() {
+    return rds_params.ta;
+}
+uint8_t get_rds_ecc() {
+    return rds_params.ecc;
 }

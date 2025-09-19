@@ -228,7 +228,7 @@ map_peripheral(uint32_t base, uint32_t len)
 #define DATA_SIZE 5000
 
 
-int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, float ppm, char *control_pipe) {
+int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, uint8_t pty, int tp, int ta, float ppm, char *control_pipe) {
     // Catch all signals possible - it is vital we kill the DMA engine
     // on process exit!
     for (int i = 0; i < 64; i++) {
@@ -369,6 +369,9 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
     char myps[9] = {0};
     set_rds_pi(pi);
     set_rds_rt(rt);
+    set_rds_pty(pty);
+    set_rds_tp(tp); // <<< ДОБАВИТЬ
+    set_rds_ta(ta); // <<< ДОБАВИТЬ
     uint16_t count = 0;
     uint16_t count2 = 0;
     int varying_ps = 0;
@@ -464,6 +467,9 @@ int main(int argc, char **argv) {
     char *ps = NULL;
     char *rt = "PiFmX: FM transmitter and full RDS functions";
     uint16_t pi = 0x1234;
+    uint8_t pty = 0;
+    int tp_flag = 0; // <<< ДОБАВИТЬ: Флаг для TP
+    int ta_flag = 0; // <<< ДОБАВИТЬ: Флаг для TA
     float ppm = 0;
     char *ecc_str = NULL;
 
@@ -497,14 +503,29 @@ int main(int argc, char **argv) {
         } else if(strcmp("-ctl", arg)==0 && param != NULL) {
             i++;
             control_pipe = param;
-        } else if(strcmp("-ecc", arg)==0 && param != NULL) { // <-- НАЧАЛО НОВОГО БЛОКА
-        i++;
-        ecc_str = param;
+        } else if(strcmp("-ecc", arg)==0 && param != NULL) {
+            i++;
+            ecc_str = param;
+        } else if(strcmp("-pty", arg)==0 && param != NULL) { // <<< НАЧАЛО НОВОГО БЛОКА
+            i++;
+            int pty_val = atoi(param);
+            if (pty_val < 0 || pty_val > 31) {
+                fatal("Invalid PTY value: %s. Must be between 0 and 31.\n", param);
+            }
+            pty = (uint8_t)pty_val;
+        } else if(strcmp("-tp", arg)==0 && param != NULL) { // <<< НАЧАЛО НОВОГО БЛОКА
+            i++;
+            tp_flag = atoi(param);
+            if (tp_flag < 0 || tp_flag > 1) fatal("Invalid TP value. Use 0 for OFF, 1 for ON.\n");
+        } else if(strcmp("-ta", arg)==0 && param != NULL) {
+            i++;
+            ta_flag = atoi(param);
+            if (ta_flag < 0 || ta_flag > 1) fatal("Invalid TA value. Use 0 for OFF, 1 for ON.\n");
         } // <-- КОНЕЦ НОВОГО БЛОКА
     else {
         fatal("Unrecognised argument: %s.\n"
         "Syntax: pi_fm_rds [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
-        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc hex_code]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
+        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
     }
 }
 
@@ -524,7 +545,11 @@ if (ecc_str) {
 }
 // === КОНЕЦ НОВОГО БЛОКА ===
 
-int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ppm, control_pipe);
+printf("PTY set to: %u\n", pty);
+printf("TP set to: %s\n", tp_flag ? "ON" : "OFF");
+printf("TA set to: %s\n", ta_flag ? "ON" : "OFF");
+
+int errcode = tx(carrier_freq, audio_file, pi, ps, rt, pty, tp_flag, ta_flag, ppm, control_pipe);
 
 terminate(errcode);
 }

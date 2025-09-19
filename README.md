@@ -185,16 +185,24 @@ with non-ASCII characters.
 ### Control RDS (rds_ctl)
 
 You can control RDS at run-time using a named pipe (FIFO). For this run PiFMX with the -ctl argument.
-```bash
+
+Before starting in the PIFMX folder, we create RDS_ctl using the command:  
+```
 mkfifo rds_ctl
+```
+
+To launch through rds_ctl:  
+```
 sudo ./pi_fm_x -ctl rds_ctl
 ```
 
-At this point, PiFMX waits until another program opens the named pipe in write mode (for example cat >rds_ctl in the example below) before it starts transmitting.
+At this point, PiFMX waits until another program opens the named pipe in write mode (for example cat >rds_ctl in the example below) before it starts transmitting.  
 
 You can use the named pipe to send “commands” to change PS, RT and TA. For instance, in another terminal:
 ```
 cat >rds_ctl
+```
+```
 PS MyText
 RT A text to be sent as radiotext
 TA ON

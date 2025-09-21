@@ -113,7 +113,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc XX] [-pty XX] [-tp X] [-ta X]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1]
 ```
 All arguments are optional:  
 

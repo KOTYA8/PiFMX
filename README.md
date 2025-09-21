@@ -26,10 +26,10 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 
 # Development Statuses (RDS functions) (global and rds_ctl)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  
-**PI** (`PI`) **RDS_CTL** - ❌ not realized 
+**PI** (`PI`) **RDS_CTL** - ✅ realized 
 
-**PTY** (`-pty`) **GLOBAL** - ❌ not realized  
-**PTY** (`PTY`) **RDS_CTL** - ❌ not realized  
+**PTY** (`-pty`) **GLOBAL** - ✅ realized  
+**PTY** (`PTY`) **RDS_CTL** - ✅ realized  
 
 **PS** (`-ps`) **GLOBAL** - ✅ realized  
 **PS** (`PS`) **RDS_CTL** - ✅ realized 
@@ -43,10 +43,10 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **RT+** (`-rtp`) **GLOBAL** - ❌ not realized  
 **RT+** (`RTP`) **RDS_CTL** - ❌ not realized  
 
-**TP** (`-tp`) **GLOBAL** - ⚠️ realized, but always turned on  
-**TP** (`TP`) **RDS_CTL** - ❌ not realized  
+**TP** (`-tp`) **GLOBAL** - ✅ realized 
+**TP** (`TP`) **RDS_CTL** - ✅ realized  
 
-**TA** (`-ta`) **GLOBAL** - ⚠️ realized, but you can’t turn on the command  
+**TA** (`-ta`) **GLOBAL** - ✅ realized  
 **TA** (`ta`) **RDS_CTL** - ✅ realized  
 
 **AF(A)** (`-afa`) **GLOBAL** - ❌ not realized   
@@ -124,7 +124,10 @@ All arguments are optional:
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.  
 * `-ctl` specifies a named pipe (FIFO) to use as a control channel to change PS and RT at run-time (see below).  
 * `-ppm` specifies your Raspberry Pi's oscillator error in parts per million (ppm), see below.  
-* `-ecc` specifies the country for the transmitter (Extended Country Code, ECC). Displayed through 2 characters, example: `-ecc E0`.
+* `-ecc` specifies the country for the transmitter (Extended Country Code, ECC). Displayed through 2 characters, example: `-ecc E0`.  
+* `-pty` specifies the type of program for radio stations (Programme Type, PTY). Displayed through 2 characters, example: `-pty 10`.  
+* `-tp` specifies the availability of radio stations, transport communication (Traffic Programme identification, TP). Displayed through 1 characters, example: `-tp 1`.  
+* `-ta` specifies the start of the transport message (Traffic Announcement identification, TA) . Displayed through 1 characters, example: `-ta 1`.  
 
 ### Clock calibration (only if experiencing difficulties)
 
@@ -218,4 +221,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* V1 - Support **ECC**
+* V2 - Support **PTY**. You can also now set **TP** and **TA**. Management has appeared via rds_ctl: **PI, PTY, TP, ECC**.  

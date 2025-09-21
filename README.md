@@ -59,7 +59,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **M/S** (`MS`) **RDS_CTL** - ❌ not realized   
 
 **ECC** (`-ecc`) **GLOBAL** - ✅ realized  
-**ECC** (`ECC`) **RDS_CTL** - ❌ not realized  
+**ECC** (`ECC`) **RDS_CTL** - ✅ realized 
 
 **LIC** (`-lic`) **GLOBAL** - ❌ not realized  
 **LIC** (`LIC`) **RDS_CTL** - ❌ not realized  

@@ -215,6 +215,7 @@ I also have a special script that allows you to use different PS and RT modes:
 [PiFMPSRT](https://github.com/KOTYA8/PiFMPSRT)
 
 # Changelog
-All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)   
+All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
+### **Currently**  
 * 18.09.2025 - Support **ECC**

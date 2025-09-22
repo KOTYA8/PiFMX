@@ -85,7 +85,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 
 # Development Statuses (Global functions)
 **MONO** (`-mn`) - Conclusion in mono sound - ❌ not realized  
-**FREQUENCY** (`-freq`) - increase to **65 MHz** - ❌ not realized  
+**FREQUENCY** (`-freq`) - increase to **64 MHz** - ❌ not realized  
 **RDS POWER** (`-rdsp`) - RDS signal level - ❌ not realized  
 **FM POWER** (`-fmp`) - Power issued by Raspberry Pi for FM - ❌ not realized  
 **CHANGE GPIO** (`-gpio`) - Change of Pin output for the antenna - ❌ not realized  

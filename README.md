@@ -9,19 +9,19 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **PTY** - Programme Type (`00 - 31`)
 * **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
 * **RT** - Radio Text (`64 characters`)
-* **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B. Example: `A, B`  
+* **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B. Example: `A/B`  
 * **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX|XX.XX.XX`
 * **TP** - Traffic Programme identification (`0/1`)   
 * **TA** - Traffic Announcement identification (`0/1`) 
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1`  
 * **AF(B)** - Alternative Frequencies List (B method). Example (main|same|regional): `87.6|90.1 95.5|90.5 90.6`  
-* **M/S** - Music Speech switch (M/S). Example: `M, S`
+* **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code (2 characters: `XX`)  
 * **LIC** - Language Identification Code (2 characters: `XX`)  
 * **PIN** - Programme Item Number. (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date|hours|minutes): `XX|XX|XX`  
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **Long PS** - Long Programme Service Name (`32 characters`)  
-* **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: `A, AC, AD, C, CA, CD, D, ACD`  
+* **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: `A/AC/AD/C/CA/CD/D/ACD`  
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5 90.5|87.6 92.1|0000|10|ON|OFF|022254|`  
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`  
 

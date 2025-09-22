@@ -141,6 +141,24 @@ In practice, I found that Pi-FM-RDS works okay even without using the `-ppm` par
 
 One way to measure the ppm error is to play the `pulses.wav` file: it will play a pulse for precisely 1 second, then play a 1-second silence, and so on. Record the audio output from a radio with a good audio card. Say you sample at 44.1 kHz. Measure 10 intervals. Using [Audacity](https://www.audacityteam.org/) for example determine the number of samples of these 10 intervals: in the absence of clock error, it should be 441,000 samples. With my Pi, I found 441,132 samples. Therefore, my ppm error is (441132-441000)/441000 * 1e6 = 299 ppm, **assuming that my sampling device (audio card) has no clock error...**
 
+### Non-ASCII characters
+
+You can use the full range of characters supported by the RDS protocol. PiFMX decodes
+the input strings based on the system's locale variables. As of early 2024, Raspberry Pi
+OS uses by default UTF-8 and the `LANG` variable is set to `en_GB.UTF-8`. With this setup,
+it should work out of the box.
+
+If it does not work, look at the first message that PiFMX prints out. It should be
+something sensible, like:
+
+```
+Locale set to en_GB.UTF-8.
+```
+
+If it is not consistent with your setup, or if the locale appears to be set to `(null)`,
+then your locale variables are not set correctly and PiFMX is incapable of working
+with non-ASCII characters.
+
 ### Piping audio into PiFMX
 
 If you use the argument `-audio -`, PiFMX reads audio data on standard input. This allows you to pipe the output of a program into PiFMX. For instance, this can be used to read MP3 files using Sox:
@@ -170,24 +188,6 @@ Enter the obtained values ​​in pi_fm_x:
 ```
 sudo arecord -fS16_LE -r 44100 -Dplughw:1,0 -c 2 -  | sudo ./pi_fm_x -audio -
 ```
-
-### Non-ASCII characters
-
-You can use the full range of characters supported by the RDS protocol. PiFMX decodes
-the input strings based on the system's locale variables. As of early 2024, Raspberry Pi
-OS uses by default UTF-8 and the `LANG` variable is set to `en_GB.UTF-8`. With this setup,
-it should work out of the box.
-
-If it does not work, look at the first message that PiFMX prints out. It should be
-something sensible, like:
-
-```
-Locale set to en_GB.UTF-8.
-```
-
-If it is not consistent with your setup, or if the locale appears to be set to `(null)`,
-then your locale variables are not set correctly and PiFMX is incapable of working
-with non-ASCII characters.
 
 ### Control RDS (rds_ctl)
 

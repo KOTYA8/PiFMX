@@ -23,6 +23,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **Long PS** - Long Programme Service Name (`32 characters`)  
 * **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: `A, AC, AD, C, CA, CD, D, ACD`  
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|`
+* **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`  
 
 # Development Statuses (RDS functions) (global and rds_ctl)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  
@@ -77,7 +78,10 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **DI(A,C,D)** (`DI`) **RDS_CTL** - ❌ not realized  
 
 **EON** (`-eon`) **GLOBAL** - ❌ not realized  
-**EON** (`EON`) **RDS_CTL** - ❌ not realized 
+**EON** (`EON`) **RDS_CTL** - ❌ not realized  
+
+**CT** (`-ct`) **GLOBAL** - ❌ not realized    
+**CT** (`CT`) **RDS_CTL** - ❌ not realized   
 
 # Development Statuses (Global functions)
 **MONO** (`-mn`) - Conclusion in mono sound - ❌ not realized  

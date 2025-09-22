@@ -22,7 +22,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **Long PS** - Long Programme Service Name (`32 characters`)  
 * **DI(A,C,D)** - Decoder Identification (Artifical Head, Compressed, Dynamic PTY). Example: `A, AC, AD, C, CA, CD, D, ACD`  
-* **EON** - Enhanced Other Networks Information. (PI,PS,AF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5|0000|10|ON|OFF|022254|`
+* **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5 90.5|87.6 92.1|0000|10|ON|OFF|022254|`  
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`  
 
 # Development Statuses (RDS functions) (global and rds_ctl)

@@ -14,11 +14,11 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **TP** - Traffic Programme identification (`0/1`)   
 * **TA** - Traffic Announcement identification (`0/1`) 
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1`  
-* **AF(B)** - Alternative Frequencies List (B method). Example (main|same|regional)⚠️: `87.6,90.1 95.5,90.5 90.6` or `file`  
+* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional)⚠️: `87.6,90.1 95.5,90.5 90.6` or `file`  
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code (2 characters: `XX`)  
 * **LIC** - Language Identification Code (2 characters: `XX`)  
-* **PIN** - Programme Item Number. (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date|hours|minutes): `XX,XX,XX`  
+* **PIN** - Programme Item Number. (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file` 

@@ -20,10 +20,17 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **LIC** - Language Identification Code (2 characters: `XX`)  
 * **PIN** - Programme Item Number. (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date|hours|minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
-* **Long PS** - Long Programme Service Name (`32 characters`)  
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254`  
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`  
+
+### RDS2
+* **Long PS** - Long Programme Service Name (`32 characters`)
+* **Station LOGO** - Broadcaster's graphical logo
+
+### RDS Applications
+* **TMC** - Traffic Message Channel. Example: `0/1`
+* **ODA** - Open Data Applications. (Cross referencing DAB within RDS, CD46: RDS-TMC: ALERT-C, 4BD7: RadioText Plus / RT+ for group 2A RT). Example: `I don’t know how many of them are`
 
 # Development Statuses (RDS functions) (global and rds_ctl)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  
@@ -69,10 +76,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **PIN** (`PIN`) **RDS_CTL** - ✅ realized   
 
 **PTYN** (`-ptyn`) **GLOBAL** - ❌ not realized   
-**PTYN** (`PTYN`) **RDS_CTL** - ❌ not realized   
-
-**Long PS** (`-lps`) **GLOBAL** - ❌ not realized   
-**Long PS** (`LPS`) **RDS_CTL** - ❌ not realized   
+**PTYN** (`PTYN`) **RDS_CTL** - ❌ not realized     
 
 **DI(S,A,C,D)** (`-di`) **GLOBAL** - ✅ realized   
 **DI(S,A,C,D)** (`DI`) **RDS_CTL** - ✅ realized   
@@ -81,7 +85,21 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **EON** (`EON`) **RDS_CTL** - ❌ not realized  
 
 **CT** (`-ct`) **GLOBAL** - ❌ not realized    
-**CT** (`CT`) **RDS_CTL** - ❌ not realized   
+**CT** (`CT`) **RDS_CTL** - ❌ not realized 
+
+### RDS2
+
+**Long PS** (`-lps`) **GLOBAL** - ❌ not realized   
+**Long PS** (`LPS`) **RDS_CTL** - ❌ not realized 
+
+**Station LOGO** (`-stl`) - ❌ not realized 
+
+### RDS Applications
+
+**TMC** (`-tmc`) **GLOBAL** - ❌ not realized  
+**TMC** (`TMC`) **RDS_CTL** - ❌ not realized 
+
+**ODA** (`-oda`) **GLOBAL** - ❌ not realized  
 
 # Development Statuses (Global functions)
 **MONO** (`-mn`) - Conclusion in mono sound - ❌ not realized  

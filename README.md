@@ -205,7 +205,7 @@ sudo ./pi_fm_x -ctl rds_ctl
 
 At this point, PiFMX waits until another program opens the named pipe in write mode (for example cat >rds_ctl in the example below) before it starts transmitting.  
 
-You can use the named pipe to send “commands” to change PS, RT and TA. For instance, in another terminal:
+You can use the named pipe to send “commands” to change RDS. For instance, in another terminal:
 ```
 cat >rds_ctl
 ```

@@ -231,4 +231,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* V2 - Support **PTY**. You can also now set **TP** and **TA**. Management has appeared via `rds_ctl`: **PI, PTY, TP, ECC**.  
+* V3 - Support **MS**, **DI**. Management has appeared via `rds_ctl`: **MS, DI**.  

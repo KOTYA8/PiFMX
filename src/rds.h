@@ -14,6 +14,8 @@ extern void set_rds_pty(uint8_t pty_code);
 extern void set_rds_ecc(uint8_t ecc_code);
 extern void set_rds_ms(int ms);
 extern void set_rds_di(uint8_t flags);
+extern void set_rds_lic(uint8_t lic_code);
+extern void set_rds_pin(uint8_t day, uint8_t hour, uint8_t minute);
 
 extern uint16_t get_rds_pi();
 extern uint8_t get_rds_pty();
@@ -22,5 +24,6 @@ extern int get_rds_ta();
 extern uint8_t get_rds_ecc();
 extern int get_rds_ms();
 extern uint8_t get_rds_di();
+extern uint8_t get_rds_lic();
 
 #endif /* RDS_H */

@@ -148,6 +148,28 @@ int poll_control_pipe() {
         return CONTROL_PIPE_DI_SET;
     }
 
+    if (strncmp(res, "LIC ", 4) == 0) {
+        char *arg = res + 4;
+        uint8_t lic_val = (uint8_t)strtol(arg, NULL, 16);
+        set_rds_lic(lic_val);
+        printf("LIC set to: 0x%02X\n", lic_val);
+        fflush(stdout);
+        return CONTROL_PIPE_LIC_SET;
+    }
+
+    if (strncmp(res, "PIN ", 4) == 0) {
+        char *arg = res + 4;
+        int day, hour, minute;
+        if (sscanf(arg, "%d,%d,%d", &day, &hour, &minute) == 3) {
+            set_rds_pin(day, hour, minute);
+            printf("PIN set to: Day %d, %02d:%02d\n", day, hour, minute);
+        } else {
+            printf("ERROR: Invalid PIN format. Use DD,HH,MM.\n");
+        }
+        fflush(stdout);
+        return CONTROL_PIPE_PIN_SET;
+    }
+
     // Если ни одна команда не подошла
     printf("ERROR: Unknown command '%s'\n", res);
     fflush(stdout);

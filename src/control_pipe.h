@@ -5,6 +5,8 @@
 #define CONTROL_PIPE_PI_SET 5
 #define CONTROL_PIPE_ECC_SET 6
 #define CONTROL_PIPE_PTY_SET 7
+#define CONTROL_PIPE_MS_SET 8
+#define CONTROL_PIPE_DI_SET 9
 
 extern int open_control_pipe(char *filename);
 extern int close_control_pipe();

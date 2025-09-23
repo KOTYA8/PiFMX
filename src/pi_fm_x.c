@@ -228,7 +228,7 @@ map_peripheral(uint32_t base, uint32_t len)
 #define DATA_SIZE 5000
 
 
-int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, uint8_t pty, int tp, int ta, float ppm, char *control_pipe) {
+int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe) {
     // Catch all signals possible - it is vital we kill the DMA engine
     // on process exit!
     for (int i = 0; i < 64; i++) {
@@ -370,8 +370,10 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
     set_rds_pi(pi);
     set_rds_rt(rt);
     set_rds_pty(pty);
-    set_rds_tp(tp); // <<< ДОБАВИТЬ
-    set_rds_ta(ta); // <<< ДОБАВИТЬ
+    set_rds_tp(tp);
+    set_rds_ta(ta);
+    set_rds_ms(ms);
+    set_rds_di(di_flags);
     uint16_t count = 0;
     uint16_t count2 = 0;
     int varying_ps = 0;
@@ -470,6 +472,8 @@ int main(int argc, char **argv) {
     uint8_t pty = 0;
     int tp_flag = 0; // <<< ДОБАВИТЬ: Флаг для TP
     int ta_flag = 0; // <<< ДОБАВИТЬ: Флаг для TA
+    int ms_flag = 1;
+    uint8_t di_flags = 0;
     float ppm = 0;
     char *ecc_str = NULL;
 
@@ -521,11 +525,26 @@ int main(int argc, char **argv) {
             i++;
             ta_flag = atoi(param);
             if (ta_flag < 0 || ta_flag > 1) fatal("Invalid TA value. Use 0 for OFF, 1 for ON.\n");
-        } // <-- КОНЕЦ НОВОГО БЛОКА
+        } else if(strcmp("-ms", arg)==0 && param != NULL) {
+            i++;
+            if (strcmp(param, "S") == 0 || strcmp(param, "s") == 0) {
+                ms_flag = 0;
+            } else if (strcmp(param, "M") == 0 || strcmp(param, "m") == 0) {
+                ms_flag = 1;
+            } else {
+                fatal("Invalid M/S value. Use 'M' for Music or 'S' for Speech.\n");
+            }
+        } else if(strcmp("-di", arg)==0 && param != NULL) {
+            i++;
+            if (strchr(param, 'D') || strchr(param, 'd')) di_flags |= 8; // Dynamic PTY
+            if (strchr(param, 'C') || strchr(param, 'c')) di_flags |= 4; // Compressed
+            if (strchr(param, 'A') || strchr(param, 'a')) di_flags |= 2; // Artificial Head
+            if (strchr(param, 'S') || strchr(param, 's')) di_flags |= 1; // Stereo
+        } 
     else {
         fatal("Unrecognised argument: %s.\n"
         "Syntax: pi_fm_rds [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
-        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
+        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1] [-ms M|S] [-di SACD]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
     }
 }
 
@@ -548,8 +567,10 @@ if (ecc_str) {
 printf("PTY set to: %u\n", pty);
 printf("TP set to: %s\n", tp_flag ? "ON" : "OFF");
 printf("TA set to: %s\n", ta_flag ? "ON" : "OFF");
+printf("M/S set to: %s\n", ms_flag ? "Music" : "Speech");
+printf("DI set to: S(%d) A(%d) C(%d) D(%d)\n", (di_flags & 1) > 0, (di_flags & 2) > 0, (di_flags & 4) > 0, (di_flags & 8) > 0);
 
-int errcode = tx(carrier_freq, audio_file, pi, ps, rt, pty, tp_flag, ta_flag, ppm, control_pipe);
+int errcode = tx(carrier_freq, audio_file, pi, ps, rt, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe);
 
 terminate(errcode);
 }

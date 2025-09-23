@@ -123,6 +123,31 @@ int poll_control_pipe() {
         return CONTROL_PIPE_TP_SET;
     }
 
+    if (strncmp(res, "MS ", 3) == 0) {
+        char *arg = res + 3;
+        int ms = 0;
+        if (strcmp(arg, "M") == 0 || strcmp(arg, "m") == 0) {
+            ms = 1;
+        }
+        set_rds_ms(ms);
+        printf("M/S set to %s\n", ms ? "Music" : "Speech");
+        fflush(stdout);
+        return CONTROL_PIPE_MS_SET;
+    }
+
+    if (strncmp(res, "DI ", 3) == 0) {
+        char *arg = res + 3;
+        uint8_t di_flags = 0;
+        if (strchr(arg, 'S') || strchr(arg, 's')) di_flags |= 1; // Stereo
+        if (strchr(arg, 'A') || strchr(arg, 'a')) di_flags |= 2; // Artificial Head
+        if (strchr(arg, 'C') || strchr(arg, 'c')) di_flags |= 4; // Compressed
+        if (strchr(arg, 'D') || strchr(arg, 'd')) di_flags |= 8; // Dynamic PTY
+        set_rds_di(di_flags);
+        printf("DI set to: S(%d) A(%d) C(%d) D(%d)\n", (di_flags & 1) > 0, (di_flags & 2) > 0, (di_flags & 4) > 0, (di_flags & 8) > 0);
+        fflush(stdout);
+        return CONTROL_PIPE_DI_SET;
+    }
+
     // Если ни одна команда не подошла
     printf("ERROR: Unknown command '%s'\n", res);
     fflush(stdout);

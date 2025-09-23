@@ -12,11 +12,15 @@ extern void set_rds_ta(int ta);
 extern void set_rds_tp(int tp);
 extern void set_rds_pty(uint8_t pty_code);
 extern void set_rds_ecc(uint8_t ecc_code);
+extern void set_rds_ms(int ms);
+extern void set_rds_di(uint8_t flags);
 
 extern uint16_t get_rds_pi();
 extern uint8_t get_rds_pty();
 extern int get_rds_tp();
 extern int get_rds_ta();
 extern uint8_t get_rds_ecc();
+extern int get_rds_ms();
+extern uint8_t get_rds_di();
 
 #endif /* RDS_H */

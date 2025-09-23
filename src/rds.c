@@ -15,14 +15,16 @@ struct {
     uint16_t pi;
     int ta;
     int tp;
+    int ms;
+    uint8_t di_flags;
     char ps[PS_LENGTH];
     char rt[RT_LENGTH];
     uint8_t pty;
     uint8_t ecc;
     int ecc_enabled;
-} rds_params = { .pty = 0, .tp = 0, .ta = 0 };
+} rds_params = { .pty = 0, .tp = 0, .ta = 0, .ms = 1, .di_flags = 0 };
 /* Here, the first member of the struct must be a scalar to avoid a
-   warning on -Wmissing-braces with GCC < 4.8.3 
+   warning on -Wmissing-braces with GCC < 4.8.3
    (bug: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119)
 */
 
@@ -46,7 +48,7 @@ uint16_t offset_words[] = {0x0FC, 0x198, 0x168, 0x1B4};
 /* Classical CRC computation */
 uint16_t crc(uint16_t block) {
     uint16_t crc = 0;
-    
+
     for(int j=0; j<BLOCK_SIZE; j++) {
         int bit = (block & MSB_BIT) != 0;
         block <<= 1;
@@ -57,7 +59,7 @@ uint16_t crc(uint16_t block) {
             crc = crc ^ POLY;
         }
     }
-    
+
     return crc;
 }
 
@@ -70,29 +72,29 @@ int get_rds_ct_group(uint16_t *blocks) {
     // Check time
     time_t now;
     struct tm *utc;
-    
+
     now = time (NULL);
     utc = gmtime (&now);
 
     if(utc->tm_min != latest_minutes) {
         // Generate CT group
         latest_minutes = utc->tm_min;
-        
+
         int l = utc->tm_mon <= 1 ? 1 : 0;
-        int mjd = 14956 + utc->tm_mday + 
+        int mjd = 14956 + utc->tm_mday +
                         (int)((utc->tm_year - l) * 365.25) +
                         (int)((utc->tm_mon + 2 + l*12) * 30.6001);
-        
+
         blocks[1] = 0x4400 | (mjd>>15);
         blocks[2] = (mjd<<1) | (utc->tm_hour>>4);
         blocks[3] = (utc->tm_hour & 0xF)<<12 | utc->tm_min<<6;
-        
+
         utc = localtime(&now);
-        
+
         int offset = utc->tm_gmtoff / (30 * 60);
         blocks[3] |= abs(offset);
         if(offset < 0) blocks[3] |= 0x20;
-        
+
         //printf("Generated CT: %04X %04X %04X\n", blocks[1], blocks[2], blocks[3]);
         return 1;
     } else return 0;
@@ -111,7 +113,7 @@ void get_rds_group(int *buffer) {
     uint16_t blocks[GROUP_LENGTH] = {rds_params.pi, 0, 0, 0};
 
     uint16_t block1_base = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
-    
+
     if(! get_rds_ct_group(blocks)) {
         if(rds_params.ecc_enabled && state == 3) {
             // Группа 1A
@@ -120,8 +122,27 @@ void get_rds_group(int *buffer) {
             blocks[3] = rds_params.pi;
         } else if(state < 4) {
             // Группа 0A
-            blocks[1] = block1_base | (rds_params.ta ? 0x10 : 0) | ps_state;
-            blocks[2] = 0xCDCD;
+
+            // Определяем, какой DI флаг выставлять в зависимости от сегмента PS
+            // Согласно стандарту RDS EN 50067, Приложение E:
+            uint8_t di_bit = 0;
+            switch (ps_state) {
+                case 0: // Stereo (S)
+                    if (rds_params.di_flags & 8) di_bit = 1;
+                    break;
+                case 1: // Artificial Head (A)
+                    if (rds_params.di_flags & 4) di_bit = 1;
+                    break;
+                case 2: // Compressed (C)
+                    if (rds_params.di_flags & 2) di_bit = 1;
+                    break;
+                case 3: // Dynamic PTY (D)
+                    if (rds_params.di_flags & 1) di_bit = 1;
+                    break;
+            }
+
+            blocks[1] = block1_base | (rds_params.ta ? 0x10 : 0) | (rds_params.ms ? 0x08 : 0) | (di_bit << 2) | ps_state;
+            blocks[2] = 0xCDCD; // This is a placeholder for PS characters, which are set below
             blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
             ps_state++;
             if(ps_state >= 4) ps_state = 0;
@@ -133,13 +154,12 @@ void get_rds_group(int *buffer) {
             rt_state++;
             if(rt_state >= 16) rt_state = 0;
         }
-    
+
         state++;
         if(state >= 5) state = 0;
     }
 
     // Calculate the checkword for each block and emit the bits
-    // ... (остальная часть функции без изменений)
     for(int i=0; i<GROUP_LENGTH; i++) {
         uint16_t block = blocks[i];
         uint16_t check = crc(block) ^ offset_words[i];
@@ -155,7 +175,7 @@ void get_rds_group(int *buffer) {
 }
 
 /* Get a number of RDS samples. This generates the envelope of the waveform using
-   pre-generated elementary waveform samples, and then it amplitude-modulates the 
+   pre-generated elementary waveform samples, and then it amplitude-modulates the
    envelope with a 57 kHz carrier, which is very efficient as 57 kHz is 4 times the
    sample frequency we are working at (228 kHz).
  */
@@ -163,7 +183,7 @@ void get_rds_samples(float *buffer, int count) {
     static int bit_buffer[BITS_PER_GROUP];
     static int bit_pos = BITS_PER_GROUP;
     static float sample_buffer[SAMPLE_BUFFER_SIZE] = {0};
-    
+
     static int prev_output = 0;
     static int cur_output = 0;
     static int cur_bit = 0;
@@ -173,19 +193,19 @@ void get_rds_samples(float *buffer, int count) {
 
     static int in_sample_index = 0;
     static int out_sample_index = SAMPLE_BUFFER_SIZE-1;
-        
+
     for(int i=0; i<count; i++) {
         if(sample_count >= SAMPLES_PER_BIT) {
             if(bit_pos >= BITS_PER_GROUP) {
                 get_rds_group(bit_buffer);
                 bit_pos = 0;
             }
-            
+
             // do differential encoding
             cur_bit = bit_buffer[bit_pos];
             prev_output = cur_output;
             cur_output = prev_output ^ cur_bit;
-            
+
             inverting = (cur_output == 1);
 
             float *src = waveform_biphase;
@@ -200,17 +220,17 @@ void get_rds_samples(float *buffer, int count) {
 
             in_sample_index += SAMPLES_PER_BIT;
             if(in_sample_index >= SAMPLE_BUFFER_SIZE) in_sample_index -= SAMPLE_BUFFER_SIZE;
-            
+
             bit_pos++;
             sample_count = 0;
         }
-        
+
         float sample = sample_buffer[out_sample_index];
         sample_buffer[out_sample_index] = 0;
         out_sample_index++;
         if(out_sample_index >= SAMPLE_BUFFER_SIZE) out_sample_index = 0;
-        
-        
+
+
         // modulate at 57 kHz
         // use phase for this
         switch(phase) {
@@ -221,7 +241,7 @@ void get_rds_samples(float *buffer, int count) {
         }
         phase++;
         if(phase >= 4) phase = 0;
-        
+
         *buffer++ = sample;
         sample_count++;
     }
@@ -247,6 +267,10 @@ void set_rds_tp(int tp) {
     rds_params.tp = tp;
 }
 
+void set_rds_ms(int ms) {
+    rds_params.ms = ms;
+}
+
 void set_rds_pty(uint8_t pty_code) {
     rds_params.pty = pty_code;
 }
@@ -254,6 +278,10 @@ void set_rds_pty(uint8_t pty_code) {
 void set_rds_ecc(uint8_t ecc_code) {
     rds_params.ecc = ecc_code;
     rds_params.ecc_enabled = 1;
+}
+
+void set_rds_di(uint8_t flags) {
+    rds_params.di_flags = flags;
 }
 
 uint16_t get_rds_pi() {
@@ -268,6 +296,13 @@ int get_rds_tp() {
 int get_rds_ta() {
     return rds_params.ta;
 }
+int get_rds_ms() {
+    return rds_params.ms;
+}
 uint8_t get_rds_ecc() {
     return rds_params.ecc;
+}
+
+uint8_t get_rds_di() {
+    return rds_params.di_flags;
 }

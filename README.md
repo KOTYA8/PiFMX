@@ -121,10 +121,13 @@ sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] 
 ```
 All arguments are optional:  
 
+Global:  
 * `-freq` specifies the carrier frequency (76 - 108 MHz). Example: `-freq 107.9`.  
 * `-audio` specifies an audio file to play as audio. The sample rate does not matter: PiFMX will resample and filter it. If a stereo file is provided, Pi-FM-RDS will produce an FM-Stereo signal. Example: `-audio sound.wav`. The supported formats depend on libsndfile. This includes WAV and Ogg/Vorbis (among others) but not MP3. Specify - as the file name to read audio data on standard input (useful for piping audio into Pi-FM-RDS, see below).
-* `-ppm` specifies your Raspberry Pi's oscillator error in parts per million (ppm), see below.  
-* `-ctl` specifies a named pipe (FIFO) to use as a control channel to change PS and RT at run-time (see below).  
+* `-ppm` specifies your Raspberry Pi's oscillator error in parts per million (ppm), see below.
+Control RDS (remotely):  
+* `-ctl` specifies a named pipe (FIFO) to use as a control channel to change PS and RT at run-time (see below).
+RDS:  
 * `-pi` specifies the PI-code of the RDS broadcast. 4 hexadecimal digits. Example: `-pi FFFF`.  
 * `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.  
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.  

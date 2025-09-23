@@ -10,19 +10,19 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
 * **RT** - Radio Text (`64 characters`)
 * **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`  
-* **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX|XX.XX.XX`
+* **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`
 * **TP** - Traffic Programme identification (`0/1`)   
 * **TA** - Traffic Announcement identification (`0/1`) 
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1`  
-* **AF(B)** - Alternative Frequencies List (B method). Example (main|same|regional): `87.6|90.1 95.5|90.5 90.6`  
+* **AF(B)** - Alternative Frequencies List (B method). Example (main|same|regional): `87.6,90.1 95.5,90.5 90.6`  
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code (2 characters: `XX`)  
 * **LIC** - Language Identification Code (2 characters: `XX`)  
-* **PIN** - Programme Item Number. (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date|hours|minutes): `XX|XX|XX`  
+* **PIN** - Programme Item Number. (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date|hours|minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **Long PS** - Long Programme Service Name (`32 characters`)  
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
-* **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5 90.5|87.6 92.1|0000|10|ON|OFF|022254|`  
+* **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254`  
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`  
 
 # Development Statuses (RDS functions) (global and rds_ctl)
@@ -62,11 +62,11 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **ECC** (`-ecc`) **GLOBAL** - ✅ realized  
 **ECC** (`ECC`) **RDS_CTL** - ✅ realized 
 
-**LIC** (`-lic`) **GLOBAL** - ❌ not realized  
-**LIC** (`LIC`) **RDS_CTL** - ❌ not realized  
+**LIC** (`-lic`) **GLOBAL** - ✅ realized  
+**LIC** (`LIC`) **RDS_CTL** - ✅ realized  
 
-**PIN** (`-pin`) **GLOBAL** - ⚠️ not realized, due to ECC, random numbers (there will be a fix)   
-**PIN** (`PIN`) **RDS_CTL** - ❌ not realized   
+**PIN** (`-pin`) **GLOBAL** - ✅ realized   
+**PIN** (`PIN`) **RDS_CTL** - ✅ realized   
 
 **PTYN** (`-ptyn`) **GLOBAL** - ❌ not realized   
 **PTYN** (`PTYN`) **RDS_CTL** - ❌ not realized   
@@ -117,7 +117,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS] [-pin XX,XX,XX]
 ```
 All arguments are optional:  
 
@@ -137,11 +137,13 @@ All arguments are optional:
 * `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.  
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.  
 * `-ecc` specifies the country for the transmitter (Extended Country Code, ECC). Displayed through 2 characters, example: `-ecc E0`.  
+* `-lic` specifies the language speaking at the radio station (Language Identification Code, LIC). Displayed through 2 characters, example: `-lic 20`.  
 * `-pty` specifies the type of program for radio stations (Programme Type, PTY). Displayed through 1 or 2 characters, example: `-pty 10`.  
 * `-tp` specifies the availability of radio stations, transport communication (Traffic Programme identification, TP). Displayed through 1 characters, example: `-tp 1`.  
 * `-ta` specifies the start of the transport message (Traffic Announcement identification, TA). Displayed through 1 characters, example: `-ta 1`.  
 * `-ms` specifies the program or music for the radio station (Music Speech switch, M/S). Displayed through 1 characters, example: `-ms M`.  
-* `-di` specifies the flags of the supported radio stations (Decoder Identification, (Stereo, Artifical Head, Compressed, Dynamic PTY)). Displayed through 1 or 4 characters, example: `-di SACD`.  
+* `-di` specifies the flags of the supported radio stations (Decoder Identification, (Stereo, Artifical Head, Compressed, Dynamic PTY)). Displayed through 1 or 4 characters, example: `-di SACD`.
+* `-pin` specifies the identification of the program at the radio station (Programme Item Number. (Date: 01-31, Hours: 00-23, Minutes: 00-59)). Displayed through 5 or 8 characters, example: `-pin 1,12,22`.  
 
 ### Clock calibration (only if experiencing difficulties)
 
@@ -227,8 +229,10 @@ RT A text to be sent as radiotext
 TA OFF/ON
 TP OFF/ON
 ECC E0
+LIC 20
 DI S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS
 MS M/S
+PIN 1,12,20
 ```
 
 ### PS and RT modes (rds_ctl)
@@ -239,4 +243,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V3** - Support **MS**, **DI**. Management has appeared via `rds_ctl`: **MS, DI**  
+* **V4** - Support **LIC**, **PIN**. Management has appeared via `rds_ctl`: **LIC, PIN**  

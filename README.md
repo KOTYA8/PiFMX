@@ -21,7 +21,7 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 * **PIN** - Programme Item Number. (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date|hours|minutes): `XX|XX|XX`  
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **Long PS** - Long Programme Service Name (`32 characters`)  
-* **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS`  
+* **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example: `D392|WDR 2   |102.1 88.5 90.5|87.6 92.1|0000|10|ON|OFF|022254|`  
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`  
 
@@ -56,8 +56,8 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **AF(B)** (`-afb`) **GLOBAL** - ❌ not realized   
 **AF(B)** (`AFB`) **RDS_CTL** - ❌ not realized   
 
-**M/S** (`-ms`) **GLOBAL** - ❌ not realized   
-**M/S** (`MS`) **RDS_CTL** - ❌ not realized   
+**M/S** (`-ms`) **GLOBAL** - ✅ realized   
+**M/S** (`MS`) **RDS_CTL** - ✅ realized   
 
 **ECC** (`-ecc`) **GLOBAL** - ✅ realized  
 **ECC** (`ECC`) **RDS_CTL** - ✅ realized 
@@ -74,8 +74,8 @@ Original repository: [PiFmRds](github.com/ChristopheJacquet/PiFmRds)
 **Long PS** (`-lps`) **GLOBAL** - ❌ not realized   
 **Long PS** (`LPS`) **RDS_CTL** - ❌ not realized   
 
-**DI(A,C,D)** (`-di`) **GLOBAL** - ❌ not realized   
-**DI(A,C,D)** (`DI`) **RDS_CTL** - ❌ not realized  
+**DI(S,A,C,D)** (`-di`) **GLOBAL** - ✅ realized   
+**DI(S,A,C,D)** (`DI`) **RDS_CTL** - ✅ realized   
 
 **EON** (`-eon`) **GLOBAL** - ❌ not realized  
 **EON** (`EON`) **RDS_CTL** - ❌ not realized  
@@ -117,7 +117,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS]
 ```
 All arguments are optional:  
 
@@ -129,9 +129,11 @@ All arguments are optional:
 * `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.  
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.  
 * `-ecc` specifies the country for the transmitter (Extended Country Code, ECC). Displayed through 2 characters, example: `-ecc E0`.  
-* `-pty` specifies the type of program for radio stations (Programme Type, PTY). Displayed through 2 characters, example: `-pty 10`.  
+* `-pty` specifies the type of program for radio stations (Programme Type, PTY). Displayed through 1 or 2 characters, example: `-pty 10`.  
 * `-tp` specifies the availability of radio stations, transport communication (Traffic Programme identification, TP). Displayed through 1 characters, example: `-tp 1`.  
-* `-ta` specifies the start of the transport message (Traffic Announcement identification, TA) . Displayed through 1 characters, example: `-ta 1`.  
+* `-ta` specifies the start of the transport message (Traffic Announcement identification, TA). Displayed through 1 characters, example: `-ta 1`.  
+* `-ms` specifies the program or music for the radio station (Music Speech switch, M/S). Displayed through 1 characters, example: `-ms M`.  
+* `-di` specifies the flags of the supported radio stations (Decoder Identification, (Stereo, Artifical Head, Compressed, Dynamic PTY)). Displayed through 1 or 4 characters, example: `-di SACD`.  
 
 ### Clock calibration (only if experiencing difficulties)
 
@@ -217,6 +219,8 @@ RT A text to be sent as radiotext
 TA OFF/ON
 TP OFF/ON
 ECC E0
+DI S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS
+MS M/S
 ```
 
 ### PS and RT modes (rds_ctl)

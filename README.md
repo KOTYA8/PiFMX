@@ -210,11 +210,13 @@ You can use the named pipe to send “commands” to change PS, RT and TA. For i
 cat >rds_ctl
 ```
 ```
+PI 0000
+PTY 10
 PS MyText
 RT A text to be sent as radiotext
-TA ON
-PS OtherTxt
-TA OFF
+TA OFF/ON
+TP OFF/ON
+ECC E0
 ```
 
 ### PS and RT modes (rds_ctl)

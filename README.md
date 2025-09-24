@@ -24,14 +24,6 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file` 
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`
 
-# Functions GLOBAL
-* **MONO** - Conclusion in mono sound  
-* **FREQUENCY** - increase to **64 MHz**  
-* **RDS POWER** - RDS signal level  
-* **FM POWER** - Power issued by Raspberry Pi for FM  
-* **CHANGE GPIO** - Change of Pin output for the antenna  
-* **CONTROL OVER RDS GROUPS** - It will be possible to control the change of RDS groups  
-
 ### RDS2
 * **Long PS** - Long Programme Service Name (`32 characters`)
 * **Station LOGO** - Broadcaster's graphical logo
@@ -39,6 +31,14 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 ### RDS Applications
 * **TMC** - Traffic Message Channel. Example: `0/1`
 * **ODA** - Open Data Applications. (Cross referencing DAB within RDS, CD46: RDS-TMC: ALERT-C, 4BD7: RadioText Plus / RT+ for group 2A RT). Example: `I don’t know how many of them are`
+
+# Functions GLOBAL
+* **MONO** - Conclusion in mono sound  
+* **FREQUENCY** - increase to **64 MHz**  
+* **RDS POWER** - RDS signal level  
+* **FM POWER** - Power issued by Raspberry Pi for FM  
+* **CHANGE GPIO** - Change of Pin output for the antenna  
+* **CONTROL OVER RDS GROUPS** - It will be possible to control the change of RDS groups  
 
 # Development Statuses (RDS functions) (global and rds_ctl)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  

@@ -16,6 +16,7 @@ extern void set_rds_ms(int ms);
 extern void set_rds_di(uint8_t flags);
 extern void set_rds_lic(uint8_t lic_code);
 extern void set_rds_pin(uint8_t day, uint8_t hour, uint8_t minute);
+extern void set_rds_ptyn(char *ptyn);
 
 extern uint16_t get_rds_pi();
 extern uint8_t get_rds_pty();

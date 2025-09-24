@@ -19,6 +19,7 @@ struct {
     uint8_t di_flags;
     char ps[PS_LENGTH];
     char rt[RT_LENGTH];
+    char ptyn[PS_LENGTH];
     uint8_t pty;
     uint8_t ecc;
     int ecc_enabled;
@@ -28,12 +29,16 @@ struct {
     uint8_t pin_hour;
     uint8_t pin_minute;
     int pin_enabled;
+    int ptyn_enabled;
+    int ptyn_second_segment_exists;
 } rds_params = {
     .pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
-    .ps = {0}, .rt = {0}, .pty = 0,
+    .ps = {0}, .rt = {0}, .ptyn = {0}, .pty = 0,
     .ecc = 0, .ecc_enabled = 0,
     .lic = 0, .lic_enabled = 0,
-    .pin_day = 0, .pin_hour = 0, .pin_minute = 0, .pin_enabled = 0
+    .pin_day = 0, .pin_hour = 0, .pin_minute = 0, .pin_enabled = 0,
+    .ptyn_enabled = 0,
+    .ptyn_second_segment_exists = 0
 };
 
 /* The RDS error-detection code generator polynomial is
@@ -113,10 +118,7 @@ void get_rds_group(int *buffer) {
             // Собираем список активных функций для циклической отправки
             if (rds_params.ecc_enabled) enabled_1a_types[num_enabled++] = 'E';
             if (rds_params.lic_enabled) enabled_1a_types[num_enabled++] = 'L';
-            // PIN сам по себе не требует циклической отправки, но его данные используются всегда.
-            // Добавляем 'P' в цикл только если нет других активных функций 1A.
             if (rds_params.pin_enabled && num_enabled == 0) enabled_1a_types[num_enabled++] = 'P';
-
 
             if (num_enabled > 0) {
                 group_1a_cycle_idx %= num_enabled;
@@ -125,23 +127,16 @@ void get_rds_group(int *buffer) {
                 uint16_t block1_base = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
                 blocks[1] = 0x1000 | block1_base; // Базовый Блок B для группы 1A
 
-                // ИСПРАВЛЕНИЕ: Блок D ВСЕГДА содержит данные PIN для любой группы 1A.
                 if (rds_params.pin_enabled) {
                     blocks[3] = (rds_params.pin_day << 11) | (rds_params.pin_hour << 6) | rds_params.pin_minute;
                 } else {
-                    blocks[3] = 0x0000; // Если PIN не активен, отправляем невалидный PIN.
+                    blocks[3] = 0x0000;
                 }
 
                 switch (type_to_send) {
-                    case 'E': // Extended Country Code
-                        blocks[2] = (0b0000 << 12) | rds_params.ecc;
-                        break;
-                    case 'L': // Language Identification Code
-                        blocks[2] = (0b0011 << 12) | rds_params.lic;
-                        break;
-                    case 'P': // Programme Item Number (когда только он активен)
-                        blocks[2] = rds_params.pi;
-                        break;
+                    case 'E': blocks[2] = (0b0000 << 12) | rds_params.ecc; break;
+                    case 'L': blocks[2] = (0b0011 << 12) | rds_params.lic; break;
+                    case 'P': blocks[2] = rds_params.pi; break;
                 }
                 
                 group_1A_sent = 1;
@@ -151,12 +146,21 @@ void get_rds_group(int *buffer) {
 
         if (!group_1A_sent) {
             uint16_t block1_base_other = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
-            if (state == 4) { // Группа 2A (RadioText)
+
+            if (state == 4) { // Состояние 4 -> Группа 2A (RadioText)
                 blocks[1] = 0x2000 | block1_base_other | (rds_params.ta ? 0x10 : 0) | rt_state;
                 blocks[2] = rds_params.rt[rt_state*4+0]<<8 | rds_params.rt[rt_state*4+1];
                 blocks[3] = rds_params.rt[rt_state*4+2]<<8 | rds_params.rt[rt_state*4+3];
                 rt_state = (rt_state + 1) % 16;
-            } else { // Группа 0A (PS Name)
+            } else if (rds_params.ptyn_enabled && state == 1) { // Состояние 1 -> PTYN Сегмент 0
+                blocks[1] = 0xA000 | block1_base_other | 0; // Сегмент 0, бит 0 = 0
+                blocks[2] = rds_params.ptyn[0*4+0]<<8 | rds_params.ptyn[0*4+1];
+                blocks[3] = rds_params.ptyn[0*4+2]<<8 | rds_params.ptyn[0*4+3];
+            } else if (rds_params.ptyn_enabled && rds_params.ptyn_second_segment_exists && state == 2) { // Состояние 2 -> PTYN Сегмент 1
+                blocks[1] = 0xA000 | block1_base_other | 1; // Сегмент 1, бит 0 = 1
+                blocks[2] = rds_params.ptyn[1*4+0]<<8 | rds_params.ptyn[1*4+1];
+                blocks[3] = rds_params.ptyn[1*4+2]<<8 | rds_params.ptyn[1*4+3];
+            } else { // Все остальные состояния -> Группа 0A (PS)
                 uint8_t di_bit = 0;
                 switch (ps_state) {
                     case 0: if (rds_params.di_flags & 8) di_bit = 1; break;
@@ -286,6 +290,20 @@ void set_rds_pin(uint8_t day, uint8_t hour, uint8_t minute) {
 
 void set_rds_di(uint8_t flags) {
     rds_params.di_flags = flags;
+}
+
+void set_rds_ptyn(char *ptyn) {
+    fill_rds_string(rds_params.ptyn, ptyn, 8);
+    rds_params.ptyn_enabled = 1;
+
+    // Проверяем, есть ли во втором сегменте (символы 4-7) что-то кроме пробелов
+    rds_params.ptyn_second_segment_exists = 0;
+    for (int i = 4; i < 8; i++) {
+        if (rds_params.ptyn[i] != ' ') {
+            rds_params.ptyn_second_segment_exists = 1;
+            break;
+        }
+    }
 }
 
 uint16_t get_rds_pi() {

@@ -170,6 +170,15 @@ int poll_control_pipe() {
         return CONTROL_PIPE_PIN_SET;
     }
 
+    if (strncmp(res, "PTYN ", 5) == 0) {
+        char *arg = res + 5;
+        arg[8] = 0; // PTYN текст не длиннее 8 символов
+        set_rds_ptyn(arg);
+        printf("PTYN set to: \"%s\"\n", arg);
+        fflush(stdout);
+        return CONTROL_PIPE_PTYN_SET;
+    }
+
     // Если ни одна команда не подошла
     printf("ERROR: Unknown command '%s'\n", res);
     fflush(stdout);

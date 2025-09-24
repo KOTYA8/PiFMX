@@ -228,7 +228,7 @@ map_peripheral(uint32_t base, uint32_t len)
 #define DATA_SIZE 5000
 
 
-int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute) {
+int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute) {
     // Catch all signals possible - it is vital we kill the DMA engine
     // on process exit!
     for (int i = 0; i < 64; i++) {
@@ -374,6 +374,7 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
     set_rds_ta(ta);
     set_rds_ms(ms);
     set_rds_di(di_flags);
+    if (ptyn) set_rds_ptyn(ptyn);
     if (lic >= 0) set_rds_lic((uint8_t)lic);
     if (pin_day >= 0) set_rds_pin(pin_day, pin_hour, pin_minute);
     uint16_t count = 0;
@@ -470,6 +471,7 @@ int main(int argc, char **argv) {
     uint32_t carrier_freq = 107900000;
     char *ps = NULL;
     char *rt = "PiFmX: FM transmitter and full RDS functions";
+    char *ptyn = NULL;
     uint16_t pi = 0x1234;
     uint8_t pty = 0;
     int tp_flag = 0;
@@ -550,13 +552,15 @@ int main(int argc, char **argv) {
         } else if(strcmp("-pin", arg)==0 && param != NULL) {
             i++;
             if (sscanf(param, "%d,%d,%d", &pin_day, &pin_hour, &pin_minute) != 3) {
-                 fatal("Invalid PIN format. Use DD,HH,MM.\n");
-            }
-        }
+                 fatal("Invalid PIN format. Use DD,HH,MM.\n"); }
+        } else if(strcmp("-ptyn", arg)==0 && param != NULL) {
+            i++;
+            ptyn = param;
+        } 
     else {
         fatal("Unrecognised argument: %s.\n"
         "Syntax: pi_fm_rds [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
-        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1] [-ms M|S] [-di SACD] [-lic code] [-pin DD,HH,MM]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
+        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1] [-ms M|S] [-di SACD] [-lic code] [-pin DD,HH,MM] [-ptyn ptyn_text]\n", arg);
     }
 }
 
@@ -580,8 +584,9 @@ printf("TA set to: %s\n", ta_flag ? "ON" : "OFF");
 printf("M/S set to: %s\n", ms_flag ? "Music" : "Speech");
 printf("DI set to: S(%d) A(%d) C(%d) D(%d)\n", (di_flags & 1) > 0, (di_flags & 2) > 0, (di_flags & 4) > 0, (di_flags & 8) > 0);
 if(pin_day != -1) printf("PIN set to: Day %d, %02d:%02d\n", pin_day, pin_hour, pin_minute);
+if(ptyn) printf("PTYN set to: \"%s\"\n", ptyn);
 
-int errcode = tx(carrier_freq, audio_file, pi, ps, rt, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute);
+int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute);
 
 terminate(errcode);
 }

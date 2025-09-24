@@ -25,12 +25,12 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`
 
 # Functions GLOBAL
-**MONO** - Conclusion in mono sound  
-**FREQUENCY** - increase to **64 MHz**  
-**RDS POWER** - RDS signal level  
-**FM POWER** - Power issued by Raspberry Pi for FM  
-**CHANGE GPIO** - Change of Pin output for the antenna  
-**CONTROL OVER RDS GROUPS** - It will be possible to control the change of RDS groups  
+* **MONO** - Conclusion in mono sound  
+* **FREQUENCY** - increase to **64 MHz**  
+* **RDS POWER** - RDS signal level  
+* **FM POWER** - Power issued by Raspberry Pi for FM  
+* **CHANGE GPIO** - Change of Pin output for the antenna  
+* **CONTROL OVER RDS GROUPS** - It will be possible to control the change of RDS groups  
 
 ### RDS2
 * **Long PS** - Long Programme Service Name (`32 characters`)

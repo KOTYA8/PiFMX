@@ -22,7 +22,15 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **PTYN** - Programme Type Name. (8 characters: `XXXXXXXX`)  
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
 * **EON** - Enhanced Other Networks Information. (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file` 
-* **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`  
+* **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`
+
+# Functions GLOBAL
+**MONO** - Conclusion in mono sound  
+**FREQUENCY** - increase to **64 MHz**  
+**RDS POWER** - RDS signal level  
+**FM POWER** - Power issued by Raspberry Pi for FM  
+**CHANGE GPIO** - Change of Pin output for the antenna  
+**CONTROL OVER RDS GROUPS** - It will be possible to control the change of RDS groups  
 
 ### RDS2
 * **Long PS** - Long Programme Service Name (`32 characters`)
@@ -102,11 +110,12 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **ODA** (`-oda`) **GLOBAL** - ❌ not realized  
 
 # Development Statuses (Global functions)
-**MONO** (`-mn`) - Conclusion in mono sound - ❌ not realized  
-**FREQUENCY** (`-freq`) - increase to **64 MHz** - ❌ not realized  
-**RDS POWER** (`-rdsp`) - RDS signal level - ❌ not realized  
-**FM POWER** (`-fmp`) - Power issued by Raspberry Pi for FM - ❌ not realized  
-**CHANGE GPIO** (`-gpio`) - Change of Pin output for the antenna - ❌ not realized  
+**MONO** (`-mn`) - ❌ not realized  
+**FREQUENCY** (`-freq`) - ❌ not realized  
+**RDS POWER** (`-rdsp`) - ❌ not realized  
+**FM POWER** (`-fmp`) - ❌ not realized  
+**CHANGE GPIO** (`-gpio`) - ❌ not realized  
+**CONTROL OVER RDS GROUPS** - ❌ not realized 
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

@@ -29,7 +29,6 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **Station LOGO** - Broadcaster's graphical logo
 
 ### RDS Applications
-* **TMC** - Traffic Message Channel. Example: `0/1`
 * **ODA** - Open Data Applications. (Cross referencing DAB within RDS, CD46: RDS-TMC: ALERT-C, 4BD7: RadioText Plus / RT+ for group 2A RT). Example: `I don’t know how many of them are`
 
 # Functions GLOBAL
@@ -104,10 +103,8 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 
 ### RDS Applications
 
-**TMC** (`-tmc`) **GLOBAL** - ❌ not realized  
-**TMC** (`TMC`) **RDS_CTL** - ❌ not realized 
-
-**ODA** (`-oda`) **GLOBAL** - ❌ not realized  
+**ODA** (`-oda`) **GLOBAL** - ❌ not realized 
+**ODA** (`ODA`) **RDS_CTL** - ❌ not realized 
 
 # Development Statuses (Global functions)
 **SOUND MODE** (`-sm`) - ❌ not realized  

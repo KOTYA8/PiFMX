@@ -38,7 +38,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **RDS POWER** - RDS signal level  
 * **FM POWER** - Power issued by Raspberry Pi for FM  
 * **CHANGE GPIO** - Change of Pin output for the antenna  
-* **CONTROL OVER RDS GROUPS** - It will be possible to control the change of RDS groups  
+* **CONTROL OVER RDS GROUPS** - It will be possible to control the speed of changing RDS groups
 
 # Development Statuses (RDS functions) (global and rds_ctl)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  

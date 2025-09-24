@@ -33,7 +33,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **ODA** - Open Data Applications. (Cross referencing DAB within RDS, CD46: RDS-TMC: ALERT-C, 4BD7: RadioText Plus / RT+ for group 2A RT). Example: `I don’t know how many of them are`
 
 # Functions GLOBAL
-* **MONO** - Conclusion in mono sound  
+* **SOUND MODE** - FM output to **Stereo** or **Mono**
 * **FREQUENCY** - increase to **64 MHz**  
 * **RDS POWER** - RDS signal level  
 * **FM POWER** - Power issued by Raspberry Pi for FM  
@@ -110,7 +110,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **ODA** (`-oda`) **GLOBAL** - ❌ not realized  
 
 # Development Statuses (Global functions)
-**MONO** (`-mn`) - ❌ not realized  
+**SOUND MODE** (`-sm`) - ❌ not realized  
 **FREQUENCY** (`-freq`) - ❌ not realized  
 **RDS POWER** (`-rdsp`) - ❌ not realized  
 **FM POWER** (`-fmp`) - ❌ not realized  

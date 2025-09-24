@@ -99,8 +99,8 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **Long PS** (`-lps`) **GLOBAL** - ❌ not realized   
 **Long PS** (`LPS`) **RDS_CTL** - ❌ not realized 
 
-**Station LOGO** (`-stl`) - ❌ not realized  
-**Station LOGO** (`STL`) - ❌ not realized  
+**Station LOGO** (`-stl`) **GLOBAL** - ❌ not realized  
+**Station LOGO** (`STL`) **RDS_CTL** - ❌ not realized  
 
 ### RDS Applications
 

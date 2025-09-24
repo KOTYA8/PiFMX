@@ -569,7 +569,7 @@ int main(int argc, char **argv) {
         }
     else {
         fatal("Unrecognised argument: %s.\n"
-        "Syntax: pi_fm_rds [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
+        "Syntax: pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
         "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1] [-ms M|S] [-di SACD] [-lic code] [-pin DD,HH,MM] [-ptyn ptyn_text] [-rts A|B|AB]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
     }
 }

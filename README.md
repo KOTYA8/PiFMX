@@ -103,8 +103,8 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 
 ### RDS Applications
 
-**ODA** (`-oda`) **GLOBAL** - ❌ not realized 
-**ODA** (`ODA`) **RDS_CTL** - ❌ not realized 
+**ODA** (`-oda`) **GLOBAL** - ❌ not realized  
+**ODA** (`ODA`) **RDS_CTL** - ❌ not realized  
 
 # Development Statuses (Global functions)
 **SOUND MODE** (`-sm`) - ❌ not realized  

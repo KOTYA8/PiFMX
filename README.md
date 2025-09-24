@@ -75,8 +75,8 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **PIN** (`-pin`) **GLOBAL** - ✅ realized   
 **PIN** (`PIN`) **RDS_CTL** - ✅ realized   
 
-**PTYN** (`-ptyn`) **GLOBAL** - ❌ not realized   
-**PTYN** (`PTYN`) **RDS_CTL** - ❌ not realized     
+**PTYN** (`-ptyn`) **GLOBAL** - ✅ realized   
+**PTYN** (`PTYN`) **RDS_CTL** - ✅ realized    
 
 **DI(S,A,C,D)** (`-di`) **GLOBAL** - ✅ realized   
 **DI(S,A,C,D)** (`DI`) **RDS_CTL** - ✅ realized   
@@ -135,7 +135,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS] [-pin XX,XX,XX]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS] [-pin XX,XX,XX] [-ptyn code]
 ```
 All arguments are optional:  
 
@@ -150,6 +150,8 @@ All arguments are optional:
 * `-ctl` specifies a named pipe (FIFO) to use as a control channel to change PS and RT at run-time (see below).
   
 **RDS:**  
+
+* `' ' or " "` can be used for additional characters (gap or prohibited symbols in the console). Example: `'hello'` -> `hello` or `" hello"` -> ` hello`  
   
 * `-pi` specifies the PI-code of the RDS broadcast. 4 hexadecimal digits. Example: `-pi FFFF`.  
 * `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.  
@@ -161,7 +163,8 @@ All arguments are optional:
 * `-ta` specifies the start of the transport message (Traffic Announcement identification, TA). Displayed through 1 characters, example: `-ta 1`.  
 * `-ms` specifies the program or music for the radio station (Music Speech switch, M/S). Displayed through 1 characters, example: `-ms M`.  
 * `-di` specifies the flags of the supported radio stations (Decoder Identification, (Stereo, Artifical Head, Compressed, Dynamic PTY)). Displayed through 1 or 4 characters, example: `-di SACD`.
-* `-pin` specifies the identification of the program at the radio station (Programme Item Number. (Date: 01-31, Hours: 00-23, Minutes: 00-59)). Displayed through 5 or 8 characters, example: `-pin 1,12,22`.  
+* `-pin` specifies the identification of the program at the radio station (Programme Item Number) (Date: 01-31, Hours: 00-23, Minutes: 00-59). Displayed through 5 or 8 characters, example: `-pin 1,12,22`.
+* `-ptyn` specifies the indicates an additional description at the radio station (Programme Type Name). Displayed through 1 or 8 characters, example: `-ptyn XXXXXXXX`.
 
 ### Clock calibration (only if experiencing difficulties)
 
@@ -251,6 +254,7 @@ LIC 20
 DI 0/S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS
 MS M/S
 PIN 1,12,20
+PTYN 12345678
 ```
 
 ### PS and RT modes (rds_ctl)
@@ -261,4 +265,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V4** - Support **LIC**, **PIN**. Management has appeared via `rds_ctl`: **LIC, PIN**  
+* **V5** - Support **PTYN**. Management has appeared via `rds_ctl`: **PTYN**  

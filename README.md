@@ -9,7 +9,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **PTY** - Programme Type (`00 - 31`)
 * **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
 * **RT** - Radio Text (`64 characters`)  
-* **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`  
+* **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`  
 * **RT(Mode)** - Radio Text (32 or 64 symbols). Modes: 32 or 64. Example: `32/64`  
 * **RT(End)** - Radio Text (OA or 0D). Modes: 0A or 0D. Example: `0A/0D`  
 * **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  

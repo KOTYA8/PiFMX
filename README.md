@@ -55,8 +55,8 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **RT** (`-rt`) **GLOBAL** - ✅ realized  
 **RT** (`RT`) **RDS_CTL** - ✅ realized  
 
-**RT(A/B)** (`-rts`) **GLOBAL** - ✅ realized  
-**RT(A/B)** (`RTS`) **RDS_CTL** - ✅ realized  
+**RT(Switch)** (`-rts`) **GLOBAL** - ✅ realized  
+**RT(Switch)** (`RTS`) **RDS_CTL** - ✅ realized  
   
 **RT(Mode)** (`-rtm`) **GLOBAL** - ❌ not realized     
 **RT(Mode)** (`RTM`) **RDS_CTL** - ❌ not realized   

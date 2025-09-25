@@ -5,23 +5,23 @@ PIFMX - works on the latest **Raspberry Pi OS** system and on the board **Raspbe
 Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)  
 
 # Functions RDS
-* **PI** - Programme Identification (4 characters: `XXXX`)  
-* **PTY** - Programme Type (`00 - 31`)
-* **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
-* **RT** - Radio Text (`64 characters`)  
+* **PI** - Programme Identification. Example (4 characters): `XXXX`  
+* **PTY** - Programme Type. Example: `00 - 31`
+* **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX`  
+* **RT** - Radio Text. Example: `64 characters` 
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`  
 * **RT(Mode)** - Radio Text (32 or 64 symbols). Modes: 32 or 64. Example: `32/64`  
 * **RT(End)** - Radio Text (Padding/0A/0D). Modes: P/0A/0D. Example: `P/0A/0D`  
 * **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
-* **TP** - Traffic Programme identification (`0/1`)   
-* **TA** - Traffic Announcement identification (`0/1`) 
+* **TP** - Traffic Programme identification. Example: `0/1`   
+* **TA** - Traffic Announcement identification. Example: `0/1`
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1`  
 * **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional)⚠️: `87.6,90.1 95.5,90.5 90.6` or `file`  
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
-* **ECC** - Extended Country Code (2 characters: `XX`)  
-* **LIC** - Language Identification Code (2 characters: `XX`)  
+* **ECC** - Extended Country Code. Example (2 characters): `XX`    
+* **LIC** - Language Identification Code. Example (2 characters): `XX`  
 * **PIN** - Programme Item Number (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
-* **PTYN** - Programme Type Name (8 characters: `XXXXXXXX`)  
+* **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
 * **EON** - Enhanced Other Networks Information (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file` 
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`

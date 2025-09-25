@@ -8,9 +8,11 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **PI** - Programme Identification (4 characters: `XXXX`)  
 * **PTY** - Programme Type (`00 - 31`)
 * **PS** - Programme Service Name (8 characters: `XXXXXXXX`)  
-* **RT** - Radio Text (`64 characters`)
+* **RT** - Radio Text (`64 characters`)  
 * **RT(A/B)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`  
-* **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`
+* **RT(Mode)** - Radio Text (32 or 64 symbols). Modes: 32 or 64. Example: `32/64`  
+* **RT(End)** - Radio Text (OA or 0D). Modes: 0A or 0D. Example: `0A/0D`  
+* **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification (`0/1`)   
 * **TA** - Traffic Announcement identification (`0/1`) 
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1`  
@@ -25,8 +27,9 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`
 
 ### RDS2
-* **Long PS** - Long Programme Service Name (`32 characters`)  
-* **Station LOGO** - Broadcaster's graphical logo (`file.jpg, png, or gif`)  
+* **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 
+* **Station LOGO** - Broadcaster's graphical logo Example: `file.jpg, png, or gif`
+* **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set
 
 ### RDS Applications
 * **ODA** - Open Data Applications (Cross referencing DAB within RDS, CD46: RDS-TMC: ALERT-C, 4BD7: RadioText Plus / RT+ for group 2A RT). Example: `I don’t know how many of them are`
@@ -53,10 +56,16 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **RT** (`RT`) **RDS_CTL** - ✅ realized  
 
 **RT(A/B)** (`-rts`) **GLOBAL** - ✅ realized  
-**RT(A/B)** (`RTS`) **RDS_CTL** - ✅ realized
-
-**RT+** (`-rtp`) **GLOBAL** - ✅ realized  
-**RT+** (`RTP`) **RDS_CTL** - ✅ realized  
+**RT(A/B)** (`RTS`) **RDS_CTL** - ✅ realized  
+  
+**RT(Mode)** (`-rtm`) **GLOBAL** - ✅ realized    
+**RT(Mode)** (`RTM`) **RDS_CTL** - ✅ realized  
+  
+**RT(End)** (`-rte`) **GLOBAL** - ✅ realized    
+**RT(End)** (`RTE`) **RDS_CTL** - ✅ realized  
+    
+**RT+** (`-rtp`) **GLOBAL** - ✅ realized    
+**RT+** (`RTP`) **RDS_CTL** - ✅ realized   
 
 **TP** (`-tp`) **GLOBAL** - ✅ realized  
 **TP** (`TP`) **RDS_CTL** - ✅ realized  
@@ -101,6 +110,9 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 
 **Station LOGO** (`-stl`) **GLOBAL** - ❌ not realized  
 **Station LOGO** (`STL`) **RDS_CTL** - ❌ not realized  
+
+**eRT** (`-ert`) **GLOBAL** - ❌ not realized  
+**eRT** (`ERT`) **RDS_CTL** - ❌ not realized  
 
 ### RDS Applications
 

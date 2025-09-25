@@ -33,7 +33,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set. Example: `64 characters`
 
 ### RDS Applications
-* **ODA** - Open Data Applications Code. Example (4 characters): `0001`
+* **ODA** - Open Data Applications Code. Example: `0001,0002`
 
 #### ODA List
 * 0000 - `Test application` - Used for testing and debugging RDS systems.  

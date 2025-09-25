@@ -23,8 +23,9 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **PIN** - Programme Item Number (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
-* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file` 
-* **CT** - Clock Time. Changing the time zone. Example: `-1, +3, +9:30`
+* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file`
+* **CT** - Clock Time. Example: `19:52,25.09.2025`
+* **CTZ** - Clock Time Zone. Example: `-1, +3, +9:30`
 
 ### RDS2
 * **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 
@@ -32,7 +33,8 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set. Example: `64 characters`
 
 ### RDS Applications
-* **ODA** - Open Data Applications (Cross referencing DAB within RDS, CD46: RDS-TMC: ALERT-C, 4BD7: RadioText Plus / RT+ for group 2A RT). Example: `I don’t know how many of them are`
+* **ODA** - Open Data Applications
+* **ODAC** - Open Data Applications Code. Example (4 characters): `0C2D`
 
 # Functions GLOBAL
 * **SOUND MODE** - FM output to **Stereo** or **Mono**
@@ -101,7 +103,10 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **EON** (`EON`) **RDS_CTL** - ❌ not realized  
 
 **CT** (`-ct`) **GLOBAL** - ❌ not realized    
-**CT** (`CT`) **RDS_CTL** - ❌ not realized 
+**CT** (`CT`) **RDS_CTL** - ❌ not realized  
+  
+**CTZ** (`-ctz`) **GLOBAL** - ❌ not realized    
+**CTZ** (`CTZ`) **RDS_CTL** - ❌ not realized  
 
 ### RDS2
 
@@ -118,6 +123,9 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 
 **ODA** (`-oda`) **GLOBAL** - ❌ not realized  
 **ODA** (`ODA`) **RDS_CTL** - ❌ not realized  
+
+**ODAC** (`-odac`) **GLOBAL** - ❌ not realized  
+**ODAC** (`ODAC`) **RDS_CTL** - ❌ not realized  
 
 # Development Statuses (Global functions)
 **SOUND MODE** (`-sm`) - ❌ not realized  

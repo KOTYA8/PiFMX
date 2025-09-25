@@ -1,6 +1,6 @@
 # PiFMX
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀PiFMX - this is FM transmitter for **Raspberry Pi**.  
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀PiFMX - will support (hope) **full RDS functions**.   
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ PiFMX - this is FM transmitter for **Raspberry Pi**.  
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ PiFMX - will support (hope) **full RDS functions**.   
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀PIFMX - works on the latest **Raspberry Pi OS** system and on the board **Raspberry Pi 4B**.  
 
 # Functions RDS

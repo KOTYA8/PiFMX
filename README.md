@@ -58,11 +58,11 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **RT(A/B)** (`-rts`) **GLOBAL** - ✅ realized  
 **RT(A/B)** (`RTS`) **RDS_CTL** - ✅ realized  
   
-**RT(Mode)** (`-rtm`) **GLOBAL** - ✅ realized    
-**RT(Mode)** (`RTM`) **RDS_CTL** - ✅ realized  
+**RT(Mode)** (`-rtm`) **GLOBAL** - ❌ not realized     
+**RT(Mode)** (`RTM`) **RDS_CTL** - ❌ not realized   
   
-**RT(End)** (`-rte`) **GLOBAL** - ✅ realized    
-**RT(End)** (`RTE`) **RDS_CTL** - ✅ realized  
+**RT(End)** (`-rte`) **GLOBAL** - ❌ not realized     
+**RT(End)** (`RTE`) **RDS_CTL** - ❌ not realized  
     
 **RT+** (`-rtp`) **GLOBAL** - ✅ realized    
 **RT+** (`RTP`) **RDS_CTL** - ✅ realized   

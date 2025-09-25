@@ -42,7 +42,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 0C2D, 0D45, 0E2D - `Encrypted TMC (TMC Forum)` - Transmission of encrypted traffic situation messages (TMC).  
 1B58 - `RT-TNG (RadioText - The Next Generation)` is a next-generation protocol for radiotext developed in Germany.   
 1D47 - `EPG for DAB` is an Electronic Program Guide (EPG) transmission for DAB digital radio.   
-4BD7 - `RadioText Plus (RT+)` is very common. An extension of the radio text that allows you to structure data (artist, track name).   
+! 4BD7 - `RadioText Plus (RT+)` is very common. An extension of the radio text that allows you to structure data (artist, track name).   
 5757 - `LPIFD - Leisure & Practical Info for Drivers` - Information for drivers: parking, fuel prices, travel data.   
 6553 - `Utility ProTeleMatic (UPT)` is an application for telematics and utility services.   
 7373, C9A1 - `Encrypted data` is a common identifier for transmitting encrypted data.  
@@ -52,7 +52,7 @@ C4EA - `eEAS (enhanced Emergency Alert System)` is an advanced emergency alert s
 C546 - `TMC-ALERT-C` is very common. An open (unencrypted) traffic message channel.   
 C5C5 - `DGPS corrections (via RTK)` - Transmission of corrections for high-precision GPS (RTK) systems.   
 C737 - `TMC-ALERT-C (TMC Forum)` is the official AID from the TMC Forum for standard TMC.    
-CD46 - `RDS-TMC: ALERT-C` is very common. One of the most commonly used TMC AIDS in Europe.   
+! CD46 - `RDS-TMC: ALERT-C` is very common. One of the most commonly used TMC AIDS in Europe.   
 CD47 - `RDS-TMC: ALERT-C with encryption` is a traffic message channel with an additional layer of encryption.   
 E1C1 - `Data for Automotive (TISA)` - Data for automotive systems from the Travel Information Association (TISA).   
 F123 - `Broadcaster specific data` - Reserved for transmitting specific data to a specific radio station.   

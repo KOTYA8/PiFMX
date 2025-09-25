@@ -29,7 +29,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 ### RDS2
 * **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 
 * **Station LOGO** - Broadcaster's graphical logo. Example: `file.jpg, png, or gif`
-* **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set
+* **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set. Example: `64 characters`
 
 ### RDS Applications
 * **ODA** - Open Data Applications (Cross referencing DAB within RDS, CD46: RDS-TMC: ALERT-C, 4BD7: RadioText Plus / RT+ for group 2A RT). Example: `I don’t know how many of them are`

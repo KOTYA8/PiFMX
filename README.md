@@ -11,7 +11,7 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **RT** - Radio Text (`64 characters`)  
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`  
 * **RT(Mode)** - Radio Text (32 or 64 symbols). Modes: 32 or 64. Example: `32/64`  
-* **RT(End)** - Radio Text (OA or 0D). Modes: 0A or 0D. Example: `0A/0D`  
+* **RT(End)** - Radio Text (0A or 0D). Modes: 0A or 0D. Example: `0A/0D`  
 * **RT+** - Radio Text+ (Tags: `00 - 63`) (Symbols: `00 - 64`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification (`0/1`)   
 * **TA** - Traffic Announcement identification (`0/1`) 

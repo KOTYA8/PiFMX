@@ -11,6 +11,13 @@
 #define PS_LENGTH 8
 #define GROUP_LENGTH 4
 
+typedef struct {
+    uint8_t content_type;
+    uint8_t start_marker;
+    uint8_t length_marker;
+    int enabled;
+} rds_rtp_tag;
+
 struct {
     uint16_t pi;
     int ta;
@@ -33,6 +40,10 @@ struct {
     int ptyn_second_segment_exists;
     int rt_channel_mode;
     int rt_ab_flag;
+    rds_rtp_tag tags[2];
+    int rtp_enabled;
+    uint8_t rtp_item_toggle_bit;
+    uint8_t rtp_item_running_bit;
 } rds_params = {
     .pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
     .ps = {0}, .rt = {0}, .ptyn = {0}, .pty = 0,
@@ -42,7 +53,11 @@ struct {
     .ptyn_enabled = 0,
     .ptyn_second_segment_exists = 0,
     .rt_channel_mode = 0,
-    .rt_ab_flag = 0
+    .rt_ab_flag = 0,
+    .tags = {{0,0,0,0}, {0,0,0,0}},
+    .rtp_enabled = 0,
+    .rtp_item_toggle_bit = 0,
+    .rtp_item_running_bit = 0
 };
 
 /* The RDS error-detection code generator polynomial is
@@ -103,7 +118,6 @@ int get_rds_ct_group(uint16_t *blocks) {
     } else return 0;
 }
 
-
 void get_rds_group(int *buffer) {
     static int state = 0;
     static int ps_state = 0;
@@ -114,82 +128,111 @@ void get_rds_group(int *buffer) {
     if (get_rds_ct_group(blocks)) {
         // Группа CT (время) имеет приоритет и была отправлена.
     } else {
-        int group_1A_sent = 0;
-        // Слот state == 3 зарезервирован для отправки групп типа 1A
-        if (state == 3) {
-            char enabled_1a_types[4];
-            int num_enabled = 0;
-            // Собираем список активных функций для циклической отправки
-            if (rds_params.ecc_enabled) enabled_1a_types[num_enabled++] = 'E';
-            if (rds_params.lic_enabled) enabled_1a_types[num_enabled++] = 'L';
-            if (rds_params.pin_enabled && num_enabled == 0) enabled_1a_types[num_enabled++] = 'P';
+        uint16_t block1_base_other = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
+        int group_sent = 0;
 
-            if (num_enabled > 0) {
-                group_1a_cycle_idx %= num_enabled;
-                char type_to_send = enabled_1a_types[group_1a_cycle_idx];
-                
-                uint16_t block1_base = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
-                blocks[1] = 0x1000 | block1_base; // Базовый Блок B для группы 1A
+        // Логика генерации групп RT+
+        if (rds_params.rtp_enabled && (rds_params.tags[0].enabled || rds_params.tags[1].enabled)) {
+            // Сначала формируем полную 37-битную полезную нагрузку для RT+
+            uint64_t payload = 0;
+            rds_rtp_tag tag1 = rds_params.tags[0];
+            rds_rtp_tag tag2 = rds_params.tags[1];
 
-                if (rds_params.pin_enabled) {
-                    blocks[3] = (rds_params.pin_day << 11) | (rds_params.pin_hour << 6) | rds_params.pin_minute;
-                } else {
-                    blocks[3] = 0x0000;
-                }
+            payload |= (uint64_t)(rds_params.rtp_item_toggle_bit & 1) << 36;
+            payload |= (uint64_t)(rds_params.rtp_item_running_bit & 1) << 35;
+            if (tag1.enabled) {
+                payload |= (uint64_t)(tag1.content_type & 0x3F) << 29;
+                payload |= (uint64_t)(tag1.start_marker & 0x3F) << 23;
+                payload |= (uint64_t)(tag1.length_marker & 0x3F) << 17;
+            }
+            if (tag2.enabled) {
+                payload |= (uint64_t)(tag2.content_type & 0x3F) << 11;
+                payload |= (uint64_t)(tag2.start_marker & 0x3F) << 5;
+                payload |= (uint64_t)(tag2.length_marker & 0x1F);
+            }
 
-                switch (type_to_send) {
-                    case 'E': blocks[2] = (0b0000 << 12) | rds_params.ecc; break;
-                    case 'L': blocks[2] = (0b0011 << 12) | rds_params.lic; break;
-                    case 'P': blocks[2] = rds_params.pi; break;
-                }
-                
-                group_1A_sent = 1;
-                group_1a_cycle_idx++;
+            // Извлекаем первые 5 бит нагрузки - это будет наш "код приложения"
+            uint8_t app_code = (payload >> 32) & 0x1F;
+
+            if (state == 6) { // Состояние 6 -> Группа 3A (Анонс ODA для RT+)
+                blocks[1] = 0x3000 | block1_base_other | app_code;
+                blocks[2] = 0x0000; // По данным Stereo Tool, этот блок должен быть нулевым
+                blocks[3] = 0x4BD7; // AID для RT+
+                group_sent = 1;
+            } else if (state == 7) { // Состояние 7 -> Группа 12A (Передача тегов RT+)
+                blocks[1] = 0xC000 | block1_base_other | app_code;
+                blocks[2] = (payload >> 16) & 0xFFFF;
+                blocks[3] = payload & 0xFFFF;
+                group_sent = 1;
             }
         }
 
-        if (!group_1A_sent) {
-            uint16_t block1_base_other = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
+        if (!group_sent) {
+            int group_1A_sent = 0;
+            // Слот state == 3 зарезервирован для отправки групп типа 1A
+            if (state == 3) {
+                char enabled_1a_types[4];
+                int num_enabled = 0;
+                if (rds_params.ecc_enabled) enabled_1a_types[num_enabled++] = 'E';
+                if (rds_params.lic_enabled) enabled_1a_types[num_enabled++] = 'L';
+                if (rds_params.pin_enabled && num_enabled == 0) enabled_1a_types[num_enabled++] = 'P';
 
-            if (state == 4) { // Состояние 4 -> Группа 2A (RadioText)
-                uint8_t ab_flag = 0;
-                if (rds_params.rt_channel_mode == 1) { // Канал B
-                    ab_flag = 1;
-                } else if (rds_params.rt_channel_mode == 2) { // Канал AB
-                    ab_flag = rds_params.rt_ab_flag; // Используем сохраненный флаг
+                if (num_enabled > 0) {
+                    group_1a_cycle_idx %= num_enabled;
+                    char type_to_send = enabled_1a_types[group_1a_cycle_idx];
+                    uint16_t block1_base = (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5);
+                    blocks[1] = 0x1000 | block1_base;
+                    if (rds_params.pin_enabled) {
+                        blocks[3] = (rds_params.pin_day << 11) | (rds_params.pin_hour << 6) | rds_params.pin_minute;
+                    } else {
+                        blocks[3] = 0x0000;
+                    }
+                    switch (type_to_send) {
+                        case 'E': blocks[2] = (0b0000 << 12) | rds_params.ecc; break;
+                        case 'L': blocks[2] = (0b0011 << 12) | rds_params.lic; break;
+                        case 'P': blocks[2] = rds_params.pi; break;
+                    }
+                    group_1A_sent = 1;
+                    group_1a_cycle_idx++;
                 }
-                // Для режима A (0), ab_flag остается 0
+            }
 
-                blocks[1] = 0x2000 | block1_base_other | (ab_flag << 4) | rt_state;
-                blocks[2] = rds_params.rt[rt_state*4+0]<<8 | rds_params.rt[rt_state*4+1];
-                blocks[3] = rds_params.rt[rt_state*4+2]<<8 | rds_params.rt[rt_state*4+3];
-                rt_state = (rt_state + 1) % 16;
-            } else if (rds_params.ptyn_enabled && state == 1) { // Состояние 1 -> PTYN Сегмент 0
-                blocks[1] = 0xA000 | block1_base_other | 0; // Сегмент 0, бит 0 = 0
-                blocks[2] = rds_params.ptyn[0*4+0]<<8 | rds_params.ptyn[0*4+1];
-                blocks[3] = rds_params.ptyn[0*4+2]<<8 | rds_params.ptyn[0*4+3];
-            } else if (rds_params.ptyn_enabled && rds_params.ptyn_second_segment_exists && state == 2) { // Состояние 2 -> PTYN Сегмент 1
-                blocks[1] = 0xA000 | block1_base_other | 1; // Сегмент 1, бит 0 = 1
-                blocks[2] = rds_params.ptyn[1*4+0]<<8 | rds_params.ptyn[1*4+1];
-                blocks[3] = rds_params.ptyn[1*4+2]<<8 | rds_params.ptyn[1*4+3];
-            } else { // Все остальные состояния -> Группа 0A (PS)
-                uint8_t di_bit = 0;
-                switch (ps_state) {
-                    case 0: if (rds_params.di_flags & 8) di_bit = 1; break;
-                    case 1: if (rds_params.di_flags & 4) di_bit = 1; break;
-                    case 2: if (rds_params.di_flags & 2) di_bit = 1; break;
-                    case 3: if (rds_params.di_flags & 1) di_bit = 1; break;
+            if (!group_1A_sent) {
+                if (state == 4 || state == 5) { // Состояния 4,5 -> Группа 2A (RadioText)
+                    uint8_t ab_flag = 0;
+                    if (rds_params.rt_channel_mode == 1) ab_flag = 1;
+                    else if (rds_params.rt_channel_mode == 2) ab_flag = rds_params.rt_ab_flag;
+                    blocks[1] = 0x2000 | block1_base_other | (ab_flag << 4) | rt_state;
+                    blocks[2] = rds_params.rt[rt_state*4+0]<<8 | rds_params.rt[rt_state*4+1];
+                    blocks[3] = rds_params.rt[rt_state*4+2]<<8 | rds_params.rt[rt_state*4+3];
+                    rt_state = (rt_state + 1) % 16;
+                } else if (rds_params.ptyn_enabled && state == 1) { // Состояние 1 -> PTYN Сегмент 0
+                    blocks[1] = 0xA000 | block1_base_other | 0;
+                    blocks[2] = rds_params.ptyn[0*4+0]<<8 | rds_params.ptyn[0*4+1];
+                    blocks[3] = rds_params.ptyn[0*4+2]<<8 | rds_params.ptyn[0*4+3];
+                } else if (rds_params.ptyn_enabled && rds_params.ptyn_second_segment_exists && state == 2) { // Состояние 2 -> PTYN Сегмент 1
+                    blocks[1] = 0xA000 | block1_base_other | 1;
+                    blocks[2] = rds_params.ptyn[1*4+0]<<8 | rds_params.ptyn[1*4+1];
+                    blocks[3] = rds_params.ptyn[1*4+2]<<8 | rds_params.ptyn[1*4+3];
+                } else { // Все остальные состояния -> Группа 0A (PS)
+                    uint8_t di_bit = 0;
+                    switch (ps_state) {
+                        case 0: if (rds_params.di_flags & 8) di_bit = 1; break;
+                        case 1: if (rds_params.di_flags & 4) di_bit = 1; break;
+                        case 2: if (rds_params.di_flags & 2) di_bit = 1; break;
+                        case 3: if (rds_params.di_flags & 1) di_bit = 1; break;
+                    }
+                    blocks[1] = block1_base_other | (rds_params.ta ? 0x10 : 0) | (rds_params.ms ? 0x08 : 0) | (di_bit << 2) | ps_state;
+                    blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
+                    ps_state = (ps_state + 1) % 4;
                 }
-                blocks[1] = block1_base_other | (rds_params.ta ? 0x10 : 0) | (rds_params.ms ? 0x08 : 0) | (di_bit << 2) | ps_state;
-                blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
-                ps_state = (ps_state + 1) % 4;
             }
         }
         
-        state = (state + 1) % 5;
+        state = (state + 1) % 8; // У нас 8 состояний
     }
 
-    // Расчет CRC и формирование битстрима (этот блок остается без изменений)
+    // Расчет CRC и формирование битстрима
     for (int i=0; i<GROUP_LENGTH; i++) {
         uint16_t block = blocks[i];
         uint16_t check = crc(block) ^ offset_words[i];
@@ -326,6 +369,60 @@ void set_rds_rt_channel(int mode) {
     if (mode >= 0 && mode <= 2) {
         rds_params.rt_channel_mode = mode;
     }
+}
+
+int set_rds_rtp(char *rtp_string) {
+    // Временно храним теги здесь, чтобы не испортить текущие рабочие теги в случае ошибки
+    rds_rtp_tag temp_tags[2] = {{0,0,0,0}, {0,0,0,0}};
+
+    char *str = strdup(rtp_string);
+    if (str == NULL) return 0; // Ошибка выделения памяти
+    char *to_free = str;
+    char *token;
+    int tag_index = 0;
+
+    while ((token = strsep(&str, ",")) != NULL && tag_index < 2) {
+        if (strlen(token) == 0) continue; // Пропускаем пустые сегменты (например, из-за двойной запятой)
+
+        int type, start, len;
+        if (sscanf(token, "%d.%d.%d", &type, &start, &len) == 3) {
+            // Проверяем диапазон
+            if (type < 0 || type > 63 || start < 0 || start > 63 || len < 0 || len > 63) {
+                free(to_free);
+                return 0; // Ошибка: значение вне диапазона
+            }
+            // Сохраняем во временный массив
+            temp_tags[tag_index].content_type = type;
+            temp_tags[tag_index].start_marker = start;
+            temp_tags[tag_index].length_marker = len;
+            temp_tags[tag_index].enabled = 1;
+            tag_index++;
+        } else {
+            // Если токен не пустой, но парсинг не удался - это ошибка формата
+            free(to_free);
+            return 0;
+        }
+    }
+
+    free(to_free);
+
+    if (tag_index == 0) return 0; // Не найдено ни одного корректного тега
+
+    // Успех! Теперь применяем изменения в основной структуре параметров.
+    rds_params.rtp_item_toggle_bit = !rds_params.rtp_item_toggle_bit;
+    rds_params.rtp_item_running_bit = 1;
+
+    rds_params.tags[0] = temp_tags[0];
+    rds_params.tags[1] = temp_tags[1];
+
+    // Длина второго тега ограничена 5 битами
+    if (rds_params.tags[1].enabled) {
+        rds_params.tags[1].length_marker &= 0x1F;
+    }
+    
+    rds_params.rtp_enabled = 1;
+    
+    return 1; // Возвращаем успех
 }
 
 uint16_t get_rds_pi() {

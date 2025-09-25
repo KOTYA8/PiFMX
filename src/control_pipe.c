@@ -66,7 +66,6 @@ int poll_control_pipe() {
         return CONTROL_PIPE_RT_SET;
     }
 
-    // <<< НОВОЕ: Установщик для PI (Program Identification)
     if (strncmp(res, "PI ", 3) == 0) {
         char *arg = res + 3;
         // Конвертируем строку (шестнадцатеричную) в число
@@ -77,8 +76,6 @@ int poll_control_pipe() {
         return CONTROL_PIPE_PI_SET;
     }
 
-    // <<< НОВОЕ: Установщик для ECC (Extended Country Code)
-    // Команда будет "ECC <value>"
     if (strncmp(res, "ECC ", 4) == 0) {
         char *arg = res + 4;
         // Конвертируем строку (шестнадцатеричную) в число
@@ -89,8 +86,6 @@ int poll_control_pipe() {
         return CONTROL_PIPE_ECC_SET;
     }
 
-    // <<< НОВОЕ: Установщик для PTY (Program Type)
-    // Команда будет "PTY <value>"
     if (strncmp(res, "PTY ", 4) == 0) {
         char *arg = res + 4;
         // Конвертируем строку (десятичную) в число
@@ -107,8 +102,9 @@ int poll_control_pipe() {
 
     if (strncmp(res, "TA ", 3) == 0) {
         char *arg = res + 3;
-        int ta = (strcmp(arg, "ON") == 0);
+        int ta = atoi(arg);
         set_rds_ta(ta);
+        // <<< ИЗМЕНЕНО: теперь выводится ON/OFF
         printf("TA set to %s\n", ta ? "ON" : "OFF");
         fflush(stdout);
         return CONTROL_PIPE_TA_SET;
@@ -116,8 +112,9 @@ int poll_control_pipe() {
 
     if (strncmp(res, "TP ", 3) == 0) {
         char *arg = res + 3;
-        int tp = (strcmp(arg, "ON") == 0);
+        int tp = atoi(arg);
         set_rds_tp(tp);
+        // <<< ИЗМЕНЕНО: теперь выводится ON/OFF
         printf("TP set to %s\n", tp ? "ON" : "OFF");
         fflush(stdout);
         return CONTROL_PIPE_TP_SET;
@@ -191,6 +188,19 @@ int poll_control_pipe() {
         printf("PTYN set to: \"%s\"\n", arg);
         fflush(stdout);
         return CONTROL_PIPE_PTYN_SET;
+    }
+
+    if (strncmp(res, "RTP ", 4) == 0) {
+        char *arg = res + 4;
+        // <<< НАЧАЛО ИЗМЕНЕНИЙ
+        if (set_rds_rtp(arg)) {
+            printf("RTP set to: \"%s\"\n", arg);
+        } else {
+            printf("ERROR: Invalid RTP value from control pipe.\n");
+        }
+        // <<< КОНЕЦ ИЗМЕНЕНИЙ
+        fflush(stdout);
+        return CONTROL_PIPE_RTP_SET;
     }
 
     // Если ни одна команда не подошла

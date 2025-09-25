@@ -27,5 +27,6 @@ extern uint8_t get_rds_ecc();
 extern int get_rds_ms();
 extern uint8_t get_rds_di();
 extern uint8_t get_rds_lic();
+extern int set_rds_rtp(char *rtp_string);
 
 #endif /* RDS_H */

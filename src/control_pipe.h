@@ -11,6 +11,7 @@
 #define CONTROL_PIPE_PIN_SET 11
 #define CONTROL_PIPE_PTYN_SET 12
 #define CONTROL_PIPE_RTS_SET 13
+#define CONTROL_PIPE_RTP_SET 14
 
 extern int open_control_pipe(char *filename);
 extern int close_control_pipe();

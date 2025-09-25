@@ -33,8 +33,33 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 * **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set. Example: `64 characters`
 
 ### RDS Applications
-* **ODA** - Open Data Applications
-* **ODAC** - Open Data Applications Code. Example (4 characters): `0C2D`
+* **ODAC** - Open Data Applications Code. Example (4 characters): `0001`
+
+#### ODA List
+0000 - **Test application** - Used for testing and debugging RDS systems.  
+0093 - **Cross referencing DAB within RDS** - Links FM broadcasting to digital DAB broadcasting for information or switching.  
+0A57 - **Wireless Lan (WLAN) access point info** - Transmission of information about the nearest Wi-Fi access points.  
+0C2D - **Encrypted TMC (TMC Forum)** - Transmission of encrypted traffic situation messages (TMC).  
+0D45 - **Encrypted TMC (TMC Forum)** is another AID for encrypted TMC.  
+0E2D - **Encrypted TMC (TMC Forum)** is another AID for encrypted TMC.  
+1B58 - **RT-TNG (RadioText - The Next Generation)** is a next-generation protocol for radiotext developed in Germany.   
+1D47 - **EPG for DAB** is an Electronic Program Guide (EPG) transmission for DAB digital radio.   
+4BD7 - **RadioText Plus (RT+)** is very common. An extension of the radio text that allows you to structure data (artist, track name).   
+5757 - **LPIFD - Leisure & Practical Info for Drivers** - Information for drivers: parking, fuel prices, travel data.   
+6553 - **Utility ProTeleMatic (UPT)** is an application for telematics and utility services.   
+7373 - **Encrypted data** is a common identifier for transmitting encrypted data.  
+C350 - **NRSC Song Title and Artist** is an American Standard (NRSC) for transmitting the name of a song and artist.  
+C3A1 - **Personal Weather Station** - Data transmission from personal weather stations (temperature, wind, etc.).   
+C4EA - **eEAS (enhanced Emergency Alert System)** is an advanced emergency alert system used in the USA.   
+C546 - **TMC-ALERT-C** is very common. An open (unencrypted) traffic message channel.   
+C5C5 - **DGPS corrections (via RTK)** - Transmission of corrections for high-precision GPS (RTK) systems.   
+C737 - **TMC-ALERT-C (TMC Forum)** is the official AID from the TMC Forum for standard TMC.  
+C9A1 - **Encrypted data** is another common identifier for transmitting encrypted data.    
+CD46 - **RDS-TMC: ALERT-C** is very common. One of the most commonly used TMC AIDS in Europe.   
+CD47 - **RDS-TMC: ALERT-C with encryption** is a traffic message channel with an additional layer of encryption.   
+E1C1 - **Data for Automotive (TISA)** - Data for automotive systems from the Travel Information Association (TISA).   
+F123 - **Broadcaster specific data** - Reserved for transmitting specific data to a specific radio station.   
+FFFF - **Dummy application** is a "dummy" or placeholder, usually for official purposes.  
 
 # Functions GLOBAL
 * **SOUND MODE** - FM output to **Stereo** or **Mono**
@@ -120,9 +145,6 @@ Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 **eRT** (`ERT`) **RDS_CTL** - ❌ not realized  
 
 ### RDS Applications
-
-**ODA** (`-oda`) **GLOBAL** - ❌ not realized  
-**ODA** (`ODA`) **RDS_CTL** - ❌ not realized  
 
 **ODAC** (`-odac`) **GLOBAL** - ❌ not realized  
 **ODAC** (`ODAC`) **RDS_CTL** - ❌ not realized  

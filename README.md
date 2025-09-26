@@ -23,10 +23,10 @@
 * **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
 * **EON** - Enhanced Other Networks Information (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file`
-* **CT** - Clock Time. Example: `19:52,25.09.2025`   
+* **CT** - Clock Time. Example: `0/1`  
+* **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   
 * **CTZ** - Clock Time Zone. Example: `m1, m3, p9:30`  
-* **CTT** - Clock Time Toggle. Example: `0/1`  
 
 ### RDS2
 * **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 
@@ -123,16 +123,16 @@
 **EON** (`EON`) **RDS_CTL** - ❌ not realized  
 
 **CT** (`-ct`) **GLOBAL** - ❌ not realized    
-**CT** (`CT`) **RDS_CTL** - ❌ not realized  
+**CT** (`CT`) **RDS_CTL** - ❌ not realized 
+
+**CTC** (`-ctc`) **GLOBAL** - ❌ not realized    
+**CTC** (`CTC`) **RDS_CTL** - ❌ not realized  
   
 **CTS** (`-cts`) **GLOBAL** - ❌ not realized    
 **CTS** (`CTS`) **RDS_CTL** - ❌ not realized   
     
 **CTZ** (`-ctz`) **GLOBAL** - ❌ not realized    
 **CTZ** (`CTZ`) **RDS_CTL** - ❌ not realized  
-  
-**CTT** (`-ctt`) **GLOBAL** - ❌ not realized    
-**CTT** (`CTT`) **RDS_CTL** - ❌ not realized  
 
 ### RDS2
 

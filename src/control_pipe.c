@@ -193,13 +193,14 @@ int poll_control_pipe() {
 
     if (strncmp(res, "RTP ", 4) == 0) {
         char *arg = res + 4;
-        // <<< НАЧАЛО ИЗМЕНЕНИЙ
-        if (set_rds_rtp(arg)) {
-            printf("RTP set to: \"%s\"\n", arg);
-        } else {
-            printf("ERROR: Invalid RTP value from control pipe.\n");
-        }
-        // <<< КОНЕЦ ИЗМЕНЕНИЙ
+        if (strcmp(arg, "0") == 0) {
+        disable_rds_rtp();
+        printf("RTP disabled.\n");
+    } else if (set_rds_rtp(arg)) {
+        printf("RTP set to: \"%s\"\n", arg);
+    } else {
+        printf("ERROR: Invalid RTP value from control pipe.\n");
+    }
         fflush(stdout);
         return CONTROL_PIPE_RTP_SET;
     }
@@ -222,6 +223,13 @@ int poll_control_pipe() {
     printf("RTM set to: %c\n", mode);
     fflush(stdout);
     return CONTROL_PIPE_RTM_SET;
+    }
+    
+    if (strcmp(res, "CT R") == 0) {
+       reset_rds_ct();
+       printf("CT settings reset to system default.\n");
+       fflush(stdout);
+       return CONTROL_PIPE_CT_RESET;
     }
     
     if (strncmp(res, "CT ", 3) == 0) {
@@ -285,6 +293,27 @@ int poll_control_pipe() {
         printf("CTZ set to: %c%d:%02d\n", sign > 0 ? 'p' : 'm', hours, minutes);
         fflush(stdout);
         return CONTROL_PIPE_CTZ_SET;
+    }
+
+    if (strncmp(res, "CTC ", 4) == 0 || strncmp(res, "CTS ", 4) == 0) {
+        int is_static = (res[2] == 'S');
+        char *arg = res + 4;
+        int hour, minute, day, month, year;
+
+        if (sscanf(arg, "%d:%d,%d.%d.%d", &hour, &minute, &day, &month, &year) == 5) {
+            // TODO: добавить валидацию значений
+            if (is_static) {
+                set_rds_cts(hour, minute, day, month, year);
+                printf("CTS set to: %02d:%02d, %02d/%02d/%04d\n", hour, minute, day, month, year);
+            } else {
+                set_rds_ctc(hour, minute, day, month, year);
+                printf("CTC set to: %02d:%02d, %02d/%02d/%04d\n", hour, minute, day, month, year);
+            }
+        } else {
+            printf("ERROR: Invalid format for %s. Use HH:MM,DD.MM.YYYY.\n", is_static ? "CTS" : "CTC");
+        }
+        fflush(stdout);
+        return is_static ? CONTROL_PIPE_CTS_SET : CONTROL_PIPE_CTC_SET;
     }
 
     // Если ни одна команда не подошла

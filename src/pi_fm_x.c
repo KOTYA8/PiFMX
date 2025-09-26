@@ -229,7 +229,7 @@ map_peripheral(uint32_t base, uint32_t len)
 #define DATA_SIZE 5000
 
 
-int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes) {    // Catch all signals possible - it is vital we kill the DMA engine
+int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes, int custom_time_set, int custom_time_is_static, int ct_h, int ct_m, int ct_d, int ct_mo, int ct_y) {    // Catch all signals possible - it is vital we kill the DMA engine
     // on process exit!
     for (int i = 0; i < 64; i++) {
         struct sigaction sa;
@@ -371,6 +371,13 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
     set_rds_rt(rt);
     set_rds_ct(ct_flag);
     set_rds_ctz(ctz_offset_minutes);
+    if (custom_time_set) {
+    if (custom_time_is_static) {
+        set_rds_cts(ct_h, ct_m, ct_d, ct_mo, ct_y);
+    } else {
+        set_rds_ctc(ct_h, ct_m, ct_d, ct_mo, ct_y);
+    }
+    }
     set_rds_rt_channel(rt_channel_mode);
     set_rds_pty(pty);
     set_rds_tp(tp);
@@ -490,6 +497,9 @@ int main(int argc, char **argv) {
     char rt_mode = 'P';
     int ct_flag = 1;
     int ctz_offset_minutes = 0;
+    int custom_time_set = 0;
+    int custom_time_is_static = 0;
+    int ct_hour=0, ct_min=0, ct_day=0, ct_mon=0, ct_year=0;
 
     // Parse command-line arguments
     for(int i=1; i<argc; i++) {
@@ -636,10 +646,17 @@ int main(int argc, char **argv) {
             }
 
             ctz_offset_minutes = sign * (hours * 60 + minutes);
+            } else if((strcmp("-ctc", arg)==0 || strcmp("-cts", arg)==0) && param != NULL) {
+                i++;
+                custom_time_set = 1;
+                custom_time_is_static = (arg[3] == 's'); // -cts
+           if (sscanf(param, "%d:%d,%d.%d.%d", &ct_hour, &ct_min, &ct_day, &ct_mon, &ct_year) != 5) {
+             fatal("Invalid format for %s. Use HH:MM,DD.MM.YYYY.\n", arg);
+            }
             } else {
             fatal("Unrecognised argument: %s.\n"
             "Syntax: pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
-            "                [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ctl control_pipe] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctz p|mH[:MM]]\n", arg);
+            "                [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ctl control_pipe] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctz p|mH[:MM]] [-ctc H:M.D.M.Y] [-cts H:M.D.M.Y]\n", arg);
         }
     }
 
@@ -689,8 +706,15 @@ int main(int argc, char **argv) {
         }
     }
 
+    if (custom_time_set) {
+        if (custom_time_is_static) {
+            printf("CTS set to: %02d:%02d, %02d.%02d.%04d\n", ct_hour, ct_min, ct_day, ct_mon, ct_year);
+        } else {
+            printf("CTC set to: %02d:%02d, %02d.%02d.%04d\n", ct_hour, ct_min, ct_day, ct_mon, ct_year);
+        }
+    }
 
-    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes);
+    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes, custom_time_set, custom_time_is_static, ct_hour, ct_min, ct_day, ct_mon, ct_year);
 
     terminate(errcode);
 }

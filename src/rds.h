@@ -21,6 +21,10 @@ extern void set_rds_rt_channel(int channel);
 extern void set_rds_rt_mode(char mode);
 extern void set_rds_ct(int ct);
 extern void set_rds_ctz(int offset_minutes);
+extern void set_rds_ctc(int hour, int minute, int day, int month, int year);
+extern void set_rds_cts(int hour, int minute, int day, int month, int year);
+extern void reset_rds_ct();
+extern void disable_rds_rtp();
 
 extern uint16_t get_rds_pi();
 extern uint8_t get_rds_pty();

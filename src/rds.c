@@ -11,6 +11,8 @@
 #define PS_LENGTH 8
 #define GROUP_LENGTH 4
 
+enum ct_mode { CT_SYSTEM, CT_CUSTOM_TICKING, CT_CUSTOM_STATIC };
+
 typedef struct {
     uint8_t content_type;
     uint8_t start_marker;
@@ -48,6 +50,10 @@ struct {
     char rt_mode;
     int ct_enabled;
     int ct_offset_minutes;
+    enum ct_mode ct_mode;
+    struct tm custom_tm;
+    time_t custom_time_start_t;
+    time_t real_time_at_set_t;
 } rds_params = {
     .pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
     .ps = {0}, .rt = {0}, .original_rt = {0}, .ptyn = {0}, .pty = 0,
@@ -64,7 +70,8 @@ struct {
     .rtp_item_running_bit = 0,
     .rt_mode = 'P',
     .ct_enabled = 1,
-    .ct_offset_minutes = 0
+    .ct_offset_minutes = 0,
+    .ct_mode = CT_SYSTEM
 };
 
 /* The RDS error-detection code generator polynomial is
@@ -103,43 +110,54 @@ uint16_t crc(uint16_t block) {
 */
 int get_rds_ct_group(uint16_t *blocks) {
     static int latest_minutes = -1;
+    static int cts_counter = 0; // Счетчик для периодической отправки CTS
     time_t now_t;
-    struct tm *utc_tm, *local_tm;
+    struct tm *time_info;
 
     if (!rds_params.ct_enabled) {
         return 0;
     }
 
-    now_t = time(NULL);
-    utc_tm = gmtime(&now_t);
+    switch (rds_params.ct_mode) {
+        case CT_SYSTEM:
+            now_t = time(NULL);
+            time_info = gmtime(&now_t);
+            break;
+        case CT_CUSTOM_TICKING:
+            now_t = rds_params.custom_time_start_t + (time(NULL) - rds_params.real_time_at_set_t);
+            time_info = gmtime(&now_t);
+            break;
+        case CT_CUSTOM_STATIC:
+            cts_counter = (cts_counter + 1) % 16;
+            if (cts_counter != 1) {
+                return 0;
+            }
+            time_info = &rds_params.custom_tm;
+            break;
+        default:
+            return 0;
+    }
 
-    if (utc_tm->tm_min != latest_minutes) {
-        latest_minutes = utc_tm->tm_min;
+    if (time_info->tm_min != latest_minutes || rds_params.ct_mode == CT_CUSTOM_STATIC) {
+        latest_minutes = time_info->tm_min;
 
-        // Время в пакете RDS всегда передается в UTC.
-        int l = utc_tm->tm_mon <= 1 ? 1 : 0;
-        int mjd = 14956 + utc_tm->tm_mday +
-                        (int)((utc_tm->tm_year - l) * 365.25) +
-                        (int)((utc_tm->tm_mon + 2 + l * 12) * 30.6001);
+        int l = time_info->tm_mon < 2 ? 1 : 0;
+        int mjd = 14956 + time_info->tm_mday +
+                        (int)((time_info->tm_year - l) * 365.25) +
+                        (int)((time_info->tm_mon + 2 + l * 12) * 30.6001);
 
-        blocks[1] = 0x4400 | (mjd >> 15);
-        blocks[2] = (mjd << 1) | (utc_tm->tm_hour >> 4);
-        blocks[3] = (utc_tm->tm_hour & 0xF) << 12 | utc_tm->tm_min << 6;
+        blocks[1] = 0x4000 | (rds_params.tp ? 0x0400 : 0) | (rds_params.pty << 5) | (mjd >> 15); // <-- ИЗМЕНЕНА ЭТА СТРОКА
+        blocks[2] = (mjd << 1) | (time_info->tm_hour >> 4);
+        blocks[3] = (time_info->tm_hour & 0xF) << 12 | time_info->tm_min << 6;
 
-        // Смещение часового пояса вычисляется на основе системных настроек,
-        // к которому добавляется ручная корректировка из параметра -ctz.
-        local_tm = localtime(&now_t);
-        // tm_gmtoff - стандартное расширение в Linux, дает смещение в секундах.
-        int total_offset_minutes = (local_tm->tm_gmtoff / 60) + rds_params.ct_offset_minutes;
-
-        // Кодируем смещение в получасовых шагах, как того требует стандарт RDS.
-        int offset_sign = (total_offset_minutes < 0) ? 1 : 0;
-        int offset_val_abs = abs(total_offset_minutes);
-        int offset_code = (offset_val_abs / 30);
-
-        blocks[3] |= offset_code & 0x1F; // 5 бит для величины смещения
-        if (offset_sign) {
-            blocks[3] |= 0x20; // 1 бит для знака
+        if (rds_params.ct_mode == CT_SYSTEM) {
+            struct tm *local_tm = localtime(&now_t);
+            int total_offset_minutes = (local_tm->tm_gmtoff / 60) + rds_params.ct_offset_minutes;
+            int offset_sign = (total_offset_minutes < 0) ? 1 : 0;
+            int offset_val_abs = abs(total_offset_minutes);
+            int offset_code = (offset_val_abs / 30);
+            blocks[3] |= offset_code & 0x1F;
+            if (offset_sign) blocks[3] |= 0x20;
         }
 
         return 1;
@@ -348,6 +366,24 @@ void set_rds_ctz(int offset_minutes) {
     rds_params.ct_offset_minutes = offset_minutes;
 }
 
+void set_rds_cts(int hour, int minute, int day, int month, int year) {
+    rds_params.ct_mode = CT_CUSTOM_STATIC;
+    rds_params.custom_tm.tm_hour = hour;
+    rds_params.custom_tm.tm_min = minute;
+    rds_params.custom_tm.tm_mday = day;
+    rds_params.custom_tm.tm_mon = month - 1;
+    rds_params.custom_tm.tm_year = year - 1900;
+    rds_params.custom_tm.tm_isdst = -1; // Let mktime decide
+}
+
+void set_rds_ctc(int hour, int minute, int day, int month, int year) {
+    set_rds_cts(hour, minute, day, month, year); // Use the same logic to fill the struct
+    rds_params.ct_mode = CT_CUSTOM_TICKING;
+    rds_params.real_time_at_set_t = time(NULL);
+    // timegm treats the struct as UTC and converts to UTC time_t, which is correct for us.
+    rds_params.custom_time_start_t = timegm(&rds_params.custom_tm);
+}
+
 void set_rds_rt(char *rt) {
     // Если включен режим AB, переключаем канал (A -> B -> A)
     if (rds_params.rt_channel_mode == 2) {
@@ -420,6 +456,18 @@ void set_rds_rt_channel(int mode) {
     if (mode >= 0 && mode <= 2) {
         rds_params.rt_channel_mode = mode;
     }
+}
+
+void reset_rds_ct() {
+    rds_params.ct_mode = CT_SYSTEM;
+    rds_params.ct_offset_minutes = 0;
+}
+
+void disable_rds_rtp() {
+    rds_params.rtp_enabled = 0;
+    // Сбрасываем теги на всякий случай
+    rds_params.tags[0].enabled = 0;
+    rds_params.tags[1].enabled = 0;
 }
 
 int set_rds_rtp(char *rtp_string) {

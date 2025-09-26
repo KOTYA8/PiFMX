@@ -10,7 +10,7 @@
 * **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX`  
 * **RT** - Radio Text. Example: `64 characters` 
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`   
-* **RT(Mode)** - Radio Text (Padding/0A/0D). Modes: P/0A/0D. Example: `P/0A/0D`  
+* **RT(Mode)** - Radio Text (Padding/0A/0D). Modes: P/A/D. Example: `P/A/D`  
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
@@ -81,8 +81,8 @@
 **RT(Switch)** (`-rts`) **GLOBAL** - ✅ realized  
 **RT(Switch)** (`RTS`) **RDS_CTL** - ✅ realized  
   
-**RT(Mode)** (`-rtm`) **GLOBAL** - ❌ not realized     
-**RT(Mode)** (`RTM`) **RDS_CTL** - ❌ not realized   
+**RT(Mode)** (`-rtm`) **GLOBAL** - ✅ realized      
+**RT(Mode)** (`RTM`) **RDS_CTL** - ✅ realized    
     
 **RT+** (`-rtp`) **GLOBAL** - ✅ realized    
 **RT+** (`RTP`) **RDS_CTL** - ✅ realized   
@@ -177,7 +177,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS] [-pin XX,XX,XX] [-ptyn code] [-rts A/B/AB] [-rtp XX.XX.XX,XX.XX.XX]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,ACDS] [-pin XX,XX,XX] [-ptyn code] [-rts A/B/AB] [-rtp XX.XX.XX,XX.XX.XX] [-rtm P/A/D]  
 ```
 All arguments are optional:  
 
@@ -200,6 +200,7 @@ All arguments are optional:
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.
 * `-rts` specifies the switching of RT modes (A/B/AB). Example: `-rts A/B/AB`.
 * `-rtp` specifies the classification of tags for Radiotext (Radio Text+). Displayed through 5 or 17 characters, example: `-rtp 1.0.10,2.0.10`.
+* `-rtm` specifies the full (64 symbols) mode or obtaining only text (P/A/D). Displayed through 1, example: `-rtm P`.  
 * `-ecc` specifies the country for the transmitter (Extended Country Code, ECC). Displayed through 2 characters, example: `-ecc E0`.  
 * `-lic` specifies the language speaking at the radio station (Language Identification Code, LIC). Displayed through 2 characters, example: `-lic 20`.  
 * `-pty` specifies the type of program for radio stations (Programme Type, PTY). Displayed through 1 or 2 characters, example: `-pty 10`.  
@@ -293,6 +294,7 @@ PS MyText
 RT A text to be sent as radiotext
 RTS A/B/AB
 RTP 1.0.10,2.0.10
+RTM P/A/D
 TA 0/1
 TP 0/1
 ECC E0
@@ -301,6 +303,7 @@ DI 0/S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS
 MS M/S
 PIN 1,12,20
 PTYN 12345678
+
 ```
 
 ### PS and RT modes (rds_ctl)
@@ -311,4 +314,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V6** - Support **RTP**. Now control **TP** and **TA** via **rds_ctl**: `0/1`. Management has appeared via `rds_ctl`: **RTP**  
+* **V7** - Support **RTM**. Management has appeared via `rds_ctl`: **RTM**  

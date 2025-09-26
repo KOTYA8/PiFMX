@@ -9,9 +9,8 @@
 * **PTY** - Programme Type. Example: `00 - 31`
 * **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX`  
 * **RT** - Radio Text. Example: `64 characters` 
-* **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`  
-* **RT(Mode)** - Radio Text (32 or 64 symbols). Modes: 32 or 64. Example: `32/64`  
-* **RT(End)** - Radio Text (Padding/0A/0D). Modes: P/0A/0D. Example: `P/0A/0D`  
+* **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`   
+* **RT(Mode)** - Radio Text (Padding/0A/0D). Modes: P/0A/0D. Example: `P/0A/0D`  
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
@@ -84,9 +83,6 @@
   
 **RT(Mode)** (`-rtm`) **GLOBAL** - ❌ not realized     
 **RT(Mode)** (`RTM`) **RDS_CTL** - ❌ not realized   
-  
-**RT(End)** (`-rte`) **GLOBAL** - ❌ not realized     
-**RT(End)** (`RTE`) **RDS_CTL** - ❌ not realized  
     
 **RT+** (`-rtp`) **GLOBAL** - ✅ realized    
 **RT+** (`RTP`) **RDS_CTL** - ✅ realized   

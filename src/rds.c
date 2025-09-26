@@ -26,6 +26,7 @@ struct {
     uint8_t di_flags;
     char ps[PS_LENGTH];
     char rt[RT_LENGTH];
+    char original_rt[RT_LENGTH];
     char ptyn[PS_LENGTH];
     uint8_t pty;
     uint8_t ecc;
@@ -44,9 +45,10 @@ struct {
     int rtp_enabled;
     uint8_t rtp_item_toggle_bit;
     uint8_t rtp_item_running_bit;
+    char rt_mode;
 } rds_params = {
     .pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
-    .ps = {0}, .rt = {0}, .ptyn = {0}, .pty = 0,
+    .ps = {0}, .rt = {0}, .original_rt = {0}, .ptyn = {0}, .pty = 0,
     .ecc = 0, .ecc_enabled = 0,
     .lic = 0, .lic_enabled = 0,
     .pin_day = 0, .pin_hour = 0, .pin_minute = 0, .pin_enabled = 0,
@@ -57,7 +59,8 @@ struct {
     .tags = {{0,0,0,0}, {0,0,0,0}},
     .rtp_enabled = 0,
     .rtp_item_toggle_bit = 0,
-    .rtp_item_running_bit = 0
+    .rtp_item_running_bit = 0,
+    .rt_mode = 'P'
 };
 
 /* The RDS error-detection code generator polynomial is
@@ -298,6 +301,14 @@ void get_rds_samples(float *buffer, int count) {
     }
 }
 
+void set_rds_rt_mode(char mode) {
+    if (mode == 'P' || mode == 'A' || mode == 'D') {
+        rds_params.rt_mode = mode;
+        // Переформатируем существующий текст с новым режимом
+        fill_rds_string_mode(rds_params.rt, rds_params.original_rt, RT_LENGTH, rds_params.rt_mode);
+    }
+}
+
 void set_rds_pi(uint16_t pi_code) {
     rds_params.pi = pi_code;
 }
@@ -307,7 +318,12 @@ void set_rds_rt(char *rt) {
     if (rds_params.rt_channel_mode == 2) {
         rds_params.rt_ab_flag = !rds_params.rt_ab_flag;
     }
-    fill_rds_string(rds_params.rt, rt, 64);
+    // Сохраняем "чистую" версию текста
+    strncpy(rds_params.original_rt, rt, RT_LENGTH - 1);
+    rds_params.original_rt[RT_LENGTH - 1] = '\0'; // Гарантируем завершающий ноль
+
+    // Форматируем текст для отправки с учётом текущего режима
+    fill_rds_string_mode(rds_params.rt, rds_params.original_rt, RT_LENGTH, rds_params.rt_mode);
 }
 
 void set_rds_ps(char *ps) {

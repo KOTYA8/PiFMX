@@ -257,11 +257,49 @@ void fill_rds_string(char* rds_string, char* src_string, size_t rds_string_size)
         src_string += size;
         remaining_src_size -= size;
     }
+}
 
-    // Pad the RDS string with SPACE characters.
-    while (remaining_rds_size > 0) {
-        *rds_string = 0x20;
-        rds_string++;
-        remaining_rds_size--;
+void fill_rds_string_mode(char* rds_string, char* src_string, size_t rds_string_size, char mode) {
+    mbtowc(NULL, 0, 0);   // Reset decoder.
+
+    size_t remaining_src_size = strlen(src_string);
+    size_t converted_len = 0;
+    char* rds_string_ptr = rds_string;
+
+    // Конвертируем строку в кодировку RDS
+    while (remaining_src_size > 0 && converted_len < rds_string_size) {
+        wchar_t codepoint;
+        int size = mbtowc(&codepoint, src_string, remaining_src_size);
+        if (size == 0) break;
+        if (size < 0) {
+            src_string++;
+            remaining_src_size--;
+            continue;
+        }
+        *rds_string_ptr++ = codepoint_to_rds_char(codepoint);
+        converted_len++;
+        src_string += size;
+        remaining_src_size -= size;
+    }
+
+    // Добавляем управляющий символ
+    if (converted_len < rds_string_size) {
+        if (mode == 'A') {
+            *rds_string_ptr++ = 0x0A; // Line Feed
+            converted_len++;
+        } else if (mode == 'D') {
+            *rds_string_ptr++ = 0x0D; // Carriage Return
+            converted_len++;
+            // Для режима 'D' заполняем остаток символами подчеркивания
+            for (int i = converted_len; i < rds_string_size; i++) {
+                *rds_string_ptr++ = 0x5F; // RDS-код для символа '_' (LOW LINE)
+            }
+            return; // Завершаем функцию здесь
+        }
+    }
+    
+    // Для режимов 'P' и 'A' заполняем остаток пробелами
+    for (int i = converted_len; i < rds_string_size; i++) {
+        *rds_string_ptr++ = 0x20;
     }
 }

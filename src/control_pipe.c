@@ -203,6 +203,26 @@ int poll_control_pipe() {
         return CONTROL_PIPE_RTP_SET;
     }
 
+    if (strncmp(res, "RTM ", 4) == 0) {
+        char *arg = res + 4;
+        char mode = 'P'; // По умолчанию 'P'
+        if (strcmp(arg, "A") == 0) {
+        mode = 'A';
+        } else if (strcmp(arg, "D") == 0) {
+        mode = 'D';
+        } else if (strcmp(arg, "P") != 0) {
+        // Если не P, A или D, выводим ошибку, но не меняем режим
+        printf("ERROR: Invalid RTM value from control pipe. Use 'P', 'A', or 'D'.\n");
+        fflush(stdout);
+        return -1;
+    }
+
+    set_rds_rt_mode(mode);
+    printf("RTM set to: %c\n", mode);
+    fflush(stdout);
+    return CONTROL_PIPE_RTM_SET;
+}
+
     // Если ни одна команда не подошла
     printf("ERROR: Unknown command '%s'\n", res);
     fflush(stdout);

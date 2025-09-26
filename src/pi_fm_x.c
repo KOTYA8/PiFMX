@@ -484,6 +484,7 @@ int main(int argc, char **argv) {
     int lic_val = -1;
     int pin_day = -1, pin_hour = -1, pin_minute = -1;
     char *rtp = NULL;
+    char rt_mode = 'P';
 
     // Parse command-line arguments
     for(int i=1; i<argc; i++) {
@@ -570,10 +571,21 @@ int main(int argc, char **argv) {
         } else if(strcmp("-rtp", arg)==0 && param != NULL) {
             i++;
             rtp = param;
+} else if(strcmp("-rtm", arg)==0 && param != NULL) {
+    i++;
+    if (param[0] == 'P' && param[1] == '\0') {
+        rt_mode = 'P';
+    } else if (param[0] == 'A' && param[1] == '\0') {
+        rt_mode = 'A';
+    } else if (param[0] == 'D' && param[1] == '\0') {
+        rt_mode = 'D';
+    } else {
+        fatal("Invalid RTM value. Use 'P', 'A' or 'D'.\n");
+    }
         } else {
         fatal("Unrecognised argument: %s.\n"
         "Syntax: pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
-        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1] [-ms M|S] [-di SACD] [-lic code] [-pin DD,HH,MM] [-ptyn ptyn_text] [-rts A|B|AB] [-rtp tags]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
+        "                  [-ps ps_text] [-rt rt_text] [-ctl control_pipe] [-ecc code] [-pty code] [-tp 0|1] [-ta 0|1] [-ms M|S] [-di SACD] [-lic code] [-pin DD,HH,MM] [-ptyn ptyn_text] [-rts A|B|AB] [-rtp tags] [-rtm P|A|D]\n", arg); // <-- ОБНОВИТЬ СПРАВКУ
     }
 }
 
@@ -604,14 +616,17 @@ if (rt_channel_mode == 1) rts_mode_str = "B";
 else if (rt_channel_mode == 2) rts_mode_str = "AB";
 printf("RTS set to: %s\n", rts_mode_str);
 
+set_rds_rt_mode(rt_mode);
+printf("RTM set to: %c\n", rt_mode);
+
 if(rtp) printf("RTP set to: \"%s\"\n", rtp);
 
-    // <<< НАЧАЛО: НОВЫЙ БЛОК ВАЛИДАЦИИ И УСТАНОВКИ
     if (rtp) {
         if (!set_rds_rtp(rtp)) {
             fatal("Invalid RTP value. Components must be between 0 and 63, format: t1.s1.l1,t2.s2.l2\n");
         }
     }
+
 
 int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode);
 

@@ -26,7 +26,11 @@
 * **CT** - Clock Time. Example: `0/1`  
 * **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   
-* **CTZ** - Clock Time Zone. Example: `m1, m3, p9:30`  
+* **CTZ** - Clock Time Zone. Example: `m1, m3, p9:30`
+
+#### RDS_CTL
+* **RTP** - Turn off RT+ and cleanses tags. Example: `0`
+* **CT** - Вrops the time to the usual mode. Example: `R`
 
 ### RDS2
 * **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 

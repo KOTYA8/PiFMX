@@ -26,7 +26,7 @@
 * **PIN** - Programme Item Number (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
-* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1 88.5 90.5,87.6 92.1,0000,10,ON,OFF,022254` or `file`
+* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,MF2,MF3,MF4,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `file`
 * **CT** - Clock Time. Example: `0/1`  
 * **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   

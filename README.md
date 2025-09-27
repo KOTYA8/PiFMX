@@ -4,6 +4,10 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀PIFMX - works on the latest **Raspberry Pi OS** system and on the board **Raspberry Pi 4B**.  
  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 
+# Apps
+[PiFMPSRT](https://github.com/KOTYA8/PiFMPSRT) - Automatic **change PS and RT**. Various **modes** (transfer, scroll). For **rds_ctl**   
+**PiFMSH** (coming soon) - Planner, all **RDS modes** for **rds_ctl**    
+
 # Functions RDS
 * **PI** - Programme Identification. Example (4 characters): `XXXX`  
 * **PTY** - Programme Type. Example: `00 - 31`

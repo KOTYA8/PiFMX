@@ -1,8 +1,8 @@
 # PiFMX
 PiFMX - this is FM transmitter for **Raspberry Pi**.  
- PiFMX - will support (hope) **full RDS functions**.   
-  PIFMX - works on the latest **Raspberry Pi OS** system and on the board **Raspberry Pi 4B**.  
-   Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
+⠀PiFMX - will support (hope) **full RDS functions**.   
+⠀⠀PIFMX - works on the latest **Raspberry Pi OS** system and on the board **Raspberry Pi 4B**.  
+⠀⠀⠀Original repository: [PiFmRds](https://github.com/ChristopheJacquet/PiFmRds)
 
 # Apps
 * [PiFMPSRT](https://github.com/KOTYA8/PiFMPSRT) - Automatic **change PS and RT**. Various **modes** (transfer, scroll). For **rds_ctl**   

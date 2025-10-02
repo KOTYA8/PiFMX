@@ -18,15 +18,15 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
-* **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1` or `afa.txt`   
-* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional): `87.6,90.1 95.5,90.5 90.6` or `afb.txt`  
+* **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1` or `rds/afa.txt`   
+* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional): `87.6,90.1 95.5,90.5 90.6` or `rds/afb.txt`  
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code. Example (2 characters): `XX`    
 * **LIC** - Language Identification Code. Example (2 characters): `XX`  
 * **PIN** - Programme Item Number (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
-* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,MF2,MF3,MF4,LI,PTY,TP,TA,PIN). Example: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `eon.txt`
+* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,MF2,MF3,MF4,LI,PTY,TP,TA,PIN). Example: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `rds/eon.txt`
 * **CT** - Clock Time. Example: `0/1`  
 * **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   

@@ -36,11 +36,11 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  
-* **AFAF RESET** - Updates AF(A)FILE from afa.txt file. Example: `R`
-* **ECC OFF** - ???
-* **LIC OFF** - ???
-* **PIN OFF** - ???
-* **PTYN OFF** - ???
+* **AFAF RESET** - Updates AF(A)FILE from afa.txt file. Example: `R`  
+* **ECC OFF** - ???  
+* **LIC OFF** - ???  
+* **PIN OFF** - ???  
+* **PTYN OFF** - ???  
 * **CT RESET** - Drops the time to the usual mode. Example: `R`  
 
 ### RDS2

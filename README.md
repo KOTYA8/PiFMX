@@ -78,6 +78,10 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **CHANGE GPIO** - Change of Pin output for the antenna  
 * **CONTROL OVER RDS GROUPS** - It will be possible to control the speed of changing RDS groups
 
+# Interface
+❌ not realized  
+In the future, it will be optimized and placed, indicators for the transmitter and RDS in the console.  
+
 # Development Statuses (RDS functions) (global and rds_ctl)
 **PI** (`-pi`) **GLOBAL** - ✅ realized  
 **PI** (`PI`) **RDS_CTL** - ✅ realized 

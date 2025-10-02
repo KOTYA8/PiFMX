@@ -176,7 +176,7 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 **RDS POWER** (`-rdsp`) - ❌ not realized  
 **FM POWER** (`-fmp`) - ❌ not realized  
 **CHANGE GPIO** (`-gpio`) - ❌ not realized  
-**CONTROL OVER RDS GROUPS** - ❌ not realized 
+**CONTROL OVER RDS GROUPS** (`-ctlr`) - ❌ not realized 
 
 # Installation 
 For continuous operation of the FM transmitter on the Raspberry Pi 4B, the following command is entered:  

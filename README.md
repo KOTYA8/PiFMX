@@ -342,6 +342,8 @@ CT R
 CTC 1:13,27.9.2025
 CTS 01:14,27.09.2025
 CTZ m1:30
+AFA 87.6 107.9
+AFAF 0/1/R
 ```
 
 ### PS and RT modes (rds_ctl)
@@ -352,4 +354,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V8** - Support **CTC**, **CTS**. Management has appeared via `rds_ctl`: **CTC**, **CTS**, **CT R**, **RTP 0** 
+* **V9** - Support **AFA**, **AFAF**. Management has appeared via `rds_ctl`: **AFA**, **AFAF**.  

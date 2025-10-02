@@ -19,14 +19,14 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1` or `afa.txt`   
-* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional): `87.6,90.1 95.5,90.5 90.6` or `file`  
+* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional): `87.6,90.1 95.5,90.5 90.6` or `afb.txt`  
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code. Example (2 characters): `XX`    
 * **LIC** - Language Identification Code. Example (2 characters): `XX`  
 * **PIN** - Programme Item Number (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
-* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,MF2,MF3,MF4,LI,PTY,TP,TA,PIN). Example: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `file`
+* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,MF2,MF3,MF4,LI,PTY,TP,TA,PIN). Example: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `eon.txt`
 * **CT** - Clock Time. Example: `0/1`  
 * **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   
@@ -205,7 +205,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM] [-afa freq1 freq2 ...] [-afaf 0/1]
 ```
 All arguments are optional:  
 
@@ -240,8 +240,10 @@ All arguments are optional:
 * `-ptyn` specifies the indicates an additional description at the radio station (Programme Type Name). Displayed through 1 or 8 characters, example: `-ptyn 12345678`.
 * `-ct` specifies the turns on and off the time (Clock Time). Displayed through 1 characters, example: `-ct 1`.
 * `-ctc` specifies the support for its date and time (Clock Time Custom). Displayed through 13 or 16 characters, example: `-ctc 01:13,27.09.2025`.
-* `-cts` specifies the support of its date and time (but it does not move anywhere) (Clock Time Still). Displayed through 13 or 16 characters, example: `-cts 1:13,27.9.2025`.
+* `-cts` specifies the support of its date and time (but it does not move anywhere) (Clock Time Still). Displayed through 13 or 16 characters, example: `-cts 1:13,27.9.2025`.  
 * `-ctz` specifies the change in the temporary zone (Clock Time Zone). Displayed through 2 or 6 characters, example: `-ctz p1`.  
+* `-afa` specifies the frequencies to switch the radio station from a low signal to a better. Alternative Frequencies List (A method). Displayed through 2 or many characters, example: `-afa 87.6 107`.  
+* `-afaf` specifies the file support for Alternative Frequencies List (A method). Displayed through 1, example: `-afaf 1`. 
 
 ### Clock calibration (only if experiencing difficulties)
 

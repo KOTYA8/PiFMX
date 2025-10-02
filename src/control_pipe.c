@@ -224,14 +224,14 @@ int poll_control_pipe() {
     fflush(stdout);
     return CONTROL_PIPE_RTM_SET;
     }
-    
+
     if (strcmp(res, "CT R") == 0) {
        reset_rds_ct();
        printf("CT settings reset to system default.\n");
        fflush(stdout);
        return CONTROL_PIPE_CT_RESET;
     }
-    
+
     if (strncmp(res, "CT ", 3) == 0) {
         char *arg = res + 3;
         int ct = atoi(arg);
@@ -314,6 +314,44 @@ int poll_control_pipe() {
         }
         fflush(stdout);
         return is_static ? CONTROL_PIPE_CTS_SET : CONTROL_PIPE_CTC_SET;
+    }
+    // Новые команды AFA и AFAF
+    if (strncmp(res, "AFA ", 4) == 0) {
+        char *arg = res + 4;
+        set_rds_af(arg);
+        printf("AFA set to: %s\n", strcmp(arg, "0") == 0 ? "OFF" : arg);
+        fflush(stdout);
+        return CONTROL_PIPE_AFA_SET;
+    }
+
+    if (strncmp(res, "AFAF ", 5) == 0) {
+        char *arg = res + 5;
+        
+        // <<< НАЧАЛО ИЗМЕНЕНИЙ
+        if (strcmp(arg, "R") == 0 || strcmp(arg, "r") == 0) {
+            // Если аргумент 'R', просто перечитываем файл
+            if(set_rds_af_from_file(1)) {
+                 printf("AFA list reloaded from file.\n");
+             } else {
+                 printf("ERROR: Failed to reload AFA list from file.\n");
+             }
+        } else {
+            // Иначе, обрабатываем как 0 или 1
+            int afaf = atoi(arg);
+            if (afaf == 0 || afaf == 1) {
+                 if(set_rds_af_from_file(afaf)) {
+                     printf("AFA from file set to %s\n", afaf ? "ON" : "OFF");
+                 } else {
+                     printf("ERROR: AFA from file failed. Could not open rds/afa.txt\n");
+                 }
+            } else {
+                printf("ERROR: Invalid AFAF value. Use 0, 1, or R.\n");
+            }
+        }
+        // <<< КОНЕЦ ИЗМЕНЕНИЙ
+
+        fflush(stdout);
+        return CONTROL_PIPE_AFAF_SET;
     }
 
     // Если ни одна команда не подошла

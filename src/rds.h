@@ -35,5 +35,7 @@ extern int get_rds_ms();
 extern uint8_t get_rds_di();
 extern uint8_t get_rds_lic();
 extern int set_rds_rtp(char *rtp_string);
+extern int set_rds_af(char* af_list_str);
+extern int set_rds_af_from_file(int afaf);
 
 #endif /* RDS_H */

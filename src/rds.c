@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <math.h>
 
 #include "rds_strings.h"
 #include "waveforms.h"
@@ -10,6 +12,7 @@
 #define RT_LENGTH 64
 #define PS_LENGTH 8
 #define GROUP_LENGTH 4
+#define MAX_AF_FREQUENCIES 25
 
 enum ct_mode { CT_SYSTEM, CT_CUSTOM_TICKING, CT_CUSTOM_STATIC };
 
@@ -54,6 +57,11 @@ struct {
     struct tm custom_tm;
     time_t custom_time_start_t;
     time_t real_time_at_set_t;
+    // Новые поля для AF
+    uint8_t af_list_to_send[MAX_AF_FREQUENCIES + 2]; // +2 для кода количества и заполнителя
+    int af_list_size;
+    int af_count;
+    int af_current_pair_index;
 } rds_params = {
     .pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
     .ps = {0}, .rt = {0}, .original_rt = {0}, .ptyn = {0}, .pty = 0,
@@ -71,8 +79,12 @@ struct {
     .rt_mode = 'P',
     .ct_enabled = 1,
     .ct_offset_minutes = 0,
-    .ct_mode = CT_SYSTEM
+    .ct_mode = CT_SYSTEM,
+    .af_list_size = 0,
+    .af_count = 0,
+    .af_current_pair_index = 0
 };
+
 
 /* The RDS error-detection code generator polynomial is
    x^10 + x^8 + x^7 + x^5 + x^4 + x^3 + x^0
@@ -89,6 +101,13 @@ struct {
 
 
 uint16_t offset_words[] = {0x0FC, 0x198, 0x168, 0x1B4};
+
+uint8_t freq_to_code(float freq_mhz) {
+    if (freq_mhz < 87.5 || freq_mhz > 108.0) {
+        return 255; // Возвращаем специальное значение для ошибки
+    }
+    return (uint8_t)roundf((freq_mhz - 87.5f) * 10.0f);
+}
 
 /* Classical CRC computation */
 uint16_t crc(uint16_t block) {
@@ -262,7 +281,7 @@ void get_rds_group(int *buffer) {
                     blocks[1] = 0xA000 | block1_base_other | 1;
                     blocks[2] = rds_params.ptyn[1*4+0]<<8 | rds_params.ptyn[1*4+1];
                     blocks[3] = rds_params.ptyn[1*4+2]<<8 | rds_params.ptyn[1*4+3];
-                } else { // Все остальные состояния -> Группа 0A (PS)
+                } else { // Все остальные состояния -> Группа 0A (PS и AF)
                     uint8_t di_bit = 0;
                     switch (ps_state) {
                         case 0: if (rds_params.di_flags & 8) di_bit = 1; break;
@@ -271,12 +290,28 @@ void get_rds_group(int *buffer) {
                         case 3: if (rds_params.di_flags & 1) di_bit = 1; break;
                     }
                     blocks[1] = block1_base_other | (rds_params.ta ? 0x10 : 0) | (rds_params.ms ? 0x08 : 0) | (di_bit << 2) | ps_state;
+
+                        if (rds_params.af_list_size > 0) {
+                        // Отправляем частоты парами из подготовленного списка
+                        uint8_t af1 = rds_params.af_list_to_send[rds_params.af_current_pair_index * 2];
+                        uint8_t af2 = rds_params.af_list_to_send[rds_params.af_current_pair_index * 2 + 1];
+                        blocks[2] = (af1 << 8) | af2;
+
+                        rds_params.af_current_pair_index++;
+                        // Если дошли до конца списка (который всегда будет иметь четное число элементов), начинаем сначала
+                        if (rds_params.af_current_pair_index * 2 >= rds_params.af_list_size) {
+                            rds_params.af_current_pair_index = 0;
+                        }
+                    } else {
+                         blocks[2] = rds_params.pi;
+                    }
+
                     blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
                     ps_state = (ps_state + 1) % 4;
                 }
             }
         }
-        
+
         state = (state + 1) % 8; // У нас 8 состояний
     }
 
@@ -344,6 +379,99 @@ void get_rds_samples(float *buffer, int count) {
         *buffer++ = sample;
         sample_count++;
     }
+}
+
+int set_rds_af(char* af_list_str) {
+    rds_params.af_count = 0;
+    rds_params.af_list_size = 0;
+    rds_params.af_current_pair_index = 0;
+
+    if (strcmp(af_list_str, "0") == 0) {
+        // Устанавливаем код "No AF exists" согласно таблице 3.2
+        rds_params.af_list_to_send[0] = 224;
+        rds_params.af_list_size = 1;
+        return 1;
+    }
+
+    uint8_t temp_freq_codes[MAX_AF_FREQUENCIES];
+    char* str = strdup(af_list_str);
+    char* to_free = str;
+    char* token;
+    
+    while ((token = strsep(&str, " ")) != NULL && rds_params.af_count < MAX_AF_FREQUENCIES) {
+        if (strlen(token) == 0) continue;
+        float freq = atof(token);
+        uint8_t code = freq_to_code(freq);
+        if (code != 255) {
+            temp_freq_codes[rds_params.af_count++] = code;
+        } else {
+            fprintf(stderr, "Error: Invalid or out-of-range AF frequency provided: %s. Valid range is 87.6-107.9 MHz.\n", token);
+            free(to_free);
+            return 0; // Ошибка
+        }
+    }
+    free(to_free);
+
+    // Формируем список для отправки
+    // Первый байт - количество частот (коды 225-249)
+    rds_params.af_list_to_send[0] = 224 + rds_params.af_count;
+    // Копируем сами частоты
+    memcpy(&rds_params.af_list_to_send[1], temp_freq_codes, rds_params.af_count);
+    rds_params.af_list_size = 1 + rds_params.af_count;
+
+    // Если количество частот нечетное, добавляем код-заполнитель 205
+    if (rds_params.af_count % 2 != 0) {
+        rds_params.af_list_to_send[rds_params.af_list_size++] = 205;
+    }
+    
+    return 1; // Успех
+}
+
+int set_rds_af_from_file(int afaf) {
+    if (afaf == 0) {
+        rds_params.af_count = 0;
+        rds_params.af_list_size = 0;
+        rds_params.af_current_pair_index = 0;
+        // Устанавливаем код "No AF exists"
+        rds_params.af_list_to_send[0] = 224;
+        rds_params.af_list_size = 1;
+        return 1;
+    }
+
+    // Пробуем найти файл по разным путям
+    const char* paths_to_try[] = {
+        "rds/afa.txt",       // Если запуск из папки src/
+        "src/rds/afa.txt",   // Если запуск из корня проекта
+        "afa.txt"            // Если файл лежит рядом с исполняемым
+    };
+    FILE* f = NULL;
+    char found_path[256] = {0};
+
+    for (int i = 0; i < 3; i++) {
+        f = fopen(paths_to_try[i], "r");
+        if (f) {
+            strncpy(found_path, paths_to_try[i], sizeof(found_path) - 1);
+            break;
+        }
+    }
+
+    if (!f) {
+        perror("Error: Could not find afa.txt in default locations (rds/afa.txt, src/rds/afa.txt, afa.txt)");
+        return 0;
+    }
+
+    printf("Reading AF list from: %s\n", found_path);
+
+    char line[256];
+    char all_freqs[1024] = {0};
+    while (fgets(line, sizeof(line), f)) {
+        line[strcspn(line, "\r\n")] = 0;
+        strcat(all_freqs, line);
+        strcat(all_freqs, " ");
+    }
+    fclose(f);
+
+    return set_rds_af(all_freqs);
 }
 
 void set_rds_rt_mode(char mode) {
@@ -518,9 +646,9 @@ int set_rds_rtp(char *rtp_string) {
     if (rds_params.tags[1].enabled) {
         rds_params.tags[1].length_marker &= 0x1F;
     }
-    
+
     rds_params.rtp_enabled = 1;
-    
+
     return 1; // Возвращаем успех
 }
 

@@ -33,11 +33,11 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **CTZ** - Clock Time Zone. Example: `m1, m3, p9:30`
 
 #### RDS_CTL
-* **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`  
-* **CT RESET** - Drops the time to the usual mode. Example: `R`  
+* **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  
 * **AFAF RESET** - Updates AF(A)FILE from afa.txt file. Example: `R`  
+* **CT RESET** - Drops the time to the usual mode. Example: `R`  
 
 ### RDS2
 * **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 

@@ -30,7 +30,7 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **CT** - Clock Time. Example: `0/1`  
 * **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   
-* **CTZ** - Clock Time Zone. Example: `m1, m3, p9:30`
+* **CTZ** - Clock Time Zone. `p` - plus, `m` - minus. Example: `m1, m3, p9:30`
 
 #### RDS_CTL
 * **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`

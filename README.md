@@ -75,6 +75,7 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * FFFF - `Dummy application` is a "dummy" or placeholder, usually for official purposes.  
 
 # Functions GLOBAL
+* **RDS OFF/ON** - RDS off/on
 * **SOUND MODE** - FM output to **Stereo** or **Mono**
 * **FREQUENCY** - increase to **64 MHz**  
 * **RDS POWER** - RDS signal level  
@@ -179,7 +180,8 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 **ODA** (`ODA`) **RDS_CTL** - ❌ not realized  
 
 # Development Statuses (Global functions)
-**SOUND MODE** (`-sm`) - ❌ not realized  
+**RDS OFF/ON** (`-rds`) - ❌ not realized  
+**SOUND MODE** (`-sm`) - ❌ not realized   
 **FREQUENCY** (`-freq`) - ❌ not realized  
 **RDS POWER** (`-rdsp`) - ❌ not realized  
 **FM POWER** (`-fmp`) - ❌ not realized  

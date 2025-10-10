@@ -25,6 +25,10 @@ extern void set_rds_ctc(int hour, int minute, int day, int month, int year);
 extern void set_rds_cts(int hour, int minute, int day, int month, int year);
 extern void reset_rds_ct();
 extern void disable_rds_rtp();
+extern void disable_rds_ecc();
+extern void disable_rds_lic();
+extern void disable_rds_pin();
+extern void disable_rds_ptyn();
 
 extern uint16_t get_rds_pi();
 extern uint8_t get_rds_pty();

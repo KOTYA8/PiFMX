@@ -20,6 +20,7 @@
 #define CONTROL_PIPE_CT_RESET 20
 #define CONTROL_PIPE_AFA_SET 21
 #define CONTROL_PIPE_AFAF_SET 22
+#define CONTROL_PIPE_PTYNO_SET 23
 
 extern int open_control_pipe(char *filename);
 extern int close_control_pipe();

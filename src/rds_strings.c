@@ -242,6 +242,7 @@ void fill_rds_string(char* rds_string, char* src_string, size_t rds_string_size)
     // First try to copy the source string.
     size_t remaining_src_size = strlen(src_string);
     size_t remaining_rds_size = rds_string_size;
+    char* rds_string_ptr = rds_string;
     wchar_t codepoint;
     while (remaining_src_size > 0 && remaining_rds_size > 0) {
         int size = mbtowc(&codepoint, src_string, remaining_src_size);
@@ -251,11 +252,16 @@ void fill_rds_string(char* rds_string, char* src_string, size_t rds_string_size)
             remaining_src_size--;
             continue;
         }
-        *rds_string = codepoint_to_rds_char(codepoint);
-        rds_string++;
+        *rds_string_ptr = codepoint_to_rds_char(codepoint);
+        rds_string_ptr++;
         remaining_rds_size--;
         src_string += size;
         remaining_src_size -= size;
+    }
+    // Pad the rest of the string with spaces
+    while(remaining_rds_size > 0) {
+        *rds_string_ptr++ = ' ';
+        remaining_rds_size--;
     }
 }
 

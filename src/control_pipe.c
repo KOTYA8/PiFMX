@@ -79,10 +79,14 @@ int poll_control_pipe() {
 
     if (strncmp(res, "ECC ", 4) == 0) {
         char *arg = res + 4;
-        // Конвертируем строку (шестнадцатеричную) в число
+        if (strcasecmp(arg, "OFF") == 0) {
+        disable_rds_ecc();
+        printf("ECC disabled\n");
+    } else {
         uint8_t ecc_val = (uint8_t)strtol(arg, NULL, 16);
         set_rds_ecc(ecc_val);
         printf("ECC set to: 0x%02X\n", ecc_val);
+    }
         fflush(stdout);
         return CONTROL_PIPE_ECC_SET;
     }
@@ -148,9 +152,14 @@ int poll_control_pipe() {
 
     if (strncmp(res, "LIC ", 4) == 0) {
         char *arg = res + 4;
+        if (strcasecmp(arg, "OFF") == 0) {
+        disable_rds_lic();
+        printf("LIC disabled\n");
+    } else {
         uint8_t lic_val = (uint8_t)strtol(arg, NULL, 16);
         set_rds_lic(lic_val);
         printf("LIC set to: 0x%02X\n", lic_val);
+    }
         fflush(stdout);
         return CONTROL_PIPE_LIC_SET;
     }
@@ -171,6 +180,10 @@ int poll_control_pipe() {
 
     if (strncmp(res, "PIN ", 4) == 0) {
         char *arg = res + 4;
+        if (strcasecmp(arg, "OFF") == 0) {
+        disable_rds_pin();
+        printf("PIN disabled\n");
+    } else {
         int day, hour, minute;
         if (sscanf(arg, "%d,%d,%d", &day, &hour, &minute) == 3) {
             set_rds_pin(day, hour, minute);
@@ -178,6 +191,7 @@ int poll_control_pipe() {
         } else {
             printf("ERROR: Invalid PIN format. Use DD,HH,MM.\n");
         }
+    }
         fflush(stdout);
         return CONTROL_PIPE_PIN_SET;
     }
@@ -189,6 +203,13 @@ int poll_control_pipe() {
         printf("PTYN set to: \"%s\"\n", arg);
         fflush(stdout);
         return CONTROL_PIPE_PTYN_SET;
+    }
+
+    if (strcmp(res, "PTYNO") == 0) {
+        disable_rds_ptyn();
+        printf("PTYN disabled\n");
+        fflush(stdout);
+        return CONTROL_PIPE_PTYNO_SET;
     }
 
     if (strncmp(res, "RTP ", 4) == 0) {

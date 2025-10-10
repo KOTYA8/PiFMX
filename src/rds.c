@@ -652,6 +652,22 @@ int set_rds_rtp(char *rtp_string) {
     return 1; // Возвращаем успех
 }
 
+void disable_rds_ecc() {
+    rds_params.ecc_enabled = 0;
+}
+
+void disable_rds_lic() {
+    rds_params.lic_enabled = 0;
+}
+
+void disable_rds_pin() {
+    rds_params.pin_enabled = 0;
+}
+
+void disable_rds_ptyn() {
+    rds_params.ptyn_enabled = 0;
+}
+
 uint16_t get_rds_pi() {
     return rds_params.pi;
 }

@@ -37,10 +37,10 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  
 * **AFAF RESET** - Updates AF(A)FILE from afa.txt file. Example: `R`  
-* **ECC OFF** - ???  
-* **LIC OFF** - ???  
-* **PIN OFF** - ???  
-* **PTYN OFF** - ???  
+* **ECC OFF** - Turn off ECC. Example: `OFF`  
+* **LIC OFF** - Turn off LIC. Example: `OFF`  
+* **PIN OFF** - Turn off PIN. Example: `OFF`  
+* **PTYN OFF** - Turn off PTYN. Example: `PTYNO`  
 * **CT RESET** - Drops the time to the usual mode. Example: `R`  
 
 ### RDS2
@@ -341,12 +341,13 @@ RTP 0 / 1.0.10,2.0.10
 RTM P/A/D
 TA 0/1
 TP 0/1
-ECC E0
-LIC 20
-PIN 1,12,20
+ECC OFF / E0
+LIC OFF / 20
+PIN OFF / 1,12,20
 DI 0/S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS
 MS M/S
 PTYN 12345678
+PTYNO
 CT 0/1/R
 CTC 1:13,27.9.2025
 CTS 01:14,27.09.2025
@@ -363,4 +364,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V9** - Support **AFA**, **AFAF**. Management has appeared via `rds_ctl`: **AFA**, **AFAF**.  
+* **V10** - Fixed **PTYN**. Management has appeared via `rds_ctl`: **ECC,LIC,PIN OFF**, **PTYNO**.    

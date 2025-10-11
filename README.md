@@ -258,7 +258,7 @@ All arguments are optional:
 * `-ctz` specifies the change in the temporary zone (Clock Time Zone). Displayed through 2 or 6 characters, example: `-ctz p1`.  
 * `-afa` specifies the frequencies to switch the radio station from a low signal to a better. Alternative Frequencies List (A method). Displayed through 2 or many characters, example: `-afa 87.6 107`.  
 * `-afaf` specifies the file support for Alternative Frequencies List (A method). Displayed through 1, example: `-afaf 1`.
-* `-afb` specifies the extended version AF (A method), also supports regional frequencies. Displayed through 2 or many characters, example: `-afb "87.6 107,88.1r|88,89.1,92"`.    
+* `-afb` specifies the extended version AF (A method), also supports regional frequencies. Displayed through 2 or many characters, example: `-afb "87.6,107,88.1r|88,89.1,92"`.    
 * `-afbf` specifies the file support for Alternative Frequencies List (B method). Displayed through 1, example: `-afbf 1`.  
 
 ### Clock calibration (only if experiencing difficulties)

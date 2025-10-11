@@ -19,7 +19,7 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
 * **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1` or `rds/afa.txt`   
-* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional)⚠️: `87.6,90.1 95.5,90.5 90.6` or `rds/afb.txt`  
+* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional): `87.6,90.1 95.5,90.5r 90.6r` or `rds/afb.txt`  
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code. Example (2 characters): `XX`    
 * **LIC** - Language Identification Code. Example (2 characters): `XX`  
@@ -37,6 +37,9 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  
 * **AFAF RESET** - Updates AF(A)FILE from afa.txt file. Example: `R`  
+* **AFB OFF** - Turn off AF(B). Example: `0`   
+* **AFBF OFF** - Turn off AF(B)FILE. Example: `0`     
+* **AFBF RESET** - Updates AF(B)FILE from afa.txt file. Example: `R`   
 * **ECC OFF** - Turn off ECC. Example: `OFF`  
 * **LIC OFF** - Turn off LIC. Example: `OFF`  
 * **PIN OFF** - Turn off PIN. Example: `OFF`  
@@ -121,11 +124,11 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 **AF(A)FILE** (`-afaf`) **GLOBAL** - ✅ realized    
 **AF(A)FILE** (`AFAF`) **RDS_CTL** - ✅ realized 
 
-**AF(B)** (`-afb`) **GLOBAL** - ❌ not realized   
-**AF(B)** (`AFB`) **RDS_CTL** - ❌ not realized   
+**AF(B)** (`-afb`) **GLOBAL** - ✅ realized   
+**AF(B)** (`AFB`) **RDS_CTL** - ✅ realized  
   
-**AF(B)FILE** (`-afbf`) **GLOBAL** - ❌ not realized   
-**AF(B)FILE** (`AFBF`) **RDS_CTL** - ❌ not realized  
+**AF(B)FILE** (`-afbf`) **GLOBAL** - ✅ realized   
+**AF(B)FILE** (`AFBF`) **RDS_CTL** - ✅ realized  
   
 **M/S** (`-ms`) **GLOBAL** - ✅ realized   
 **M/S** (`MS`) **RDS_CTL** - ✅ realized   
@@ -215,7 +218,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM] [-afa freq1 freq2 ...] [-afaf 0/1]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM] [-afa freq1 freq2 ...] [-afaf 0/1] [-afb main,freq1 ...,freq(r) ...] [-afbf 0/1]
 ```
 All arguments are optional:  
 
@@ -253,7 +256,9 @@ All arguments are optional:
 * `-cts` specifies the support of its date and time (but it does not move anywhere) (Clock Time Still). Displayed through 13 or 16 characters, example: `-cts 1:13,27.9.2025`.  
 * `-ctz` specifies the change in the temporary zone (Clock Time Zone). Displayed through 2 or 6 characters, example: `-ctz p1`.  
 * `-afa` specifies the frequencies to switch the radio station from a low signal to a better. Alternative Frequencies List (A method). Displayed through 2 or many characters, example: `-afa 87.6 107`.  
-* `-afaf` specifies the file support for Alternative Frequencies List (A method). Displayed through 1, example: `-afaf 1`. 
+* `-afaf` specifies the file support for Alternative Frequencies List (A method). Displayed through 1, example: `-afaf 1`.
+* `-afb` specifies the extended version AF (A method), also supports regional frequencies. Displayed through 2 or many characters, example: `-afb "87.6 107,88.1r|88,89.1,92"`.    
+* `-afbf` specifies the file support for Alternative Frequencies List (B method). Displayed through 1, example: `-afbf 1`.  
 
 ### Clock calibration (only if experiencing difficulties)
 
@@ -354,6 +359,8 @@ CTS 01:14,27.09.2025
 CTZ m1:30
 AFA 0 / 87.6 107.9
 AFAF 0/1/R
+AFB 0 / 87.6,88,88.2|89,89.1,89.2  
+AFBF 0/1/R  
 ```
 
 ### PS and RT modes (rds_ctl)
@@ -364,4 +371,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V10** - Fixed **PTYN**. Management has appeared via `rds_ctl`: **ECC,LIC,PIN OFF**, **PTYNO**.    
+* **V11** - Support **AFB**, **AFBF**. Fixed **AFA**. Management has appeared via `rds_ctl`: **AFB**, **AFBF**.    

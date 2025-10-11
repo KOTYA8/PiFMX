@@ -229,7 +229,7 @@ map_peripheral(uint32_t base, uint32_t len)
 #define DATA_SIZE 5000
 
 
-int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes, int custom_time_set, int custom_time_is_static, int ct_h, int ct_m, int ct_d, int ct_mo, int ct_y, char* afa_str, int afaf_flag) {    // Catch all signals possible - it is vital we kill the DMA engine
+int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes, int custom_time_set, int custom_time_is_static, int ct_h, int ct_m, int ct_d, int ct_mo, int ct_y, char* afa_str, int afaf_flag, char* afb_str, int afbf_flag) {    // Catch all signals possible - it is vital we kill the DMA engine
     // on process exit!
     for (int i = 0; i < 64; i++) {
         struct sigaction sa;
@@ -384,22 +384,32 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
     set_rds_ta(ta);
     set_rds_ms(ms);
     set_rds_di(di_flags);
-    // Установка AF
-     if (afaf_flag) {
+    if (afaf_flag) {
         if (set_rds_af_from_file(afaf_flag)) {
              printf("AFA set from file: ON\n");
         } else {
-             // ИЗМЕНИТЕ ЭТУ СТРОКУ
              fatal("AFA set from file: FAILED (check rds/afa.txt)\n");
         }
     } else {
-         // ЗАМЕНИТЕ ЭТУ СТРОКУ
          if (set_rds_af(afa_str)) {
             printf("AFA set to: %s\n", strcmp(afa_str, "0") == 0 ? "OFF" : afa_str);
          } else {
             fatal("Invalid AFA value provided.\n");
          }
     }
+    if (afbf_flag) {
+    if (set_rds_afb_from_file(afbf_flag)) {
+         printf("AFB set from file: ON\n");
+    } else {
+         fatal("AFB set from file: FAILED (check rds/afb.txt)\n");
+      }
+    } else {
+     if (set_rds_afb(afb_str)) {
+        printf("AFB set to: %s\n", strcmp(afb_str, "0") == 0 ? "OFF" : afb_str);
+     } else {
+        fatal("Invalid AFB value provided.\n");
+     }
+}
     if (ptyn) set_rds_ptyn(ptyn);
     if (lic >= 0) set_rds_lic((uint8_t)lic);
     if (pin_day >= 0) set_rds_pin(pin_day, pin_hour, pin_minute);
@@ -520,6 +530,9 @@ int main(int argc, char **argv) {
     char* afa_str = "0";
     int afaf_flag = 0;
     int afa_str_is_dynamic = 0;
+    char* afb_str = "0";
+    int afbf_flag = 0;
+    int afb_str_is_dynamic = 0;
 
     // Parse command-line arguments
     for(int i=1; i<argc; i++) {
@@ -641,7 +654,27 @@ int main(int argc, char **argv) {
             i++;
             afaf_flag = atoi(param);
             if (afaf_flag < 0 || afaf_flag > 1) fatal("Invalid AFAF value. Use 0 for OFF, 1 for ON.\n");
-        } else if(strcmp("-ctz", arg)==0 && param != NULL) {
+    } else if(strcmp("-afb", arg)==0 && param != NULL) {
+        i++;
+        // Собираем все частоты в одну строку
+        int total_len = strlen(param) + 1;
+        afb_str = malloc(total_len);
+        strcpy(afb_str, param);
+        afb_str_is_dynamic = 1;
+
+        while (i + 1 < argc && argv[i + 1][0] != '-') {
+            i++;
+            int new_len = total_len + strlen(argv[i]) + 1;
+            afb_str = realloc(afb_str, new_len);
+            strcat(afb_str, " "); // Используем пробел как разделитель для сборки
+            strcat(afb_str, argv[i]);
+            total_len = new_len;
+        }
+    } else if(strcmp("-afbf", arg)==0 && param != NULL) {
+        i++;
+        afbf_flag = atoi(param);
+        if (afbf_flag < 0 || afbf_flag > 1) fatal("Invalid AFBF value. Use 0 for OFF, 1 for ON.\n");
+    } else if(strcmp("-ctz", arg)==0 && param != NULL) {
             i++;
             char *arg_ctz = param;
             int sign = 1;
@@ -699,7 +732,7 @@ int main(int argc, char **argv) {
             "                [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ctl control_pipe]\n"
             "                [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di SACD]\n"
             "                [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctz p|mH[:MM]] [-ctc H:M.D.M.Y] [-cts H:M.D.M.Y]\n"
-            "                [-afa 0/freq1 freq2 ...] [-afaf 0/1]\n", arg);
+            "                [-afa 0/freq1 freq2 ...] [-afaf 0/1] [-afb 0/main,af1,af2r...] [-afbf 0/1]\n", arg);
         }
     }
 
@@ -757,10 +790,13 @@ int main(int argc, char **argv) {
         }
     }
 
-    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes, custom_time_set, custom_time_is_static, ct_hour, ct_min, ct_day, ct_mon, ct_year, afa_str, afaf_flag);
+    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes, custom_time_set, custom_time_is_static, ct_hour, ct_min, ct_day, ct_mon, ct_year, afa_str, afaf_flag, afb_str, afbf_flag);
 
     if (afa_str_is_dynamic) {
         free(afa_str);
+    }
+    if (afb_str_is_dynamic) {
+        free(afb_str);
     }
     terminate(errcode);
 }

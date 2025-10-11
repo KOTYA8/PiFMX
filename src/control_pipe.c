@@ -336,7 +336,7 @@ int poll_control_pipe() {
         fflush(stdout);
         return is_static ? CONTROL_PIPE_CTS_SET : CONTROL_PIPE_CTC_SET;
     }
-    // Новые команды AFA и AFAF
+
     if (strncmp(res, "AFA ", 4) == 0) {
         char *arg = res + 4;
         set_rds_af(arg);
@@ -347,17 +347,13 @@ int poll_control_pipe() {
 
     if (strncmp(res, "AFAF ", 5) == 0) {
         char *arg = res + 5;
-        
-        // <<< НАЧАЛО ИЗМЕНЕНИЙ
         if (strcmp(arg, "R") == 0 || strcmp(arg, "r") == 0) {
-            // Если аргумент 'R', просто перечитываем файл
             if(set_rds_af_from_file(1)) {
                  printf("AFA list reloaded from file.\n");
              } else {
                  printf("ERROR: Failed to reload AFA list from file.\n");
              }
         } else {
-            // Иначе, обрабатываем как 0 или 1
             int afaf = atoi(arg);
             if (afaf == 0 || afaf == 1) {
                  if(set_rds_af_from_file(afaf)) {
@@ -369,10 +365,43 @@ int poll_control_pipe() {
                 printf("ERROR: Invalid AFAF value. Use 0, 1, or R.\n");
             }
         }
-        // <<< КОНЕЦ ИЗМЕНЕНИЙ
-
         fflush(stdout);
         return CONTROL_PIPE_AFAF_SET;
+    }
+    
+    if (strncmp(res, "AFB ", 4) == 0) {
+        char *arg = res + 4;
+    if (set_rds_afb(arg)) { // Передаем 0, т.к. carrier_freq неизвестна
+            printf("AFB set to: %s\n", strcmp(arg, "0") == 0 ? "OFF" : arg);
+        } else {
+            printf("ERROR: Invalid AFB value from control pipe.\n");
+        }
+        fflush(stdout);
+        return CONTROL_PIPE_AFB_SET;
+    }
+
+    if (strncmp(res, "AFBF ", 5) == 0) {
+        char *arg = res + 5;
+        if (strcmp(arg, "R") == 0 || strcmp(arg, "r") == 0) {
+        if(set_rds_afb_from_file(1)) { // Передаем 0
+                 printf("AFB list reloaded from file.\n");
+             } else {
+                 printf("ERROR: Failed to reload AFB list from file.\n");
+             }
+        } else {
+            int afbf = atoi(arg);
+            if (afbf == 0 || afbf == 1) {
+             if(set_rds_afb_from_file(afbf)) { // Передаем 0
+                     printf("AFB from file set to %s\n", afbf ? "ON" : "OFF");
+                 } else {
+                     printf("ERROR: AFB from file failed. Could not open rds/afb.txt\n");
+                 }
+            } else {
+                printf("ERROR: Invalid AFBF value. Use 0, 1, or R.\n");
+            }
+        }
+        fflush(stdout);
+        return CONTROL_PIPE_AFBF_SET;
     }
 
     // Если ни одна команда не подошла

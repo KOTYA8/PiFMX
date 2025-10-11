@@ -57,11 +57,13 @@ struct {
     struct tm custom_tm;
     time_t custom_time_start_t;
     time_t real_time_at_set_t;
-    // Новые поля для AF
     uint8_t af_list_to_send[MAX_AF_FREQUENCIES + 2]; // +2 для кода количества и заполнителя
     int af_list_size;
     int af_count;
     int af_current_pair_index;
+    uint8_t afb_list[256]; // Увеличенный буфер для всех пар
+    int afb_list_size;
+    int afb_current_pair_index;
 } rds_params = {
     .pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
     .ps = {0}, .rt = {0}, .original_rt = {0}, .ptyn = {0}, .pty = 0,
@@ -82,7 +84,10 @@ struct {
     .ct_mode = CT_SYSTEM,
     .af_list_size = 0,
     .af_count = 0,
-    .af_current_pair_index = 0
+    .af_current_pair_index = 0,
+    .afb_list = {0},
+    .afb_list_size = 0,
+    .afb_current_pair_index = 0
 };
 
 
@@ -190,6 +195,7 @@ void get_rds_group(int *buffer) {
     static int ps_state = 0;
     static int rt_state = 0;
     static int group_1a_cycle_idx = 0;
+    static int af_toggle = 0; // Переключатель между AFA и AFB
     uint16_t blocks[GROUP_LENGTH] = {rds_params.pi, 0, 0, 0};
 
     if (get_rds_ct_group(blocks)) {
@@ -200,7 +206,6 @@ void get_rds_group(int *buffer) {
 
         // Логика генерации групп RT+
         if (rds_params.rtp_enabled && (rds_params.tags[0].enabled || rds_params.tags[1].enabled)) {
-            // Сначала формируем полную 37-битную полезную нагрузку для RT+
             uint64_t payload = 0;
             rds_rtp_tag tag1 = rds_params.tags[0];
             rds_rtp_tag tag2 = rds_params.tags[1];
@@ -218,15 +223,14 @@ void get_rds_group(int *buffer) {
                 payload |= (uint64_t)(tag2.length_marker & 0x1F);
             }
 
-            // Извлекаем первые 5 бит нагрузки - это будет наш "код приложения"
             uint8_t app_code = (payload >> 32) & 0x1F;
 
-            if (state == 6) { // Состояние 6 -> Группа 3A (Анонс ODA для RT+)
+            if (state == 6) { // Группа 3A (Анонс ODA для RT+)
                 blocks[1] = 0x3000 | block1_base_other | app_code;
-                blocks[2] = 0x0000; // По данным Stereo Tool, этот блок должен быть нулевым
+                blocks[2] = 0x0000;
                 blocks[3] = 0x4BD7; // AID для RT+
                 group_sent = 1;
-            } else if (state == 7) { // Состояние 7 -> Группа 12A (Передача тегов RT+)
+            } else if (state == 7) { // Группа 12A (Передача тегов RT+)
                 blocks[1] = 0xC000 | block1_base_other | app_code;
                 blocks[2] = (payload >> 16) & 0xFFFF;
                 blocks[3] = payload & 0xFFFF;
@@ -236,7 +240,6 @@ void get_rds_group(int *buffer) {
 
         if (!group_sent) {
             int group_1A_sent = 0;
-            // Слот state == 3 зарезервирован для отправки групп типа 1A
             if (state == 3) {
                 char enabled_1a_types[4];
                 int num_enabled = 0;
@@ -265,7 +268,7 @@ void get_rds_group(int *buffer) {
             }
 
             if (!group_1A_sent) {
-                if (state == 4 || state == 5) { // Состояния 4,5 -> Группа 2A (RadioText)
+                if (state == 4 || state == 5) { // Группа 2A (RadioText)
                     uint8_t ab_flag = 0;
                     if (rds_params.rt_channel_mode == 1) ab_flag = 1;
                     else if (rds_params.rt_channel_mode == 2) ab_flag = rds_params.rt_ab_flag;
@@ -273,15 +276,15 @@ void get_rds_group(int *buffer) {
                     blocks[2] = rds_params.rt[rt_state*4+0]<<8 | rds_params.rt[rt_state*4+1];
                     blocks[3] = rds_params.rt[rt_state*4+2]<<8 | rds_params.rt[rt_state*4+3];
                     rt_state = (rt_state + 1) % 16;
-                } else if (rds_params.ptyn_enabled && state == 1) { // Состояние 1 -> PTYN Сегмент 0
+                } else if (rds_params.ptyn_enabled && state == 1) { // PTYN Сегмент 0
                     blocks[1] = 0xA000 | block1_base_other | 0;
                     blocks[2] = rds_params.ptyn[0*4+0]<<8 | rds_params.ptyn[0*4+1];
                     blocks[3] = rds_params.ptyn[0*4+2]<<8 | rds_params.ptyn[0*4+3];
-                } else if (rds_params.ptyn_enabled && rds_params.ptyn_second_segment_exists && state == 2) { // Состояние 2 -> PTYN Сегмент 1
+                } else if (rds_params.ptyn_enabled && rds_params.ptyn_second_segment_exists && state == 2) { // PTYN Сегмент 1
                     blocks[1] = 0xA000 | block1_base_other | 1;
                     blocks[2] = rds_params.ptyn[1*4+0]<<8 | rds_params.ptyn[1*4+1];
                     blocks[3] = rds_params.ptyn[1*4+2]<<8 | rds_params.ptyn[1*4+3];
-                } else { // Все остальные состояния -> Группа 0A (PS и AF)
+                } else { // Группа 0A (PS и AF)
                     uint8_t di_bit = 0;
                     switch (ps_state) {
                         case 0: if (rds_params.di_flags & 8) di_bit = 1; break;
@@ -291,18 +294,31 @@ void get_rds_group(int *buffer) {
                     }
                     blocks[1] = block1_base_other | (rds_params.ta ? 0x10 : 0) | (rds_params.ms ? 0x08 : 0) | (di_bit << 2) | ps_state;
 
-                        if (rds_params.af_list_size > 0) {
-                        // Отправляем частоты парами из подготовленного списка
-                        uint8_t af1 = rds_params.af_list_to_send[rds_params.af_current_pair_index * 2];
-                        uint8_t af2 = rds_params.af_list_to_send[rds_params.af_current_pair_index * 2 + 1];
-                        blocks[2] = (af1 << 8) | af2;
-
-                        rds_params.af_current_pair_index++;
-                        // Если дошли до конца списка (который всегда будет иметь четное число элементов), начинаем сначала
-                        if (rds_params.af_current_pair_index * 2 >= rds_params.af_list_size) {
-                            rds_params.af_current_pair_index = 0;
+                    int af_sent_this_cycle = 0;
+                    
+                    if (af_toggle == 1 && rds_params.afb_list_size > 0) {
+                        // Отправляем AFB
+                        int num_pairs = rds_params.afb_list_size / 2;
+                        if (num_pairs > 0) {
+                            int pair_index = rds_params.afb_current_pair_index;
+                            blocks[2] = (rds_params.afb_list[pair_index * 2] << 8) | rds_params.afb_list[pair_index * 2 + 1];
+                            rds_params.afb_current_pair_index = (pair_index + 1) % num_pairs;
+                            af_sent_this_cycle = 1;
                         }
-                    } else {
+                        if (rds_params.af_list_size > 0) af_toggle = 0; // В следующий раз отправляем AFA
+                    } else if (rds_params.af_list_size > 0) {
+                        // Отправляем AFA
+                        int num_pairs = rds_params.af_list_size / 2;
+                         if (num_pairs > 0) {
+                            int pair_index = rds_params.af_current_pair_index;
+                            blocks[2] = (rds_params.af_list_to_send[pair_index * 2] << 8) | rds_params.af_list_to_send[pair_index * 2 + 1];
+                            rds_params.af_current_pair_index = (pair_index + 1) % num_pairs;
+                            af_sent_this_cycle = 1;
+                        }
+                        if (rds_params.afb_list_size > 0) af_toggle = 1; // В следующий раз отправляем AFB
+                    }
+
+                    if (!af_sent_this_cycle) {
                          blocks[2] = rds_params.pi;
                     }
 
@@ -312,7 +328,7 @@ void get_rds_group(int *buffer) {
             }
         }
 
-        state = (state + 1) % 8; // У нас 8 состояний
+        state = (state + 1) % 8;
     }
 
     // Расчет CRC и формирование битстрима
@@ -387,9 +403,9 @@ int set_rds_af(char* af_list_str) {
     rds_params.af_current_pair_index = 0;
 
     if (strcmp(af_list_str, "0") == 0) {
-        // Устанавливаем код "No AF exists" согласно таблице 3.2
         rds_params.af_list_to_send[0] = 224;
-        rds_params.af_list_size = 1;
+        rds_params.af_list_to_send[1] = 205; // Filler
+        rds_params.af_list_size = 2;
         return 1;
     }
 
@@ -397,34 +413,37 @@ int set_rds_af(char* af_list_str) {
     char* str = strdup(af_list_str);
     char* to_free = str;
     char* token;
-    
-    while ((token = strsep(&str, " ")) != NULL && rds_params.af_count < MAX_AF_FREQUENCIES) {
+
+    while ((token = strsep(&str, " ,")) != NULL && rds_params.af_count < MAX_AF_FREQUENCIES) {
         if (strlen(token) == 0) continue;
         float freq = atof(token);
+        if (freq == 0) continue;
         uint8_t code = freq_to_code(freq);
         if (code != 255) {
             temp_freq_codes[rds_params.af_count++] = code;
         } else {
-            fprintf(stderr, "Error: Invalid or out-of-range AF frequency provided: %s. Valid range is 87.6-107.9 MHz.\n", token);
+            fprintf(stderr, "Error: Invalid or out-of-range AF frequency: %s.\n", token);
             free(to_free);
-            return 0; // Ошибка
+            return 0;
         }
     }
     free(to_free);
 
-    // Формируем список для отправки
-    // Первый байт - количество частот (коды 225-249)
+    // FIX: Если частота всего одна, дублируем её для лучшей совместимости
+    if (rds_params.af_count == 1) {
+        temp_freq_codes[1] = temp_freq_codes[0];
+        rds_params.af_count = 2;
+    }
+
     rds_params.af_list_to_send[0] = 224 + rds_params.af_count;
-    // Копируем сами частоты
     memcpy(&rds_params.af_list_to_send[1], temp_freq_codes, rds_params.af_count);
     rds_params.af_list_size = 1 + rds_params.af_count;
 
-    // Если количество частот нечетное, добавляем код-заполнитель 205
-    if (rds_params.af_count % 2 != 0) {
+    if (rds_params.af_list_size % 2 != 0) {
         rds_params.af_list_to_send[rds_params.af_list_size++] = 205;
     }
-    
-    return 1; // Успех
+
+    return 1;
 }
 
 int set_rds_af_from_file(int afaf) {
@@ -689,4 +708,129 @@ uint8_t get_rds_ecc() {
 
 uint8_t get_rds_di() {
     return rds_params.di_flags;
+}
+
+int set_rds_afb(char* afb_list_str) {
+    rds_params.afb_list_size = 0;
+    rds_params.afb_current_pair_index = 0;
+
+    if (strcmp(afb_list_str, "0") == 0) {
+        return 1; // Выключаем
+    }
+
+    uint8_t all_pairs_list[256];
+    int total_pairs = 0;
+
+    char* str_variants = strdup(afb_list_str);
+    if (!str_variants) return 0;
+    char* to_free_variants = str_variants;
+    char* variant_token;
+
+    while ((variant_token = strsep(&str_variants, "|")) != NULL) {
+        uint8_t af_codes_in_variant[MAX_AF_FREQUENCIES];
+        uint8_t rv_flags_in_variant[MAX_AF_FREQUENCIES];
+        int variant_af_count = 0;
+        uint8_t tuned_freq_code = 0;
+
+        char* str_freqs = strdup(variant_token);
+        if (!str_freqs) { free(to_free_variants); return 0; }
+        char* to_free_freqs = str_freqs;
+        char* freq_token;
+        int is_first_freq = 1;
+
+        while ((freq_token = strsep(&str_freqs, " ,")) != NULL) {
+            if (strlen(freq_token) == 0) continue;
+
+            int is_regional = 0;
+            int len = strlen(freq_token);
+            if (tolower(freq_token[len - 1]) == 'r') {
+                is_regional = 1;
+                freq_token[len - 1] = '\0';
+            }
+
+            float freq = atof(freq_token);
+            if (freq == 0) continue;
+            uint8_t code = freq_to_code(freq);
+
+            if (code == 255) {
+                fprintf(stderr, "Error: Invalid AFB frequency: %s\n", freq_token);
+                free(to_free_freqs); free(to_free_variants); return 0;
+            }
+
+            if (is_first_freq) {
+                tuned_freq_code = code;
+                is_first_freq = 0;
+            } else if (variant_af_count < MAX_AF_FREQUENCIES) {
+                af_codes_in_variant[variant_af_count] = code;
+                rv_flags_in_variant[variant_af_count] = is_regional;
+                variant_af_count++;
+            }
+        }
+        free(to_free_freqs);
+
+        if (tuned_freq_code != 0 && variant_af_count > 0) {
+            all_pairs_list[total_pairs * 2] = 224 + variant_af_count;
+            all_pairs_list[total_pairs * 2 + 1] = tuned_freq_code;
+            total_pairs++;
+
+            for (int i = 0; i < variant_af_count; i++) {
+                uint8_t af_code = af_codes_in_variant[i];
+                uint8_t is_rv = rv_flags_in_variant[i];
+                uint8_t F1 = is_rv ? (af_code > tuned_freq_code ? af_code : tuned_freq_code) : (af_code < tuned_freq_code ? af_code : tuned_freq_code);
+                uint8_t F2 = is_rv ? (af_code < tuned_freq_code ? af_code : tuned_freq_code) : (af_code > tuned_freq_code ? af_code : tuned_freq_code);
+                if (F1==F2) {F1=tuned_freq_code; F2=af_code;}
+
+                all_pairs_list[total_pairs * 2] = F1;
+                all_pairs_list[total_pairs * 2 + 1] = F2;
+                total_pairs++;
+            }
+        }
+    }
+    free(to_free_variants);
+
+    if (total_pairs > 0) {
+        memcpy(rds_params.afb_list, all_pairs_list, total_pairs * 2);
+        rds_params.afb_list_size = total_pairs * 2;
+    }
+
+    return 1;
+}
+
+int set_rds_afb_from_file(int afbf) {
+    if (afbf == 0) {
+        rds_params.afb_list_size = 0;
+        return 1;
+    }
+
+    const char* paths_to_try[] = {"rds/afb.txt", "src/rds/afb.txt", "afb.txt"};
+    FILE* f = NULL;
+    char found_path[256] = {0};
+    for (int i = 0; i < 3; i++) {
+        f = fopen(paths_to_try[i], "r");
+        if (f) {
+            strncpy(found_path, paths_to_try[i], sizeof(found_path) - 1);
+            break;
+        }
+    }
+
+    if (!f) {
+        perror("Error: Could not find afb.txt in default locations");
+        return 0;
+    }
+    printf("Reading AFB list from: %s\n", found_path);
+
+    char line[1024];
+    char all_freqs[2048] = {0};
+    while (fgets(line, sizeof(line), f)) {
+        line[strcspn(line, "\r\n")] = 0;
+        strcat(all_freqs, line);
+        strcat(all_freqs, "|");
+    }
+    fclose(f);
+
+    if (strlen(all_freqs) > 0) {
+        all_freqs[strlen(all_freqs) - 1] = '\0';
+    }
+
+    return set_rds_afb(all_freqs);
 }

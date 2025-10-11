@@ -18,8 +18,8 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
-* **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1` or `rds/afa.txt`   
-* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional): `87.6,90.1 95.5,90.5r 90.6r`.  
+* **AF(A)** - Alternative Frequencies List (A method) (Frequencies: `87.6 - 107.9`). Example: `87.6 87.8 91.1` or `rds/afa.txt`   
+* **AF(B)** - Alternative Frequencies List (B method) (Frequencies: `87.6 - 107.9`). Example (main,same,regional): `87.6,90.1 95.5,90.5r 90.6r`.  
 If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds/afb.txt`      
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code. Example (2 characters): `XX`    

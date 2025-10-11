@@ -49,7 +49,7 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 
 ### RDS2
 * **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 
-* **Station LOGO** - Broadcaster's graphical logo. Example: `file.jpg, png, gif or link`
+* **Station LOGO** - Broadcaster's graphical logo. Example: `file.jpg, png, gif` or `link`
 * **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set. Example: `64 characters`
 
 ### RDS Applications

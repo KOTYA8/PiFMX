@@ -14,7 +14,7 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX` or ❌`off` 
 * **RT** - Radio Text. Example: `64 characters` or ❌`off` 
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`   
-* **RT(Mode)** - Radio Text (Padding/0A/0D). Modes: P/A/D. Example: `P/A/D`  
+* **RT(Mode)** - Radio Text (Padding/⚠️0A/0D). Modes: P/A/D. Example: `P/A/D`  
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`

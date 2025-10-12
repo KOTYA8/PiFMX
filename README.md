@@ -9,10 +9,10 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **PiFMSH** (coming soon) - Scheduler. Automatic change of **all RDS modes**, after time all. For **rds_ctl**    
 
 # Functions RDS
-* **PI** - Programme Identification. Example (4 characters): `XXXX` or `off`
+* **PI** - Programme Identification. Example (4 characters): `XXXX` or ❌`off`
 * **PTY** - Programme Type. Example: `00 - 31`
-* **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX` or `off` 
-* **RT** - Radio Text. Example: `64 characters` or `off` 
+* **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX` or ❌`off` 
+* **RT** - Radio Text. Example: `64 characters` or ❌`off` 
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`   
 * **RT(Mode)** - Radio Text (Padding/0A/0D). Modes: P/A/D. Example: `P/A/D`  
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
@@ -34,10 +34,10 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 * **CTZ** - Clock Time Zone. `p` - plus, `m` - minus. Example: `m1, m3, p9:30`
 
 #### RDS_CTL
-* **RDS RESET** - Resets to initial RDS. Example: `R`
-* **PI OFF** - Turn off PI. Example: `OFF`
-* **PS OFF** - Turn off PS. Example: `OFF`
-* **RT OFF** - Turn off RT. Example: `OFF`
+* **RDS RESET** - ❌Resets to initial RDS. Example: `R`
+* **PI OFF** - ❌Turn off PI. Example: `OFF`
+* **PS OFF** - ❌Turn off PS. Example: `OFF`
+* **RT OFF** - ❌Turn off RT. Example: `OFF`
 * **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  

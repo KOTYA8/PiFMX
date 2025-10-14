@@ -748,8 +748,8 @@ int main(int argc, char **argv) {
             }
             } else {
             fatal("Unrecognised argument: %s.\n"
-            "Syntax: pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code]\n"
-            "                [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ctl control_pipe]\n"
+            "Syntax: pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-pi pi_code] [-pio]\n"
+            "                [-ps ps_text] [-pso] [-rt rt_text] [-rto] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ctl control_pipe]\n"
             "                [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di SACD]\n"
             "                [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctz p|mH[:MM]] [-ctc H:M.D.M.Y] [-cts H:M.D.M.Y]\n"
             "                [-afa 0/freq1 freq2 ...] [-afaf 0/1] [-afb 0/main,af1,af2r...] [-afbf 0/1]\n", arg);

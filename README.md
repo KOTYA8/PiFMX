@@ -9,10 +9,10 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **PiFMSH** (coming soon) - Scheduler. Automatic change of **all RDS modes**, after time all. For **rds_ctl**    
 
 # Functions RDS
-* **PI** - Programme Identification. Example (4 characters): `XXXX` or ❌`off`
+* **PI** - Programme Identification. Example (4 characters): `XXXX` or `pio`
 * **PTY** - Programme Type. Example: `00 - 31`
-* **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX` or ❌`off` 
-* **RT** - Radio Text. Example: `64 characters` or ❌`off` 
+* **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX` or `pso` 
+* **RT** - Radio Text. Example: `64 characters` or `rto` 
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`   
 * **RT(Mode)** - Radio Text (Padding/⚠️0A/0D). Modes: P/A/D. Example: `P/A/D`  
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
@@ -35,9 +35,9 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 
 #### RDS_CTL
 * **RDS RESET** - ❌Resets to initial RDS. Example: `R`
-* **PI OFF** - ❌Turn off PI. Example: `OFF`
-* **PS OFF** - ❌Turn off PS. Example: `OFF`
-* **RT OFF** - ❌Turn off RT. Example: `OFF`
+* **PI OFF** - Turn off/on PI. Example: `PIO` or `PION`
+* **PS OFF** - Turn off/on PS. Example: `PSO` or `PSON`
+* **RT OFF** - Turn off/on RT. Example: `RTO` or `RTON`
 * **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  
@@ -223,7 +223,7 @@ sudo ./pi_fm_x
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM] [-afa freq1 freq2 ...] [-afaf 0/1] [-afb main,freq1 ...,freq(r) ...] [-afbf 0/1]
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-pi pi_code] [-pio] [-ps ps_text] [-pso] [-rt rt_text] [-rto] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM] [-afa freq1 freq2 ...] [-afaf 0/1] [-afb main,freq1 ...,freq(r) ...] [-afbf 0/1]
 ```
 All arguments are optional:  
 
@@ -241,9 +241,12 @@ All arguments are optional:
   
 * `' ' or " "` can be used for additional characters (gap or prohibited symbols in the console). Example: `'hello'` -> `hello` or `" hello"` -> ` hello`  
   
-* `-pi` specifies the PI-code of the RDS broadcast. 4 hexadecimal digits. Example: `-pi FFFF`.  
-* `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.  
+* `-pi` specifies the PI-code of the RDS broadcast. 4 hexadecimal digits. Example: `-pi FFFF`.
+* `-pio` specifies the PI shutdown. Example: `-pio`  
+* `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.
+* `-pso` specifies the PS shutdown. Example: `-pso`  
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.
+* `-rto` specifies the RT shutdown. Example: `-rto`  
 * `-rts` specifies the switching of RT modes (A/B/AB). Example: `-rts A/B/AB`.
 * `-rtp` specifies the classification of tags for Radiotext (Radio Text+). Displayed through 5 or 17 characters, example: `-rtp 1.0.10,2.0.10`.
 * `-rtm` specifies the full (64 symbols) mode or obtaining only text (P/A/D). Displayed through 1, example: `-rtm P`.  
@@ -343,9 +346,12 @@ cat >rds_ctl
 ```
 ```
 PI 0000
+PIO
 PTY 10
 PS MyText
+PSO
 RT A text to be sent as radiotext
+RTO
 RTS A/B/AB
 RTP 0 / 1.0.10,2.0.10
 RTM P/A/D
@@ -376,4 +382,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V11** - Support **AFB**, **AFBF**. Fixed **AFA**. Management has appeared via `rds_ctl`: **AFB**, **AFBF**.    
+* **V12** - Support **PIO**, **PSO**, **RTO**. Management has appeared via `rds_ctl`: **PIO**, **PSO**, **RTO**.   

@@ -14,6 +14,9 @@
 #define GROUP_LENGTH 4
 #define MAX_AF_FREQUENCIES 25
 
+const uint16_t cyclic_pi_sequence[] = {0xA121, 0x2121, 0x012A, 0xA120, 0x012F, 0x0128, 0x0129, 0xBEEF};
+const int cyclic_pi_sequence_size = sizeof(cyclic_pi_sequence) / sizeof(uint16_t);
+
 enum ct_mode { CT_SYSTEM, CT_CUSTOM_TICKING, CT_CUSTOM_STATIC };
 
 typedef struct {
@@ -26,6 +29,9 @@ typedef struct {
 struct {
     uint16_t pi;
     uint16_t original_pi;
+    int pi_cyclic_mode;     // <-- Флаг для -pio
+    int pi_random_mode;     // <-- Флаг для -rds-bug
+    int buggy_pi_index;
     int ta;
     int tp;
     int ms;
@@ -68,7 +74,7 @@ struct {
     int ps_enabled;
     int rt_enabled;
 } rds_params = {
-    .pi = 0x1234, .original_pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
+    .pi = 0x1234, .original_pi = 0x1234, .pi_cyclic_mode = 0, .pi_random_mode = 0, .buggy_pi_index = 0, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
     .ps = {0}, .rt = {0}, .original_rt = {0}, .ptyn = {0}, .pty = 0,
     .ecc = 0, .ecc_enabled = 0,
     .lic = 0, .lic_enabled = 0,
@@ -200,8 +206,21 @@ void get_rds_group(int *buffer) {
     static int ps_state = 0;
     static int rt_state = 0;
     static int group_1a_cycle_idx = 0;
-    static int af_toggle = 0; // Переключатель между AFA и AFB
+    static int af_toggle = 0;
     uint16_t blocks[GROUP_LENGTH] = {rds_params.pi, 0, 0, 0};
+
+    // --- НАША НОВАЯ, ЧИСТАЯ ЛОГИКА ---
+    if (rds_params.pi_random_mode) {
+        // Режим -rds-bug: полностью случайный PI
+        rds_params.pi = (rand() % 0xFFFE) + 1;
+    } else if (rds_params.pi_cyclic_mode) {
+        // Режим -pio: циклическая смена PI из последовательности
+        rds_params.pi = cyclic_pi_sequence[rds_params.buggy_pi_index];
+        rds_params.buggy_pi_index = (rds_params.buggy_pi_index + 1) % cyclic_pi_sequence_size;
+    }
+    // Присваиваем измененный PI первому блоку
+    blocks[0] = rds_params.pi;
+    // ------------------------------------
 
     if (get_rds_ct_group(blocks)) {
         // Группа CT (время) имеет приоритет и была отправлена.
@@ -328,15 +347,14 @@ void get_rds_group(int *buffer) {
                     }
 
                     if (rds_params.ps_enabled) {
-                    blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
+                        blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
                     } else {
-                    blocks[3] = ' '<<8 | ' ';
+                        blocks[3] = ' '<<8 | ' ';
                     }
                     ps_state = (ps_state + 1) % 4;
-            
+                }
             }
         }
-    }
 
         state = (state + 1) % 8;
     }
@@ -345,6 +363,9 @@ void get_rds_group(int *buffer) {
     for (int i=0; i<GROUP_LENGTH; i++) {
         uint16_t block = blocks[i];
         uint16_t check = crc(block) ^ offset_words[i];
+        if (rds_params.pi_cyclic_mode && i == 0) {
+            check = check ^ 0x0001; // Инвертируем последний бит CRC
+        }
         for (int j=0; j<BLOCK_SIZE; j++) {
             *buffer++ = ((block & (1<<(BLOCK_SIZE-1))) != 0);
             block <<= 1;
@@ -723,6 +744,14 @@ uint8_t get_rds_ecc() {
 
 uint8_t get_rds_di() {
     return rds_params.di_flags;
+}
+
+void set_rds_pi_cyclic_mode(int enabled) {
+    rds_params.pi_cyclic_mode = enabled;
+}
+
+void set_rds_pi_random_mode(int enabled) {
+    rds_params.pi_random_mode = enabled;
 }
 
 void set_rds_ps_enabled(int enabled) {

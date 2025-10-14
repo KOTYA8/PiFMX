@@ -213,14 +213,14 @@ int poll_control_pipe() {
     }
 
     if (strcmp(res, "PIO") == 0) {
-        set_rds_pi_null(1);
-        printf("PI set to NULL (0x0000)\n");
+        set_rds_pi_cyclic_mode(1);
+        printf("Cyclic PI mode enabled (----)\n");
         fflush(stdout);
         return CONTROL_PIPE_PIO_SET;
     }
     if (strcmp(res, "PION") == 0) {
-        set_rds_pi_null(0);
-        printf("PI restored to original value\n");
+        set_rds_pi_cyclic_mode(0);
+        printf("Cyclic PI mode disabled\n");
         fflush(stdout);
         return CONTROL_PIPE_PIO_SET;
     }

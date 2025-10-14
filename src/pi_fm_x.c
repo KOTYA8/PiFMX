@@ -229,7 +229,7 @@ map_peripheral(uint32_t base, uint32_t len)
 #define DATA_SIZE 5000
 
 
-int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes, int custom_time_set, int custom_time_is_static, int ct_h, int ct_m, int ct_d, int ct_mo, int ct_y, char* afa_str, int afaf_flag, char* afb_str, int afbf_flag, int pio, int pso, int rto, int varying_ps) {    // Catch all signals possible - it is vital we kill the DMA engine
+int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes, int custom_time_set, int custom_time_is_static, int ct_h, int ct_m, int ct_d, int ct_mo, int ct_y, char* afa_str, int afaf_flag, char* afb_str, int afbf_flag, int pio, int pso, int rto, int varying_ps, int rds_bug) {    // Catch all signals possible - it is vital we kill the DMA engine
     // on process exit!
     for (int i = 0; i < 64; i++) {
         struct sigaction sa;
@@ -367,9 +367,11 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
 
     // Initialize the RDS modulator
     char myps[9] = {0};
-
     if (pio) {
-        pi = 0x0000; // Если флаг -pio, ставим PI в ноль
+    set_rds_pi_cyclic_mode(1);
+    }
+    if (rds_bug) {
+    set_rds_pi_random_mode(1);
     }
     set_rds_pi(pi);
     if (pso) set_rds_ps_enabled(0);
@@ -504,6 +506,7 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
 
 
 int main(int argc, char **argv) {
+    srand(time(NULL));
     char *audio_file = NULL;
     char *control_pipe = NULL;
     uint32_t carrier_freq = 107900000;
@@ -528,7 +531,6 @@ int main(int argc, char **argv) {
     int custom_time_set = 0;
     int custom_time_is_static = 0;
     int ct_hour=0, ct_min=0, ct_day=0, ct_mon=0, ct_year=0;
-    // Новые переменные для AF
     char* afa_str = "0";
     int afaf_flag = 0;
     int afa_str_is_dynamic = 0;
@@ -537,7 +539,8 @@ int main(int argc, char **argv) {
     int afb_str_is_dynamic = 0;
     int pso_flag = 0;
     int rto_flag = 0;
-    int pio_flag = 0;
+    int pio_flag = 0;       // Для циклического режима
+    int rds_bug_flag = 0;   // Для случайного режима
     int varying_ps = 0;
 
     // Parse command-line arguments
@@ -545,11 +548,14 @@ int main(int argc, char **argv) {
         char *arg = argv[i];
         char *param = NULL;
 
-       if(strcmp("-pio", arg) == 0) { // <-- Изменили здесь
+       if(strcmp("-pio", arg) == 0) {
         pio_flag = 1;
         continue;
        }    
-    
+       if(strcmp("-rds-bug", arg) == 0) {
+        rds_bug_flag = 1;
+        continue;
+       }
        if(strcmp("-pso", arg) == 0) {
         pso_flag = 1;
         continue;
@@ -762,7 +768,9 @@ int main(int argc, char **argv) {
     printf("Locale set to %s.\n", locale);
 
     if (pio_flag) {
-    printf("PI: OFF (set to 0x0000)\n");
+    printf("PI: Cyclic mode enabled (----)\n");
+    } else if (rds_bug_flag) {
+    printf("PI: Random mode enabled (RDS reboot)\n");
     } else {
     printf("PI: %04X\n", pi);
     }
@@ -833,7 +841,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes, custom_time_set, custom_time_is_static, ct_hour, ct_min, ct_day, ct_mon, ct_year, afa_str, afaf_flag, afb_str, afbf_flag, pio_flag, pso_flag, rto_flag, varying_ps);
+    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes, custom_time_set, custom_time_is_static, ct_hour, ct_min, ct_day, ct_mon, ct_year, afa_str, afaf_flag, afb_str, afbf_flag, pio_flag, pso_flag, rto_flag, varying_ps, rds_bug_flag);
 
     if (afa_str_is_dynamic) {
         free(afa_str);

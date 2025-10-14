@@ -29,6 +29,9 @@ extern void disable_rds_ecc();
 extern void disable_rds_lic();
 extern void disable_rds_pin();
 extern void disable_rds_ptyn();
+extern void set_rds_pi_null(int nullify);
+extern void set_rds_ps_enabled(int enabled);
+extern void set_rds_rt_enabled(int enabled);
 
 extern uint16_t get_rds_pi();
 extern uint8_t get_rds_pty();

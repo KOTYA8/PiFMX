@@ -212,6 +212,45 @@ int poll_control_pipe() {
         return CONTROL_PIPE_PTYNO_SET;
     }
 
+    if (strcmp(res, "PIO") == 0) {
+        set_rds_pi_null(1);
+        printf("PI set to NULL (0x0000)\n");
+        fflush(stdout);
+        return CONTROL_PIPE_PIO_SET;
+    }
+    if (strcmp(res, "PION") == 0) {
+        set_rds_pi_null(0);
+        printf("PI restored to original value\n");
+        fflush(stdout);
+        return CONTROL_PIPE_PIO_SET;
+    }
+
+    if (strcmp(res, "PSO") == 0) {
+        set_rds_ps_enabled(0);
+        printf("PS disabled\n");
+        fflush(stdout);
+        return CONTROL_PIPE_PSO_SET;
+    }
+    if (strcmp(res, "PSON") == 0) {
+        set_rds_ps_enabled(1);
+        printf("PS enabled\n");
+        fflush(stdout);
+        return CONTROL_PIPE_PSO_SET;
+    }
+
+    if (strcmp(res, "RTO") == 0) {
+        set_rds_rt_enabled(0);
+        printf("RT disabled\n");
+        fflush(stdout);
+        return CONTROL_PIPE_RTO_SET;
+    }
+    if (strcmp(res, "RTON") == 0) {
+        set_rds_rt_enabled(1);
+        printf("RT enabled\n");
+        fflush(stdout);
+        return CONTROL_PIPE_RTO_SET;
+    }
+
     if (strncmp(res, "RTP ", 4) == 0) {
         char *arg = res + 4;
         if (strcmp(arg, "0") == 0) {

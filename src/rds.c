@@ -25,6 +25,7 @@ typedef struct {
 
 struct {
     uint16_t pi;
+    uint16_t original_pi;
     int ta;
     int tp;
     int ms;
@@ -64,8 +65,10 @@ struct {
     uint8_t afb_list[256]; // Увеличенный буфер для всех пар
     int afb_list_size;
     int afb_current_pair_index;
+    int ps_enabled;
+    int rt_enabled;
 } rds_params = {
-    .pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
+    .pi = 0x1234, .original_pi = 0x1234, .ta = 0, .tp = 0, .ms = 1, .di_flags = 0,
     .ps = {0}, .rt = {0}, .original_rt = {0}, .ptyn = {0}, .pty = 0,
     .ecc = 0, .ecc_enabled = 0,
     .lic = 0, .lic_enabled = 0,
@@ -87,7 +90,9 @@ struct {
     .af_current_pair_index = 0,
     .afb_list = {0},
     .afb_list_size = 0,
-    .afb_current_pair_index = 0
+    .afb_current_pair_index = 0,
+    .ps_enabled = 1,
+    .rt_enabled = 1
 };
 
 
@@ -268,7 +273,7 @@ void get_rds_group(int *buffer) {
             }
 
             if (!group_1A_sent) {
-                if (state == 4 || state == 5) { // Группа 2A (RadioText)
+                if ((state == 4 || state == 5) && rds_params.rt_enabled) { // Группа 2A (RadioText)
                     uint8_t ab_flag = 0;
                     if (rds_params.rt_channel_mode == 1) ab_flag = 1;
                     else if (rds_params.rt_channel_mode == 2) ab_flag = rds_params.rt_ab_flag;
@@ -322,11 +327,16 @@ void get_rds_group(int *buffer) {
                          blocks[2] = rds_params.pi;
                     }
 
+                    if (rds_params.ps_enabled) {
                     blocks[3] = rds_params.ps[ps_state*2]<<8 | rds_params.ps[ps_state*2+1];
+                    } else {
+                    blocks[3] = ' '<<8 | ' ';
+                    }
                     ps_state = (ps_state + 1) % 4;
-                }
+            
             }
         }
+    }
 
         state = (state + 1) % 8;
     }
@@ -503,6 +513,11 @@ void set_rds_rt_mode(char mode) {
 
 void set_rds_pi(uint16_t pi_code) {
     rds_params.pi = pi_code;
+    // Сохраняем код как "оригинальный", если он не нулевой.
+    // Это позволит нам восстановить его командой PION.
+    if (pi_code != 0x0000) {
+        rds_params.original_pi = pi_code;
+    }
 }
 
 void set_rds_ct(int ct) {
@@ -708,6 +723,22 @@ uint8_t get_rds_ecc() {
 
 uint8_t get_rds_di() {
     return rds_params.di_flags;
+}
+
+void set_rds_ps_enabled(int enabled) {
+    rds_params.ps_enabled = enabled;
+}
+
+void set_rds_rt_enabled(int enabled) {
+    rds_params.rt_enabled = enabled;
+}
+
+void set_rds_pi_null(int nullify) {
+    if (nullify) {
+        rds_params.pi = 0x0000;
+    } else {
+        rds_params.pi = rds_params.original_pi;
+    }
 }
 
 int set_rds_afb(char* afb_list_str) {

@@ -229,7 +229,7 @@ map_peripheral(uint32_t base, uint32_t len)
 #define DATA_SIZE 5000
 
 
-int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes, int custom_time_set, int custom_time_is_static, int ct_h, int ct_m, int ct_d, int ct_mo, int ct_y, char* afa_str, int afaf_flag, char* afb_str, int afbf_flag) {    // Catch all signals possible - it is vital we kill the DMA engine
+int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt, char *ptyn, uint8_t pty, int tp, int ta, int ms, uint8_t di_flags, float ppm, char *control_pipe, int lic, int pin_day, int pin_hour, int pin_minute, int rt_channel_mode, int ct_flag, int ctz_offset_minutes, int custom_time_set, int custom_time_is_static, int ct_h, int ct_m, int ct_d, int ct_mo, int ct_y, char* afa_str, int afaf_flag, char* afb_str, int afbf_flag, int pio, int pso, int rto, int varying_ps) {    // Catch all signals possible - it is vital we kill the DMA engine
     // on process exit!
     for (int i = 0; i < 64; i++) {
         struct sigaction sa;
@@ -367,7 +367,13 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
 
     // Initialize the RDS modulator
     char myps[9] = {0};
+
+    if (pio) {
+        pi = 0x0000; // Если флаг -pio, ставим PI в ноль
+    }
     set_rds_pi(pi);
+    if (pso) set_rds_ps_enabled(0);
+    if (rto) set_rds_rt_enabled(0);
     set_rds_rt(rt);
     set_rds_ct(ct_flag);
     set_rds_ctz(ctz_offset_minutes);
@@ -415,16 +421,12 @@ int tx(uint32_t carrier_freq, char *audio_file, uint16_t pi, char *ps, char *rt,
     if (pin_day >= 0) set_rds_pin(pin_day, pin_hour, pin_minute);
     uint16_t count = 0;
     uint16_t count2 = 0;
-    int varying_ps = 0;
 
     if(ps) {
-        set_rds_ps(ps);
-        printf("PI: %04X, PS: \"%s\".\n", pi, ps);
+    set_rds_ps(ps);
     } else {
-        printf("PI: %04X, PS: <Varying>.\n", pi);
-        varying_ps = 1;
+    varying_ps = 1;
     }
-    printf("RT: \"%s\"\n", rt);
 
     // Initialize the control pipe reader
     if(control_pipe) {
@@ -533,11 +535,29 @@ int main(int argc, char **argv) {
     char* afb_str = "0";
     int afbf_flag = 0;
     int afb_str_is_dynamic = 0;
+    int pso_flag = 0;
+    int rto_flag = 0;
+    int pio_flag = 0;
+    int varying_ps = 0;
 
     // Parse command-line arguments
     for(int i=1; i<argc; i++) {
         char *arg = argv[i];
         char *param = NULL;
+
+       if(strcmp("-pio", arg) == 0) { // <-- Изменили здесь
+        pio_flag = 1;
+        continue;
+       }    
+    
+       if(strcmp("-pso", arg) == 0) {
+        pso_flag = 1;
+        continue;
+       }
+       if(strcmp("-rto", arg) == 0) {
+        rto_flag = 1;
+        continue;
+       }
 
         if(arg[0] == '-' && i+1 < argc) param = argv[i+1];
 
@@ -741,6 +761,29 @@ int main(int argc, char **argv) {
     char* locale = setlocale(LC_ALL, "");
     printf("Locale set to %s.\n", locale);
 
+    if (pio_flag) {
+    printf("PI: OFF (set to 0x0000)\n");
+    } else {
+    printf("PI: %04X\n", pi);
+    }
+
+// Блок вывода информации о PS
+    if (pso_flag) {
+    printf("PS: OFF\n");
+    } else if (ps) {
+    printf("PS: \"%s\"\n", ps);
+    } else {
+    printf("PS: <Varying>\n");
+    varying_ps = 1;
+    }
+
+// Блок вывода информации о RT
+    if (rto_flag) {
+        printf("RT: OFF\n");
+    } else {
+        printf("RT: \"%s\"\n", rt);
+    }
+
     if (ecc_str) {
         uint8_t ecc_code = (uint8_t)strtol(ecc_str, NULL, 16);
         // PI-код должен соответствовать коду страны. Первая цифра PI - это код страны.
@@ -790,7 +833,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes, custom_time_set, custom_time_is_static, ct_hour, ct_min, ct_day, ct_mon, ct_year, afa_str, afaf_flag, afb_str, afbf_flag);
+    int errcode = tx(carrier_freq, audio_file, pi, ps, rt, ptyn, pty, tp_flag, ta_flag, ms_flag, di_flags, ppm, control_pipe, lic_val, pin_day, pin_hour, pin_minute, rt_channel_mode, ct_flag, ctz_offset_minutes, custom_time_set, custom_time_is_static, ct_hour, ct_min, ct_day, ct_mon, ct_year, afa_str, afaf_flag, afb_str, afbf_flag, pio_flag, pso_flag, rto_flag, varying_ps);
 
     if (afa_str_is_dynamic) {
         free(afa_str);

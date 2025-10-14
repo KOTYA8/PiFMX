@@ -14,7 +14,7 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX` or `pso` 
 * **RT** - Radio Text. Example: `64 characters` or `rto` 
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`   
-* **RT(Mode)** - Radio Text (Padding/⚠️0A/0D). Modes: P/A/D. Example: `P/A/D`  
+* **RT(Mode)** - Radio Text (Padding/0A/0D). Modes: P/A/D. Example: `P/A/D`  
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
@@ -35,9 +35,9 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 
 #### RDS_CTL
 * **RDS RESET** - ❌Resets to initial RDS. Example: `R`
-* **PI OFF** - Turn off/on PI. Example: `PIO` or `PION`
-* **PS OFF** - Turn off/on PS. Example: `PSO` or `PSON`
-* **RT OFF** - Turn off/on RT. Example: `RTO` or `RTON`
+* **PI OFF/ON** - Turn off/on PI. Example: `PIO` or `PION`
+* **PS OFF/ON** - Turn off/on PS. Example: `PSO` or `PSON`
+* **RT OFF/ON** - Turn off/on RT. Example: `RTO` or `RTON`
 * **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  
@@ -346,12 +346,12 @@ cat >rds_ctl
 ```
 ```
 PI 0000
-PIO
+PIO / PION
 PTY 10
 PS MyText
-PSO
+PSO / PSON
 RT A text to be sent as radiotext
-RTO
+RTO / RTON
 RTS A/B/AB
 RTP 0 / 1.0.10,2.0.10
 RTM P/A/D

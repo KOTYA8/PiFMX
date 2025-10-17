@@ -27,7 +27,7 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 * **PIN** - Programme Item Number (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
-* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,2,3,4(main,same),LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `rds/eon.txt`
+* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,2,3,4(main -> same),LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `rds/eon.txt`
 * **CT** - Clock Time. Example: `0/1`  
 * **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   

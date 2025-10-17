@@ -189,8 +189,9 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 **ODA** (`ODA`) **RDS_CTL** - ❌ not realized  
 
 # Development Statuses (Global functions)
-**RDS-BUG** (`-rds-bug`) - ✅ realized  
-**RDS OFF/ON** (`-rds`) - ❌ not realized  
+**RDS-BUG** (`-rds-bug`) **GLOBAL** - ✅ realized    
+**RDS-BUG** (`RDS-BUG`) **RDS_CTL** - ✅ realized    
+**RDS OFF/ON** (`-rds`) - ❌ not realized   
 **SOUND MODE** (`-sm`) - ❌ not realized   
 **FREQUENCY** (`-freq`) - ❌ not realized  
 **RDS POWER** (`-rdsp`) - ❌ not realized  
@@ -348,6 +349,7 @@ You can use the named pipe to send “commands” to change RDS. For instance, i
 cat >rds_ctl
 ```
 ```
+RDS-BUG
 PI 0000
 PIOFF / PION
 PTY 10

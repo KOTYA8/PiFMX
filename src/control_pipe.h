@@ -20,12 +20,12 @@
 #define CONTROL_PIPE_CT_RESET 20
 #define CONTROL_PIPE_AFA_SET 21
 #define CONTROL_PIPE_AFAF_SET 22
-#define CONTROL_PIPE_PTYNO_SET 23
+#define CONTROL_PIPE_PTYNOFF_SET 23
 #define CONTROL_PIPE_AFB_SET 24
 #define CONTROL_PIPE_AFBF_SET 25
-#define CONTROL_PIPE_PIO_SET 26
-#define CONTROL_PIPE_PSO_SET 27
-#define CONTROL_PIPE_RTO_SET 28
+#define CONTROL_PIPE_PIOFF_SET 26
+#define CONTROL_PIPE_PSOFF_SET 27
+#define CONTROL_PIPE_RTOFF_SET 28
 
 extern int open_control_pipe(char *filename);
 extern int close_control_pipe();

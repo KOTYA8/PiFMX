@@ -205,50 +205,50 @@ int poll_control_pipe() {
         return CONTROL_PIPE_PTYN_SET;
     }
 
-    if (strcmp(res, "PTYNO") == 0) {
+    if (strcmp(res, "PTYNOFF") == 0) {
         disable_rds_ptyn();
         printf("PTYN disabled\n");
         fflush(stdout);
-        return CONTROL_PIPE_PTYNO_SET;
+        return CONTROL_PIPE_PTYNOFF_SET;
     }
 
-    if (strcmp(res, "PIO") == 0) {
+    if (strcmp(res, "PIOFF") == 0) {
         set_rds_pi_cyclic_mode(1);
         printf("Cyclic PI mode enabled (----)\n");
         fflush(stdout);
-        return CONTROL_PIPE_PIO_SET;
+        return CONTROL_PIPE_PIOFF_SET;
     }
     if (strcmp(res, "PION") == 0) {
         set_rds_pi_cyclic_mode(0);
         printf("Cyclic PI mode disabled\n");
         fflush(stdout);
-        return CONTROL_PIPE_PIO_SET;
+        return CONTROL_PIPE_PIOFF_SET;
     }
 
-    if (strcmp(res, "PSO") == 0) {
+    if (strcmp(res, "PSOFF") == 0) {
         set_rds_ps_enabled(0);
         printf("PS disabled\n");
         fflush(stdout);
-        return CONTROL_PIPE_PSO_SET;
+        return CONTROL_PIPE_PSOFF_SET;
     }
     if (strcmp(res, "PSON") == 0) {
         set_rds_ps_enabled(1);
         printf("PS enabled\n");
         fflush(stdout);
-        return CONTROL_PIPE_PSO_SET;
+        return CONTROL_PIPE_PSOFF_SET;
     }
 
-    if (strcmp(res, "RTO") == 0) {
+    if (strcmp(res, "RTOFF") == 0) {
         set_rds_rt_enabled(0);
         printf("RT disabled\n");
         fflush(stdout);
-        return CONTROL_PIPE_RTO_SET;
+        return CONTROL_PIPE_RTOFF_SET;
     }
     if (strcmp(res, "RTON") == 0) {
         set_rds_rt_enabled(1);
         printf("RT enabled\n");
         fflush(stdout);
-        return CONTROL_PIPE_RTO_SET;
+        return CONTROL_PIPE_RTOFF_SET;
     }
 
     if (strncmp(res, "RTP ", 4) == 0) {

@@ -548,7 +548,7 @@ int main(int argc, char **argv) {
         char *arg = argv[i];
         char *param = NULL;
 
-       if(strcmp("-pio", arg) == 0) {
+       if(strcmp("-pioff", arg) == 0) {
         pio_flag = 1;
         continue;
        }    
@@ -556,11 +556,11 @@ int main(int argc, char **argv) {
         rds_bug_flag = 1;
         continue;
        }
-       if(strcmp("-pso", arg) == 0) {
+       if(strcmp("-psoff", arg) == 0) {
         pso_flag = 1;
         continue;
        }
-       if(strcmp("-rto", arg) == 0) {
+       if(strcmp("-rtoff", arg) == 0) {
         rto_flag = 1;
         continue;
        }
@@ -754,8 +754,8 @@ int main(int argc, char **argv) {
             }
             } else {
             fatal("Unrecognised argument: %s.\n"
-            "Syntax: pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-rds-bug] [-pi pi_code] [-pio]\n"
-            "                [-ps ps_text] [-pso] [-rt rt_text] [-rto] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ctl control_pipe]\n"
+            "Syntax: pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-rds-bug] [-pi pi_code] [-pioff]\n"
+            "                [-ps ps_text] [-psoff] [-rt rt_text] [-rtoff] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ctl control_pipe]\n"
             "                [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di SACD]\n"
             "                [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctz p|mH[:MM]] [-ctc H:M.D.M.Y] [-cts H:M.D.M.Y]\n"
             "                [-afa 0/freq1 freq2 ...] [-afaf 0/1] [-afb 0/main,af1,af2r...] [-afbf 0/1]\n", arg);

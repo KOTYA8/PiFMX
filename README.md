@@ -105,7 +105,7 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 **PTY** (`PTY`) **RDS_CTL** - ✅ realized  
 
 **PS** (`-ps`) **GLOBAL** - ✅ realized  
-**PS** (`PS`) **RDS_CTL** - ✅ realized 
+**PS** (`PS`) **RDS_CTL** - ✅ realized  
 
 **RT** (`-rt`) **GLOBAL** - ✅ realized  
 **RT** (`RT`) **RDS_CTL** - ✅ realized  
@@ -191,7 +191,8 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 
 # Development Statuses (Global functions)
 **RDS-BUG** (`-rds-bug`) **GLOBAL** - ✅ realized    
-**RDS-BUG** (`RDS-BUG`) **RDS_CTL** - ✅ realized  
+**RDS-BUG** (`RDS-BUG`) **RDS_CTL** - ✅ realized   
+
 **RDS RESET** (`-rdsr`) - ❌ not realized   
 **RDS OFF/ON** (`-rds`) - ❌ not realized   
 **SOUND MODE** (`-sm`) - ❌ not realized   

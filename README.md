@@ -35,7 +35,6 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 
 #### RDS_CTL
 * **RDS-BUG OFF** - Turn off RDS-BUG. Example: `OFF`
-* **RDS RESET** - ❌Resets to initial RDS. Example: `R`
 * **PI OFF/ON** - Turn off/on PI. Example: `PIOFF` or `PION`
 * **PS OFF/ON** - Turn off/on PS. Example: `PSOFF` or `PSON`
 * **RT OFF/ON** - Turn off/on RT. Example: `RTOFF` or `RTON`
@@ -193,7 +192,8 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 **RDS-BUG** (`-rds-bug`) **GLOBAL** - ✅ realized    
 **RDS-BUG** (`RDS-BUG`) **RDS_CTL** - ✅ realized   
 
-**RDS RESET** (`-rdsr`) - ❌ not realized   
+**RDS RESET** (`RDSR`) **RDS_CTL** - ❌ not realized   
+
 **RDS OFF/ON** (`-rds`) - ❌ not realized   
 **SOUND MODE** (`-sm`) - ❌ not realized   
 **FREQUENCY** (`-freq`) - ❌ not realized  

@@ -352,7 +352,7 @@ You can use the named pipe to send “commands” to change RDS. For instance, i
 cat >rds_ctl
 ```
 ```
-RDS-BUG
+RDS-BUG / OFF
 PI 0000
 PIOFF / PION
 PTY 10

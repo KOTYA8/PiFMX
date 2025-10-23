@@ -230,6 +230,7 @@ sudo ./pi_fm_x
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
 ```
 sudo ./pi_fm_x
+
 [-freq freq]
 [-audio file]
 [-ppm ppm_error]

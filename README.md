@@ -228,8 +228,39 @@ sudo ./pi_fm_x
 
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
-```bash
-sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-rds-bug] [-pi pi_code] [-pioff] [-ps ps_text] [-psoff] [-rt rt_text] [-rtoff] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM] [-afa freq1 freq2 ...] [-afaf 0/1] [-afb main,freq1 ...,freq(r) ...] [-afbf 0/1]
+```
+sudo ./pi_fm_x
+[-freq freq]
+[-audio file]
+[-ppm ppm_error]
+[-ctl control_pipe]
+[-rds-bug]
+[-pi pi_code]
+[-pioff]
+[-ps ps_text]
+[-psoff]
+[-rt rt_text]
+[-rtoff]
+[-rts A/B/AB]
+[-rtp tags]
+[-rtm P/A/D]
+[-ecc code]
+[-lic code]
+[-pty code]
+[-tp 0/1]
+[-ta 0/1]
+[-ms M/S]
+[-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD]
+[-pin DD,HH,MM]
+[-ptyn ptyn_text]
+[-ct 0/1]
+[-ctc HH:MM,DD,MM,YYYY]
+[-cts HH:MM,DD,MM,YYYY]
+[-ctz p/mHH:MM]
+[-afa freq1 freq2 ...]
+[-afaf 0/1]
+[-afb main,freq1 ...,freq(r) ...]
+[-afbf 0/1]
 ```
 All arguments are optional:  
 

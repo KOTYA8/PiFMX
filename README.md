@@ -417,9 +417,3 @@ AFBF 0/1/R
 ### PS and RT modes (rds_ctl)
 I also have a special script that allows you to use different PS and RT modes:
 [PiFMPSRT](https://github.com/KOTYA8/PiFMPSRT)
-
-# Changelog
-All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
-
-### **Currently**  
-* **V13** - Support **RDS-BUG**. Update **PIO** -> **PIOFF** , **PSO** -> **PSOFF**, **RTO** -> **RTOFF**, **PTYNO** -> **PTYNOFF** 

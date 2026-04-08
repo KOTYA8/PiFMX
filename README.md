@@ -9,17 +9,17 @@ PiFMX - this is FM transmitter for **Raspberry Pi**.
 * **PiFMSH** (coming soon) - Scheduler. Automatic change of **all RDS modes**, after time all. For **rds_ctl**    
 
 # Functions RDS
-* **PI** - Programme Identification. Example (4 characters): `XXXX` or `pioff`
+* **PI** - Programme Identification. Example (4 characters): `XXXX`  
 * **PTY** - Programme Type. Example: `00 - 31`
-* **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX` or `psoff` 
-* **RT** - Radio Text. Example: `64 characters` or `rtoff` 
+* **PS** - Programme Service Name. Example (1 to 8 characters): `XXXXXXXX`  
+* **RT** - Radio Text. Example: `64 characters` 
 * **RT(Switch)** - Radio Text (A/B Switches). Modes: only A, only B, AB. Example: `A/B/AB`   
 * **RT(Mode)** - Radio Text (Padding/0A/0D). Modes: P/A/D. Example: `P/A/D`  
 * **RT+** - Radio Text+ (Tags/Symbols: `00 - 63`). Example (tags.first symbol.last symbol): `XX.XX.XX,XX.XX.XX`  
 * **TP** - Traffic Programme identification. Example: `0/1`   
 * **TA** - Traffic Announcement identification. Example: `0/1`
-* **AF(A)** - Alternative Frequencies List (A method) (Frequencies: `87.6 - 107.9`). Example: `87.6 87.8 91.1` or `rds/afa.txt`   
-* **AF(B)** - Alternative Frequencies List (B method) (Frequencies: `87.6 - 107.9`). Example (main,same,regional): `87.6,90.1 95.5,90.5r 90.6r`.  
+* **AF(A)** - Alternative Frequencies List (A method). Example: `87.6 87.8 91.1` or `rds/afa.txt`   
+* **AF(B)** - Alternative Frequencies List (B method). Example (main,same,regional): `87.6,90.1 95.5,90.5r 90.6r`.  
 If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds/afb.txt`      
 * **M/S** - Music Speech switch (M/S). Example: `M/S`
 * **ECC** - Extended Country Code. Example (2 characters): `XX`    
@@ -27,17 +27,13 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 * **PIN** - Programme Item Number (Date: `01-31`, Hours: `00-23`, Minutes: `00-59`). Example (date,hours,minutes): `XX,XX,XX`  
 * **PTYN** - Programme Type Name. Example (1 to 8 characters): `XXXXXXXX` 
 * **DI(A,C,D)** - Decoder Identification (Stereo, Artifical Head, Compressed, Dynamic PTY). Example: `S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS`  
-* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,2,3,4(main -> same),LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `rds/eon.txt`
+* **EON** - Enhanced Other Networks Information (PI,PS,AF,MF1,MF2,MF3,MF4,LI,PTY,TP,TA,PIN). Example⚠️: `D392,WDR 2   ,102.1,87.6 92.1,87.7 92.2,87.8 92.3,87.9 92.4,0000,10,1,0,022254` or `rds/eon.txt`
 * **CT** - Clock Time. Example: `0/1`  
 * **CTC** - Clock Time Custom. Example: `19:52,25.09.2025`  
 * **CTS** - Clock Time Still. Example: `19:52,25.09.2025`   
 * **CTZ** - Clock Time Zone. `p` - plus, `m` - minus. Example: `m1, m3, p9:30`
 
 #### RDS_CTL
-* **RDS-BUG OFF** - Turn off RDS-BUG. Example: `OFF`
-* **PI OFF/ON** - Turn off/on PI. Example: `PIOFF` or `PION`
-* **PS OFF/ON** - Turn off/on PS. Example: `PSOFF` or `PSON`
-* **RT OFF/ON** - Turn off/on RT. Example: `RTOFF` or `RTON`
 * **RTP OFF** - Turn off RT+ and cleanses tags. Example: `0`
 * **AFA OFF** - Turn off AF(A). Example: `0`  
 * **AFAF OFF** - Turn off AF(A)FILE. Example: `0`  
@@ -48,12 +44,12 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 * **ECC OFF** - Turn off ECC. Example: `OFF`  
 * **LIC OFF** - Turn off LIC. Example: `OFF`  
 * **PIN OFF** - Turn off PIN. Example: `OFF`  
-* **PTYN OFF** - Turn off PTYN. Example: `PTYNOFF`  
+* **PTYN OFF** - Turn off PTYN. Example: `PTYNO`  
 * **CT RESET** - Drops the time to the usual mode. Example: `R`  
 
 ### RDS2
 * **Long PS** - Long Programme Service Name - up to 32 byte with UTF-8 character set. (Indian, Chinese, Arabic, and more). Example: `32 characters` 
-* **Station LOGO** - Broadcaster's graphical logo. Example: `file.jpg, png, gif` or `link`
+* **Station LOGO** - Broadcaster's graphical logo. Example: `file.jpg, png, gif or link`
 * **eRT** - enhanced RadioText - 128 byte long with UTF-8 character set. Example: `64 characters`
 
 ### RDS Applications
@@ -83,7 +79,6 @@ If two or more frequencies: `"87.6,90.1 95.5,90.5r 90.6r|88,88.1,88.2r"` or `rds
 * FFFF - `Dummy application` is a "dummy" or placeholder, usually for official purposes.  
 
 # Functions GLOBAL
-* **RDS-BUG** - (funny feature) - PI-Сode changes every time
 * **RDS OFF/ON** - RDS off/on
 * **SOUND MODE** - FM output to **Stereo** or **Mono**
 * **FREQUENCY** - increase to **64 MHz**  
@@ -104,7 +99,7 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 **PTY** (`PTY`) **RDS_CTL** - ✅ realized  
 
 **PS** (`-ps`) **GLOBAL** - ✅ realized  
-**PS** (`PS`) **RDS_CTL** - ✅ realized  
+**PS** (`PS`) **RDS_CTL** - ✅ realized 
 
 **RT** (`-rt`) **GLOBAL** - ✅ realized  
 **RT** (`RT`) **RDS_CTL** - ✅ realized  
@@ -189,12 +184,7 @@ In the future, it will be optimized and placed, indicators for the transmitter a
 **ODA** (`ODA`) **RDS_CTL** - ❌ not realized  
 
 # Development Statuses (Global functions)
-**RDS-BUG** (`-rds-bug`) **GLOBAL** - ✅ realized    
-**RDS-BUG** (`RDS-BUG`) **RDS_CTL** - ✅ realized   
-
-**RDS RESET** (`RDSR`) **RDS_CTL** - ❌ not realized   
-
-**RDS OFF/ON** (`-rds`) - ❌ not realized   
+**RDS OFF/ON** (`-rds`) - ❌ not realized  
 **SOUND MODE** (`-sm`) - ❌ not realized   
 **FREQUENCY** (`-freq`) - ❌ not realized  
 **RDS POWER** (`-rdsp`) - ❌ not realized  
@@ -228,40 +218,8 @@ sudo ./pi_fm_x
 
 # General Arguments
 By default the PS changes back and forth between `RPi-Live` and a sequence number, starting at `00000000`. The PS changes around one time per second.  
-```
-sudo ./pi_fm_x
-
-[-freq freq]
-[-audio file]
-[-ppm ppm_error]
-[-ctl control_pipe]
-[-rds-bug]
-[-pi pi_code]
-[-pioff]
-[-ps ps_text]
-[-psoff]
-[-rt rt_text]
-[-rtoff]
-[-rts A/B/AB]
-[-rtp XX.XX.XX,XX.XX.XX]
-[-rtm P/A/D]
-[-ecc code]
-[-lic code]
-[-pty code]
-[-tp 0/1]
-[-ta 0/1]
-[-ms M/S]
-[-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/SACD]
-[-pin DD,HH,MM]
-[-ptyn ptyn_text]
-[-ct 0/1]
-[-ctc HH:MM,DD,MM,YYYY]
-[-cts HH:MM,DD,MM,YYYY]
-[-ctz p/mHH:MM]
-[-afa freq1 freq2 ...]
-[-afaf 0/1]
-[-afb main,freq1 ...,freq(r) ...]
-[-afbf 0/1]
+```bash
+sudo ./pi_fm_x [-freq freq] [-audio file] [-ppm ppm_error] [-ctl control_pipe] [-pi pi_code] [-ps ps_text] [-rt rt_text] [-rts A/B/AB] [-rtp tags] [-rtm P/A/D] [-ecc code] [-lic code] [-pty code] [-tp 0/1] [-ta 0/1] [-ms M/S] [-di S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD,SACD] [-pin DD,HH,MM] [-ptyn ptyn_text] [-ct 0/1] [-ctc HH:MM,DD,MM,YYYY] [-cts HH:MM,DD,MM,YYYY] [-ctz p/mHH:MM] [-afa freq1 freq2 ...] [-afaf 0/1] [-afb main,freq1 ...,freq(r) ...] [-afbf 0/1]
 ```
 All arguments are optional:  
 
@@ -269,8 +227,7 @@ All arguments are optional:
   
 * `-freq` specifies the carrier frequency (76 - 108 MHz). Example: `-freq 107.9`.  
 * `-audio` specifies an audio file to play as audio. The sample rate does not matter: PiFMX will resample and filter it. If a stereo file is provided, Pi-FM-RDS will produce an FM-Stereo signal. Example: `-audio sound.wav`. The supported formats depend on libsndfile. This includes WAV and Ogg/Vorbis (among others) but not MP3. Specify - as the file name to read audio data on standard input (useful for piping audio into Pi-FM-RDS, see below).
-* `-ppm` specifies your Raspberry Pi's oscillator error in parts per million (ppm), see below.
-* `-rds-bug` specifies to (funny feature) - PI-Сode changes every time
+* `-ppm` specifies your Raspberry Pi's oscillator error in parts per million (ppm), see below.  
    
 **Control RDS (remotely):**  
    
@@ -280,12 +237,9 @@ All arguments are optional:
   
 * `' ' or " "` can be used for additional characters (gap or prohibited symbols in the console). Example: `'hello'` -> `hello` or `" hello"` -> ` hello`  
   
-* `-pi` specifies the PI-code of the RDS broadcast. 4 hexadecimal digits. Example: `-pi FFFF`.
-* `-pioff` specifies the PI shutdown. Example: `-pioff`  
-* `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.
-* `-psoff` specifies the PS shutdown. Example: `-psoff`  
+* `-pi` specifies the PI-code of the RDS broadcast. 4 hexadecimal digits. Example: `-pi FFFF`.  
+* `-ps` specifies the station name (Program Service name, PS) of the RDS broadcast. Limit: 8 characters. Example: `-ps RASP-PI`.  
 * `-rt` specifies the radiotext (RT) to be transmitted. Limit: 64 characters. Example: `-rt 'Hello, world!'`.
-* `-rtoff` specifies the RT shutdown. Example: `-rtoff`  
 * `-rts` specifies the switching of RT modes (A/B/AB). Example: `-rts A/B/AB`.
 * `-rtp` specifies the classification of tags for Radiotext (Radio Text+). Displayed through 5 or 17 characters, example: `-rtp 1.0.10,2.0.10`.
 * `-rtm` specifies the full (64 symbols) mode or obtaining only text (P/A/D). Displayed through 1, example: `-rtm P`.  
@@ -304,7 +258,7 @@ All arguments are optional:
 * `-ctz` specifies the change in the temporary zone (Clock Time Zone). Displayed through 2 or 6 characters, example: `-ctz p1`.  
 * `-afa` specifies the frequencies to switch the radio station from a low signal to a better. Alternative Frequencies List (A method). Displayed through 2 or many characters, example: `-afa 87.6 107`.  
 * `-afaf` specifies the file support for Alternative Frequencies List (A method). Displayed through 1, example: `-afaf 1`.
-* `-afb` specifies the extended version AF (A method), also supports regional frequencies. Displayed through 2 or many characters, example: `-afb "87.6,107,88.1r|88,89.1,92"`.    
+* `-afb` specifies the extended version AF (A method), also supports regional frequencies. Displayed through 2 or many characters, example: `-afb "87.6 107,88.1r|88,89.1,92"`.    
 * `-afbf` specifies the file support for Alternative Frequencies List (B method). Displayed through 1, example: `-afbf 1`.  
 
 ### Clock calibration (only if experiencing difficulties)
@@ -384,14 +338,10 @@ You can use the named pipe to send “commands” to change RDS. For instance, i
 cat >rds_ctl
 ```
 ```
-RDS-BUG / OFF
 PI 0000
-PIOFF / PION
 PTY 10
 PS MyText
-PSOFF / PSON
 RT A text to be sent as radiotext
-RTOFF / RTON
 RTS A/B/AB
 RTP 0 / 1.0.10,2.0.10
 RTM P/A/D
@@ -403,7 +353,7 @@ PIN OFF / 1,12,20
 DI 0 / S/SA/SD/SC/A/AC/AD/C/CA/CD/D/ACD/ACDS
 MS M/S
 PTYN 12345678
-PTYNOFF
+PTYNO
 CT 0/1/R
 CTC 1:13,27.9.2025
 CTS 01:14,27.09.2025
@@ -422,4 +372,4 @@ I also have a special script that allows you to use different PS and RT modes:
 All previous versions are available in the repository: [PiFMX_VER](https://github.com/KOTYA8/PiFMX_VER)  
 
 ### **Currently**  
-* **V13** - Support **RDS-BUG**. Update **PIO** -> **PIOFF** , **PSO** -> **PSOFF**, **RTO** -> **RTOFF**, **PTYNO** -> **PTYNOFF** 
+* **V11** - Support **AFB**, **AFBF**. Fixed **AFA**. Management has appeared via `rds_ctl`: **AFB**, **AFBF**.    
